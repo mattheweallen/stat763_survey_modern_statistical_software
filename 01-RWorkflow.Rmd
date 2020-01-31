@@ -1,0 +1,693 @@
+---
+title: "Course Intro and R/RStudio Basics"
+author: "STAT 763 - Survey of Modern Statistical Software"
+output: ioslides_presentation
+---
+
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(out.width = '80%', collapse = TRUE, warning=FALSE, message=FALSE)
+```
+
+## Agenda
+
+- Course overview and mechanics
+- R Basics
+- R and RStudio Workflow Basics
+
+- (Recommended): STAT 345 Homework One (no submission)
+- Readings: R4DS Chapters 4, 6, 8, 27, 29, and 30
+- Other sources: 
+  - [Quick-R Data Management](https://www.statmethods.net/management/index.html)
+  - [Quick-R Data Input](https://www.statmethods.net/input/index.html)
+
+
+
+## Course overview
+
+- Focus on RStudio, Tableau, and Python
+  - We'll be moving quickly through a lot of material
+- Lectures/demonstrations on core concepts
+  - We will not be covering everything you need to learn in class
+  - Course materials and additional reading materials posted on Canvas
+- Homework to extend on core concepts
+  - There will be a significant amount of reading and searching for solutions
+  - Get used to using online resources (R-bloggers, stackexchange, etc.)
+- Student presentations on advancements/improvements/additional resources
+  - Intended to cover a wider variety of modern approaches not typically found in textbooks and improve communication skills
+
+
+## The R console
+
+Basic interaction with R is by typing in the **console**, a.k.a. **terminal** or **command-line**
+
+You type in commands, R gives back answers (or errors)
+
+Menus and other graphical interfaces are extras built on top of the console (such as RStudio!)
+
+## The RStudio IDE
+
+RStudio is a integrated development environment for R. A basic configuration includes four panes:
+
+- Scripts, workbooks, and presentation files
+- Environment, History, and more
+- Console, terminal, and debugging tools
+- File browser, plot viewer, and package selector
+
+## Variables built into R
+
+R has a small number of built-in constants. The following constants are available:
+
+- `LETTERS`: the 26 upper-case letters of the Roman alphabet;
+- `letters`: the 26 lower-case letters of the Roman alphabet;
+- `month.abb`: the three-letter abbreviations for the English month names;
+- `month.name`: the English names for the months of the year;
+- `pi`: the ratio of the circumference of a circle to its diameter.
+
+These are implemented as variables in the base namespace taking appropriate values.
+
+## Creating new variables
+Variables in R must start with a letter, and contain only letters, numbers, `.`, and `_`
+
+Most variables are created with the **assignment operator**, `<-` or `=`  
+```{r}
+approx_pi <- 22/7
+approx_pi
+diameter_in_cubits = 10
+approx_pi*diameter_in_cubits
+```
+
+## Creating New Variables
+
+The assignment operator also changes values:
+```{r}
+circumference_in_cubits <- approx_pi*diameter_in_cubits
+circumference_in_cubits
+circumference_in_cubits <- 30
+circumference_in_cubits 
+```
+
+## The workspace
+
+What names have you defined values for?
+```{r}
+ls()
+objects()
+```
+
+Getting of variables:
+```{r}
+rm("circumference_in_cubits")
+ls()
+```
+
+Also, see the "Environment" tab!
+
+## Abstraction
+
+Using names and variables makes code: easier to design, easier to debug, less prone to bugs, easier to improve,  and easier for others to read
+
+Best practice: use "snake case" (variable_name)
+
+Avoid "magic constants"; use named variables!
+
+## Data types
+
+- character: R does not distinguish between individual characters and strings
+- numeric: "double" in other languages
+  - integer: add "L" to the end of the number to coerce an integer (`5L` is 5 as an integer)
+  - complex: add "i" to the end of the number to coerce a complex number (`5i` is 5 as a complex number)
+- boolean: TRUE/FALSE, common in control structures
+- NA: the typical missing value indicator in R
+- factor: nominal and ordinal objects
+
+
+## Data types
+
+- `typeof()` and `str()` functions return the type of object
+
+- `is.`_foo_`()` functions return Booleans for whether the argument is of type _foo_
+
+- `as.`_foo_`()` (tries to) "cast" its argument to type _foo_ --- to translate it sensibly into a _foo_-type value
+
+
+## Data types
+```{r}
+typeof(5/6)
+as.character(5/6)
+as.numeric(as.character(5/6))
+6*as.numeric(as.character(5/6))
+5/6 == as.numeric(as.character(5/6))
+```
+
+## Factors
+
+- We can tell R that a variable is nominal by making it a factor. 
+- The factor stores the nominal values as a vector of integers in the range [1...k] (where k is the number of unique values in the nominal variable), and an internal vector of character strings (the original values) mapped to these integers.
+- `factor(x)` casts an object `x` as a nominal variable
+- `ordered(x)` casts an object `x` as an ordinal variable (alphabetically!)
+
+
+## Operators in R
+
+- `+`: addition
+- `-`: subtraction
+- `*`: multiplication
+- `/`: division
+- `^` or `**`: exponentiation
+- `x%%y`: modulus (x mod y)
+- `x%/%y%`: integer division
+
+## Operators in R
+
+- `<`: less than
+- `<=`: less than or equal to
+- `>`: greater than
+- `>=`: greater than or equal to
+- `==`: exactly equal to
+- `!=`: not equal to
+- `!x`: not x
+- `x|y`: x OR y
+- `x&y`: x AND y
+- `isTRUE(x)`: test if X is TRUE
+
+## Functions in R
+
+Some common numeric functions:
+
+- `abs(x)`: absolute value
+- `sqrt(x)`:	square root
+- `ceiling(x)`:	ceiling(3.475) is 4
+- `floor(x)`:	floor(3.475) is 3
+- `trunc(x)`:	trunc(5.99) is 5
+- `round(x, digits=n)`:	round(3.475, digits=2) is 3.48
+- `signif(x, digits=n)`:	signif(3.475, digits=2) is 3.5
+- `cos(x), sin(x), tan(x)`:	also acos(x), cosh(x), acosh(x), etc.
+- `log(x)`:	natural logarithm
+- `log10(x)`:	common logarithm
+- `exp(x)`:	e^x
+
+## Functions in R
+
+Some common character functions:
+
+- `substr(x, start=n1, stop=n2)`:	Extract or replace substrings in a character vector.
+- `grep(pattern, x , ignore.case=FALSE, fixed=FALSE)`:	Search for pattern in x. If fixed =FALSE then pattern is a regular expression. If fixed=TRUE then pattern is a text string. Returns matching indices.
+- `sub(pattern, replacement, x, ignore.case =FALSE, fixed=FALSE)`:	Find pattern in x and replace with replacement text.
+- `strsplit(x, split)`:	Split the elements of character vector x at split. 
+- `paste(..., sep="")`:	Concatenate strings after using sep string to seperate them.
+- `toupper(x)`:	Uppercase
+- `tolower(x)`:	Lowercase
+
+## Functions in R
+
+Some common statistical functions:
+
+- `mean(x, trim=0,na.rm=FALSE)`:	mean of object x
+- `sd(x)`:	standard deviation of object(x). also look at `var(x)` for variance and `mad(x)` for median absolute deviation.
+- `median(x)`:	median
+- `quantile(x, probs)`:	quantiles where `x` is the numeric vector whose quantiles are desired and `probs` is a numeric vector with probabilities in [0,1].
+- `range(x)`:	range
+- `sum(x)`:	sum
+- `diff(x, lag=1)`:	lagged differences, with lag indicating which lag to use
+- `min(x)`:	minimum
+- `max(x)`:	maximum
+- `scale(x, center=TRUE, scale=TRUE)`:	column center or standardize a matrix.
+
+## Functions in R
+
+Some other useful functions:
+
+- `seq(from , to, by)`:	generate a sequence
+- `rep(x, n)`:	repeat `x` n times
+- `cut(x,n)`: divide continuous variable `x` in factor with n levels
+
+
+## User defined functions
+
+The structure of a function:
+
+```{r eval=FALSE}
+#Function to do "statements"
+#Inputs: arg1, a data structure; arg2, a boolean
+#Outputs: the thing we want
+myfunction <- function(arg1, arg2, ... ){
+  statements #Comments internally to explain the process (typically to yourself in 6 months)
+  return(object)
+}
+```
+
+- function name: same rules as for variables
+- inputs/arguments: inside the `function()` function
+  - Can include defaults for arguments
+- outputs/return values: specified in the `return()` function
+- comments: not required by R, but recommended 
+  - One-line description of purpose; listing of arguments; listing of outputs; internal comments
+
+
+## What should be a function?
+
+- Things you're going to re-run, especially if it will be re-run with changes
+- Chunks of code you keep highlighting and hitting return on
+- Chunks of code  which are small parts of bigger analyses
+- Chunks which are very similar to other chunks
+
+
+## Example function
+
+```{r}
+# Function example - get measures of central tendency and spread for a numeric vector x. 
+# Inputs: x, a numeric vector; npar, boolean if nonparametric measures are desired; print, boolean if results should be printed to the console.
+# Outputs: a list object with center and spread statistics
+
+mysummary <- function(x,npar=TRUE,print=TRUE) {
+  if (!npar) {
+    center <- mean(x); spread <- sd(x) 
+  } else {
+    center <- median(x); spread <- mad(x) 
+  }
+  if (print & !npar) {
+    cat("Mean=", center, "\n", "SD=", spread, "\n")
+  } else if (print & npar) {
+    cat("Median=", center, "\n", "MAD=", spread, "\n")
+  }
+  result <- list(center=center,spread=spread)
+  return(result)
+}
+```
+
+## Example function
+
+```{r}
+# invoking the function 
+set.seed(1234)
+x <- rpois(500, 4) 
+y <- mysummary(x)
+
+z <- mysummary(x, npar=FALSE, print=FALSE)
+z
+```
+
+
+## Control structures
+
+- if-else:
+  - `if (cond) expr`
+  - `if (cond) {expr1 expr2}`
+  - `if (cond) expr1 else expr2`
+- for: `for (var in seq) expr`
+- while: `while (cond) expr`
+- switch: `switch(expr, ...)`
+- ifelse: `ifelse(test, yes, no)`
+
+## Example function
+
+```{r}
+# Function to compute the transpose of a matrix (a poor alternative to built-in t() function)
+# Inputs: a matrix x
+# Outputs: a matrix
+mytrans <- function(x) { 
+  if (!is.matrix(x)) {
+    warning("argument is not a matrix: returning NA")
+    return(NA_real_)
+  }
+  y <- matrix(1, nrow=ncol(x), ncol=nrow(x)) 
+  for (i in 1:nrow(x)) {
+    for (j in 1:ncol(x)) {
+      y[j,i] <- x[i,j] 
+    }
+  }
+return(y)
+}
+```
+
+## Another example function
+
+```{r}
+require(stats)
+centre <- function(x, type) {
+  switch(type,
+         mean = mean(x),
+         median = median(x),
+         trimmed = mean(x, trim = .1))
+}
+x <- rcauchy(10)
+centre(x, "mean"); centre(x, "median"); centre(x, "trimmed")
+```
+
+## Data structures
+
+- Vectors - R's basic data structure; incredibly common and useful
+- Arrays - multi-dimensional vectors; uncommon
+- Matrices - numeric, 2D array; particularly useful for some statistical applications
+- Lists - sequence of values, _not_ necessarily all of the same type
+- Data Frames - basically a list of vectors; we'll spend most of our time here
+
+## First data structure: vectors
+
+A **vector** is a sequence of values, all of the same type
+```{r}
+x <- c(7, 8, 10, 45)
+x
+is.vector(x)
+x2 <- c("a", "b", "c"); x2
+is.vector(x2)
+```
+
+`c()` function returns a vector containing all its arguments in order
+
+`x[1]` is the first element, `x[4]` is the 4th element of x
+`x2[-4]` is a vector containing all but the fourth element of x2
+
+
+## First data structure: vectors
+
+`vector(length=6)` returns an empty vector of length 6; helpful for filling things up later
+```{r}
+weekly.hours <- vector(length=5)
+weekly.hours[5] <- 8
+weekly.hours
+```
+
+## Vector arithmetic
+
+Operators apply to vectors "pairwise" or "elementwise":
+```{r}
+#x <- c(7, 8, 10, 45)
+y <- c(-7, -8, -10, -45)
+x+y
+x*y
+```
+
+## Recycling
+
+**Recycling** repeat elements in shorter vector when combined with longer
+```{r}
+x + c(-7,-8)
+x^c(1,0,-1,0.5)
+```
+
+Single numbers are vectors of length 1 for purposes of recycling:
+```{r}
+2*x
+```
+
+## Vector comparisons
+
+To compare whole vectors, best to use `identical()` or `all.equal()`:
+```{r}
+x == -y
+identical(x,-y)
+identical(c(0.5-0.3,0.3-0.1),c(0.3-0.1,0.5-0.3))
+all.equal(c(0.5-0.3,0.3-0.1),c(0.3-0.1,0.5-0.3))
+```
+
+## Functions on vectors
+
+Lots of functions take vectors as arguments:
+
+- `mean()`, `median()`, `sd()`, `var()`, `max()`, `min()`, `length()`, `sum()`: return single numbers
+- `sort()` returns a new vector
+- `hist()` takes a vector of numbers and produces a histogram, a highly structured object, with the side-effect of making a plot
+- Similarly `ecdf()` produces a cumulative-density-function object
+- `summary()` gives a five-number summary of numerical vectors
+- `any()` and `all()` are useful on Boolean vectors
+
+## Addressing vectors
+
+Vector of indices:
+```{r}
+x[c(2,4)]
+```
+
+Vector of negative indices
+```{r}
+x[c(-1,-3)]
+```
+
+
+## Boolean vectors
+
+Boolean vector:
+```{r}
+x[x>9]
+y[x>9]
+```
+
+`which()` turns a Boolean vector into a vector of TRUE indices:
+```{r}
+places <- which(x > 9)
+places
+y[places]
+```
+
+## Named components
+
+You can give names to elements or components of vectors
+```{r}
+names(x) <- c("v1","v2","v3","fred")
+names(x)
+x[c("fred","v1")]
+```
+
+`names(x)` is just another vector (of characters)
+
+## Arrays
+
+A generally useful structure for programming, not so much for common statistical or data science techniques
+
+## Matrices
+
+- In R, a matrix is a specialization of a 2D array
+- All columns in a matrix must have the same mode(numeric, character, etc.) and the same length. The general format is
+
+```{r eval=FALSE}
+mymatrix <- matrix(vector, nrow=r, ncol=c, byrow=FALSE, 
+   dimnames=list(char_vector_rownames, char_vector_colnames))
+```
+
+- `byrow=TRUE` indicates that the matrix should be filled by rows (default is by columns)
+- `dimnames` provides optional labels for the columns and rows.
+
+## Matrices
+
+- Element-wise operations with the usual arithmetic and comparison operators (e.g., `factory/3`)
+- Compare whole matrices with `identical(x,y)` or `all.equal(x,y)`
+- Special operator for multiplication: `x%*%y`
+- Transpose: `t(x)`
+- Diagonal, determinant, and inverse: `diag(x)`, `det(x)`, `solve(x)`
+- Identify rows, columns, or elements using subscripts: `x[2:4, 1:3]`
+
+## Lists
+
+- An ordered collection of objects (components). A list allows you to gather a variety of (possibly unrelated) objects under one name.
+  - Most of what you can do with vectors you can also do with lists
+- Accessing elements: 
+  - Can use `[ ]` as with vectors  
+  - Use `[[ ]]`, but only with a single index  
+    - `[[ ]]` drops names and structures, `[ ]` does not
+  - Use `$` with named elements (also drops names and structures)
+- Lists are super useful, but behave oddly when you don't anticipate them
+  
+## Data frames
+
+- Dataframe = the classic data table, $n$ rows for cases, $p$ columns for variables
+- Lots of the really-statistical parts of R presume data frames
+- Not just a matrix because *columns can have different types*
+- Many matrix functions also work for dataframes (`rowSums()`, `summary()`, `apply()`)
+  - no matrix multiplying dataframes, even if all columns are numeric
+
+## Data frames
+
+```{r}
+library(datasets)
+states <- data.frame(state.x77, abb=state.abb, region=state.region, division=state.division)
+```
+
+- `data.frame()` is combining here a pre-existing matrix (`state.x77`), a vector of characters (`state.abb`), and two vectors of qualitative categorical variables (**factors**; `state.region`, `state.division`)
+- Column names are preserved or guessed if not explicitly set
+
+## with()
+
+- What percentage of literate adults graduated HS?
+```{r}
+head(100*(states$HS.Grad/(100-states$Illiteracy)))
+```
+
+- `with()` takes a data frame and evaluates an expression "inside" it:
+```{r}
+with(states, head(100*(HS.Grad/(100-Illiteracy))))
+```
+
+## Data arguments
+
+Many functions take `data` arguments, and look variables up in that data frame:
+
+```{r}
+plot(Illiteracy~Frost, data=states)
+```
+
+
+## Workflow: scripts
+
+- Each of the lines of code we've seen so far can be run directly in the console
+- To keep these lines of code organized (and easily reproducible), we can use the script editor
+- To use the script editor. Open it up either by clicking the File menu, and selecting New File, then R script, or using the keyboard shortcut Cmd/Ctrl + Shift + N.
+- Can run expressions directly from the script editor using Cmd/Ctrl + Enter
+  - Run the whole script with Cmd/Ctrl + Shift + S
+- Start scripts with the packages you need (`library` or `require` calls only, not `install.packages` or `setwd`)
+
+## Workflow: what is real?
+
+- Your working environment is a product of the code/scripts you've run and your data files
+  - You can recreate the environment by re-running your scripts
+  - Wickham recommends you set RStudio to not preserve your workspace between sessions (see R4DS 8.1)
+- Checking to see if your scripts have captured everything is important!
+  - Press Cmd/Ctrl + Shift + F10 to restart RStudio
+  - Press Cmd/Ctrl + Shift + S to rerun the current script
+  
+## Workflow: the working directory
+
+- The `STAT345-hw-01.docx` file on Canvas recommends setting up a reasonable file structure for the class
+  - This will typically be sufficient for a class (like STAT 763), or for small projects
+- By default, R will initially set a working directory based on the location of the file in your computer
+  - Saving files to a file structure, then opening the file from that location is a simple approach
+- You can set the working directory using `setwd()`
+  - Shouldn't be needed with this approach
+  - Use relative paths throughout your code (no absolute paths)
+  - Use forward slashes (Linux/Mac style) in your paths, even if using Windows
+
+## Workflow: projects
+
+- An even better approach, particularly when working with many files, is to set up a Project
+  - File > New Project > New Directory > Empty Project
+  - Set the directory name appropriately, and make it a subdirectory of a sensible directory
+- When you quit RStudio and re-open the project, RStudio gives you:
+  - The same working directory you expect
+  - Your complete command history
+  - All the files that were open
+  - Ideally a fresh environment (if you aren't preserving your workspace as noted before)
+
+## Workflow: R Markdown
+
+- Single framework for combining code, results, and written descriptions
+- Fully reproducible with many output formats
+- R Markdown can be used for 
+  - communicating results
+  - collaborating with other statisticians/data scientists
+  - a modern-day lab notebook
+- R Markdown Cheat Sheets:
+  - Help > Cheatsheets > R Markdown Cheat Sheet
+  - Help > Cheatsheets > R Markdown Reference Guide
+  
+## R Markdown: basics
+
+- An R Markdown file (.Rmd) contains three types of content:
+  - An optional `YAML` header (surrounded by `---`)
+  - Chunks of R code (surrounded by ` ``` `)
+  - Text with simple formatting (`# heading` and `_italics_`)
+- Code and output are woven together
+  - Press the play button on a code chunk (or Cmd/Ctrl + Shift + Enter) to run the code and display the results inline
+  - Create a report by clicking "Knit"
+    - Or with Cmd/Ctrl + Shift + K
+    - Or with `rmarkdown::render("1-example.Rmd")` in code
+
+## R Markdown: text formatting
+
+- Help > Markdown Quick Reference
+- Text formatting:
+  - `*italic*` or `_italic_`
+  - `**bold**` or `__bold__`
+  - ` `code` `
+  - `superscript^2^` and `subscript~2~`
+- Headings:
+  - `# 1st Level Header`
+  - `## 2nd Level Header`
+  - `## 3rd Level Header`
+- Lots of options for formatting lists and tables
+
+## R Markdown: code chunks
+
+- Running code in an R Markdown document requires "code chunks"
+  - Cmd/Ctrl + Alt + I
+  - "Insert" button in the editor toolbar
+  - Typing the chunk delimeters ` ```{r} ` and ` ``` `
+- Chunks can be given names ` ```{r by-name} `
+  - Easier navigation
+  - graphics produced by chunks will be named more usefully
+  - can cache chunks for long-running code
+
+## R Markdown: chunk options
+
+- There are a whole lot of them: [http://yihui.name/knitr/options/](http://yihui.name/knitr/options/)
+- The primary ones are:
+  - `eval = FALSE` - don't evaluate code chunk (display code, but disable it)
+  - `include = FALSE` - run code, don't show code or results (good for setup)
+  - `echo = FALSE` - run code, don't show code, show results (good for hiding the code in reports)
+  - `message = FALSE` and `warning = FALSE` - suppress messages or warnings in document
+  - `results = 'hide'` hides printed output, `fig.show = 'hide'` hides plots
+  - `error = TRUE` - render document even if code returns an error (good for debugging)
+  
+## R Markdown: tables
+
+- You can print (typically) nicer tables in your documents:
+  - Standard way: something like simply calling the dataframe
+  
+```{r}
+mtcars[1:5,]
+```
+
+## R Markdown: nicer tables
+
+Using the `knitr::kable` function:
+
+```{r}
+knitr::kable(
+  mtcars[1:5,],
+  caption = "A knitr table."
+)
+```
+
+## R Markdown: caching
+
+- Each knit of your R Markdown file starts from a clean slate
+- You can use `cache = TRUE` in code chunks that take a long time
+  - This is potentially dangerous, particularly if any files/code chunks upstream change
+  - See R4DS 27.4.4 for more options (code dependencies, file dependencies, etc.)
+  
+## R Markdown: inline code
+
+- You can embed code directly into your text with single gravs surrounding __r expr__
+  - __expr__ is whatever code whose results you want to display inline
+  - This is particularly useful when referencing named objects
+  - See R4DS 27.4.6 for reference to the `format()` function, or even better, Wickham's custom `comma()` function
+
+## R Markdown: YAML header
+
+- "Yet Another Markup Language"
+- You can control details/options for the whole document
+  - R4DS 27.6 has some nice examples 
+  - There are a lot more options available (see [https://bookdown.org/yihui/rmarkdown](https://bookdown.org/yihui/rmarkdown) Chapter 3 for more)
+    - You can set default table format to `kable` or `tibble` in pdfs
+    - Allow "code-folding" in HTML documents
+  
+## R Markdown: document options
+
+- `html_document`
+- `pdf_document` - requires LaTeX (R will prompt)
+- `word_document` - .docx files
+- `odt_document` - OpenDocument Text
+- `rtf_document` - Rich Text Format
+- `md_document` - Markdown document (probably not useful directly)
+- `github_document` - tailored .md document for GitHub
+- `ioslides_presentation` - what these notes are using (alternative: .Rpres files)
+
+Search `?rmarkdown::html_document` (or similar) for lots of options that you can set
+
+## R Markdown: other "documents"
+
+- Dashboards (R4DS 29.6): present related objects on one screen, perhaps interactively
+- Websites (R4DS 29.8): yep, you could build a whole website in R
+- htmlwidgets: client-side interactivity
+- shiny: powerful, server-side interactive documents (we'll cover these before Spring Break)
+
+

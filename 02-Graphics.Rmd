@@ -1,0 +1,592 @@
+---
+title: "Data Visualization with ggplot2"
+author: "STAT 763 - Survey of Modern Statistical Software"
+output: ioslides_presentation
+---
+
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(out.width = '80%', collapse = TRUE, warning=FALSE, message=FALSE)
+```
+
+## Agenda
+
+- Grammar of Graphics
+- ggplot2 examples
+- Graphics for communication
+
+- Readings: R4DS Chapters 3, 5, 7, and 28
+- Other sources: 
+  - [Quick-R Data Management](https://www.statmethods.net/management/index.html)
+  - [Quick-R Data Input](https://www.statmethods.net/input/index.html)
+
+## ggplot2 package
+
+`ggplot2` functions are a bit more complex than R's basic plotting commands in many cases, but have a more consistent formatting
+
+- There are whole books devoted to this package! (http://ggplot2.org/book)
+- There are whole graduate-level courses devoted to data visualization!
+- Many researchers still use base R graphics for exploratory data analysis
+- ggplot2 graphics are great for showing other people
+
+R will load the `ggplot2` package when loading the `tidyverse` package (which we'll be using extensively)
+
+## The Grammar of Graphics
+
+Grammar of language -- rules of structuring words and phrases into meaningful expressions
+
+Grammar of graphics -- rules of structuring mathematic and aesthetic elements into a meaningful graph
+
+- **Data** are variables mapped to aesthetic features
+- **Geoms** are the objects/shapes on the graph
+- **Stats** are statistical transformations that summarize data
+- **Scales** define which aesthetic values are mapped to data values (legends. axes)
+- **Coordinate systems** define the plane on which data are mapped
+- **Faceting** splits the data into subsets to create variations of same graph
+
+## Example Dataset: US Murders
+
+```{r}
+#install.packages("tidyverse")
+#install.packages("dslabs")
+library(tidyverse)
+library(dslabs)
+data(murders)
+head(murders)
+```
+
+## ggplot objects
+
+```{r}
+ggplot(data = murders)
+# murders %>% ggplot() # equivalent
+```
+
+## ggplot objects
+
+```{r}
+p <- ggplot(data = murders)
+class(p)
+# print(p) # equivalent to ggplot(data=murders)
+```
+
+## Geometries
+
+Geom functions produce the graphical rendering
+
+* Partial list of geoms (in addition to `geom_point` and `geom_smooth`)
+  + `geom_point`: standard scatterplot
+  + `geom_smooth`: smooth curve through scatterplot
+  + `geom_bar`: bars with bases on x-axis
+  + `geom_boxplot`: box-and-whisker plots
+  + `geom_errorbar`: T-shaped error bars
+  + `geom_histogram`: histogram
+  + `geom_quantile`: bands spanning y-values across a range of x-values
+
+Geoms each require/understand different aesthetics
+
+## geom_point
+
+- The help files for each geom are useful for determining which aesthetics are expected.
+- For `geom_point`, we can specify:
+  - `x` (required)
+  - `y` (required)
+  - `alpha`
+  - `colour`
+
+## Aesthetic mappings
+
+- Aesthetic mappings describe how properties of the data connect with features of the graph
+  - e.g., distance along the axis, size, color
+  - `aes` function is the primary tool, and has some nice features (like recognizing variable names in the data file)
+
+```{r eval=FALSE}
+murders %>% ggplot() +
+  geom_point(mapping = aes(x = population/10^6, y = total, color=region)) #note that mapping=, x=, and y= aren't needed, but good practice
+```
+
+## Aesthetic mappings
+  
+```{r}
+murders %>% ggplot() +
+  geom_point(mapping = aes(x = population/10^6, y = total, shape=region)) #note that mapping=, x=, and y= aren't needed, but good practice
+```
+
+- Be careful with `shape`: by default, only the first 6 categories will be get shapes
+
+## Layers
+
+- We can add additional layers to our plots, just like we added the `geom_point` layer
+- Suppose we wanted to add labels to our plot
+  - `geom_label` and `geom_text` add text to the plot, with or without background rectanges (respectively)
+
+## Layers
+
+```{r}
+p <- murders %>% ggplot()
+p + geom_point(aes(population/10^6, total)) +
+  geom_text(aes(population/10^6, total, label = abb))
+
+# p_test <- p + geom_text(aes(population/10^6, total), label = abb)
+# Why does this return an error?
+```
+
+## Layers
+
+- We can add in other options, like `size` and `nudge_x`.
+- If the options affect all points the same, they are defined outside of `aes()`
+
+```{r}
+p + geom_point(aes(population/10^6, total), size = 3) +
+  geom_text(aes(population/10^6, total,label = abb), nudge_x = 1.5)
+```
+
+## Layers
+
+We can define aesthetic mappings in the original `ggplot` call, and added layers will inherit them:
+
+```{r}
+p <- murders %>% ggplot(aes(population/10^6, total, label = abb))
+p + geom_point(size = 3) + 
+  geom_text(nudge_x = 1.5)
+#size and nudge_x apply to the points and text separately, so we don't put them in the ggplot call
+```
+
+## Layers
+
+If necessary, we can override the global mapping by defining a new mapping within each layer. These local definitions override the global. Here is an example:
+
+```{r}
+p + geom_point(size = 3) +  
+  geom_text(aes(x = 10, y = 800, label = "Hello there!"))
+```
+
+## Scales
+
+We can change the x and y scales using additional layers:
+
+```{r fig.height=3}
+p + geom_point(size = 3) +  
+  geom_text(nudge_x = 0.05) + 
+  scale_x_continuous(trans = "log10") +
+  scale_y_continuous(trans = "log10")
+```
+
+## Scales
+
+- log10 scales are built into ggplot2:
+
+```{r eval=FALSE}
+p + geom_point(size = 3) +  
+  geom_text(nudge_x = 0.05) + 
+  scale_x_log10() +
+  scale_y_log10()
+```
+
+## Labels and titles
+
+- We can add labels and titles too:
+
+```{r eval=FALSE}
+p + geom_point(size = 3) +  
+  geom_text(nudge_x = 0.05) + 
+  scale_x_log10() +
+  scale_y_log10() +
+  xlab("Populations in millions (log scale)") + 
+  ylab("Total number of murders (log scale)") +
+  ggtitle("US Gun Murders in 2010")
+```
+
+## Labels and titles
+
+```{r echo=FALSE}
+p + geom_point(size = 3) +  
+  geom_text(nudge_x = 0.05) + 
+  scale_x_log10() +
+  scale_y_log10() +
+  xlab("Populations in millions (log scale)") + 
+  ylab("Total number of murders (log scale)") +
+  ggtitle("US Gun Murders in 2010")
+```
+
+## Colors
+
+```{r eval=FALSE}
+p + geom_point(aes(col=region), size = 3)
+#Notes the difference from: p + geom_point(col="blue", size = 3)
+```
+
+## Colors
+
+```{r echo=FALSE}
+p + geom_point(aes(col=region), size = 3) +  
+  geom_text(nudge_x = 0.05) + 
+  scale_x_log10() +
+  scale_y_log10() +
+  xlab("Populations in millions (log scale)") + 
+  ylab("Total number of murders (log scale)") +
+  ggtitle("US Gun Murders in 2010")
+```
+
+## Fix the legend title
+
+```{r eval=FALSE}
+p + scale_color_discrete(name = "Region") 
+```
+
+## Fix the legend title
+
+```{r echo=FALSE}
+p + geom_point(aes(col=region), size = 3) +  
+  geom_text(nudge_x = 0.05) + 
+  scale_x_log10() +
+  scale_y_log10() +
+  xlab("Populations in millions (log scale)") + 
+  ylab("Total number of murders (log scale)") +
+  ggtitle("US Gun Murders in 2010") + 
+  scale_color_discrete(name = "Region")
+```
+
+## Themes
+
+- The style of a ggplot2 graph can be changed using the theme functions. 
+- Several themes are included as part of the ggplot2 package, including:
+  - `theme_gray`: default
+  - `theme_bw`: classic dark-on-light 
+  - `theme_linedraw`: black lines on white background
+  - `theme_light`: grey lines on white background
+  - `theme_dark`: like `theme_light` but with a dark background
+  - `theme_void`: "a completely empty theme"
+  
+## Themes
+
+- We can access additional themes using the `ggthemes` package, including:
+
+```{r}
+library(ggthemes)
+ls("package:ggthemes")[grepl("theme_", ls("package:ggthemes"))]
+```
+  
+## Themes
+
+```{r eval=FALSE}
+p + geom_point(aes(col=region), size = 3) +  
+  geom_text(nudge_x = 0.05) + 
+  scale_x_log10() +
+  scale_y_log10() +
+  xlab("Populations in millions (log scale)") + 
+  ylab("Total number of murders (log scale)") +
+  ggtitle("US Gun Murders in 2010") + 
+  scale_color_discrete(name = "Region") + 
+  theme_economist()
+```
+
+## Themes
+
+```{r echo=FALSE}
+p + geom_point(aes(col=region), size = 3) +  
+  geom_text(nudge_x = 0.05) + 
+  scale_x_log10() +
+  scale_y_log10() +
+  xlab("Populations in millions (log scale)") + 
+  ylab("Total number of murders (log scale)") +
+  ggtitle("US Gun Murders in 2010") + 
+  scale_color_discrete(name = "Region") + 
+  theme_economist()
+```
+
+## Quick plots
+
+Sometimes, we just want a quick plot. Enter `qplot`
+
+```{r}
+qplot(population, total, data=murders)
+```
+
+## Quick plots
+
+```{r fig.height=3}
+qplot(total, data=murders)
+# murders %>% qplot(total, data=.)
+# qplot(total, data=murders, geom="density")
+# qplot(total, data=murders, color="blue")
+```
+
+## Grids of ggplots
+
+We can even plot several graphs next to each other (or in a grid) with the `gridExtra` package:
+
+```{r fig.height=3}
+library(gridExtra)
+p1 <- qplot(total, data=murders)
+p2 <- qplot(population, total, data=murders)
+grid.arrange(p1, p2, ncol=2)
+```
+
+## Facets
+
+We can make similar graphs, separated based on a variable, arranged in a grid, using facets.
+
+- Use `facet_wrap()` to facet your plot by a single discrete variable
+
+```{r eval=FALSE}
+ggplot(data=murders) +
+  geom_point(mapping = aes(population/10^6, total)) +
+  facet_wrap(~region, nrow=2)
+```
+
+## Facets
+
+```{r echo=FALSE}
+ggplot(data=murders) +
+  geom_point(mapping = aes(population/10^6, total)) +
+  facet_wrap(~region, nrow=2)
+```
+
+## Facets
+
+- Use `facet_grid` to subset based on two discrete variables
+  - convention is `rows ~ columns`
+  
+```{r eval=FALSE}
+#This is a dumb plot.
+ggplot(data=murders) +
+  geom_point(mapping = aes(population/10^6, total)) +
+  facet_grid(state~region, nrow=2)
+
+```
+
+## Data visualization principles: visual cues
+
+There are a few main visual cues to consider when making plots:
+
+- position
+- aligned lengths
+- angles
+- area
+- brightness
+- color hue
+
+## Data visualization principles: when to include 0
+
+Graphs based on aligned lengths (like bar charts) should include 0
+
+![](https://www.mediamatters.org/static/images/item/fox-apprehensions.jpg){ width=75% }
+
+## Data visualization principles: when to include 0
+
+![](https://rafalab.github.io/dsbook/dataviz/img/venezuela-election.png){ width=75% }
+
+## Data visualization principles: when to include 0
+
+When using position, rather than length, it's not necessary to include 0
+
+![](https://rafalab.github.io/dsbook/book_files/figure-html/points-plot-not-from-zero-1.png){ width=75% }
+
+## Data visualization principles: don't distort the data
+
+![](https://rafalab.github.io/dsbook/dataviz/img/state-of-the-union.png){ width=75% }
+
+## Data visualization principles: ordering categories with reorder()
+
+```{r echo=FALSE}
+m1 <- murders %>% mutate(murder_rate = total / population * 100000) %>%
+  ggplot(aes(state, murder_rate)) +
+  geom_bar(stat="identity") +
+  coord_flip() +
+  theme(axis.text.y = element_text(size = 6)) +
+  xlab("")
+m2 <- murders %>% mutate(murder_rate = total / population * 100000) %>%
+  mutate(state = reorder(state, murder_rate)) %>%
+  ggplot(aes(state, murder_rate)) +
+  geom_bar(stat="identity") +
+  coord_flip() +
+  theme(axis.text.y = element_text(size = 6)) +
+  xlab("")
+grid.arrange(m1, m2, ncol=2)
+```
+
+## Data visualization principles: ease comparisons
+
+There are a few ways to make comparisons easier for your audience:
+
+- Overlay the plots together (e.g., histograms and densities)
+- Use common axes
+- Align plots vertically to see horizontal changes and horizontally to see vertical changes
+
+
+## Data visualization principles: ease comparisons
+
+![](https://rafalab.github.io/dsbook/book_files/figure-html/show-the-data-comparison-1.png){ width=75% }
+
+## Data visualization principles: adjacent cues
+
+Visual cues to be compared should be adjacent. 
+
+```{r echo=FALSE}
+data(gapminder)
+g1 <- gapminder %>% 
+  filter(year %in% c(1970, 2010) & !is.na(gdp)) %>%
+  mutate(dollars_per_day = gdp/population/365) %>%
+  mutate(labels = paste(year, continent)) %>%
+  ggplot(aes(labels, dollars_per_day)) +
+  geom_boxplot() + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  scale_y_continuous(trans = "log2") + 
+  ylab("Income in dollars per day")
+
+g2 <- gapminder %>% 
+  filter(year %in% c(1970, 2010) & !is.na(gdp)) %>%
+  mutate(dollars_per_day = gdp/population/365) %>%
+  mutate(labels = paste(continent, year)) %>%
+  ggplot(aes(labels, dollars_per_day)) +
+  geom_boxplot() + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  scale_y_continuous(trans = "log2") + 
+  ylab("Income in dollars per day")
+
+grid.arrange(g1, g2, ncol=2)
+```
+
+## Data visualization principles: colors
+
+```{r echo=FALSE}
+ gapminder %>% 
+  filter(year %in% c(1970, 2010) & !is.na(gdp)) %>%
+  mutate(dollars_per_day = gdp/population/365, year = factor(year)) %>%
+  ggplot(aes(continent, dollars_per_day, fill = year)) +
+  geom_boxplot() + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  scale_y_continuous(trans = "log2") + 
+  ylab("Income in dollars per day")
+```
+
+## Data visualization principles: colorblind
+
+```{r, eval=FALSE}
+color_blind_friendly_cols <- 
+  c("#999999", "#E69F00", "#56B4E9", "#009E73", 
+    "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+```
+
+Here are the colors:
+```{r color-blind-friendly-colors, echo=FALSE, fig.height=0.5}
+color_blind_friendly_cols <- 
+  c("#999999", "#E69F00", "#56B4E9", "#009E73", 
+    "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+p1 <- data.frame(x=1:8, y=rep(1,8), col = as.character(1:8)) %>% 
+  ggplot(aes(x, y, color = col)) + 
+  geom_point(size=8, show.legend = FALSE) +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank())
+p1 + scale_color_manual(values=color_blind_friendly_cols)
+```
+
+- More info: 
+  - [http://bconnelly.net/2013/10/creating-colorblind-friendly-figures/](http://bconnelly.net/2013/10/creating-colorblind-friendly-figures/)
+  - `ggthemes` package, using `colorblind_pal()`, `scale_color_colorblind(...)`, and `scale_fill_colorblind(...)`
+
+## Data visualization principles: two variables
+
+Comparing variables of the same type, but at different time points and for a relatively small number of comparisons: the _slope chart_. 
+
+```{r fig.height=4, echo=FALSE}
+library(ggrepel)
+west <- c("Western Europe","Northern Europe","Southern Europe",
+          "Northern America","Australia and New Zealand")
+dat <- gapminder %>% 
+  filter(year%in% c(2010, 2015) & region %in% west & 
+           !is.na(life_expectancy) & population > 10^7) 
+
+s1 <- dat %>% 
+  mutate(year = paste0("life_expectancy_", year)) %>%
+  select(country, year, life_expectancy) %>%
+  spread(year, life_expectancy) %>% 
+  ggplot(aes(x=life_expectancy_2010,y=life_expectancy_2015, label = country)) + 
+  geom_point() + geom_text_repel() +
+  scale_x_continuous(limits=c(78.5, 83)) +
+  scale_y_continuous(limits=c(78.5, 83)) +
+  geom_abline(lty = 2) +
+  xlab("2010") + 
+  ylab("2015")
+
+s2 <- dat %>%
+  mutate(location = ifelse(year == 2010, 1, 2), 
+         location = ifelse(year == 2015 & 
+                             country %in% c("United Kingdom", "Portugal"),
+                           location+0.22, location),
+         hjust = ifelse(year == 2010, 1, 0)) %>%
+  mutate(year = as.factor(year)) %>%
+  ggplot(aes(year, life_expectancy, group = country)) +
+  geom_line(aes(color = country), show.legend = FALSE) +
+  geom_text(aes(x = location, label = country, hjust = hjust), 
+            show.legend = FALSE) +
+  xlab("") + ylab("Life Expectancy")
+
+grid.arrange(s1,s2,ncol=2)
+```
+
+## Data visualization principles: two variables
+
+If the difference in years is the most important, devote an axis to it!
+
+Since we are primarily interested in the difference, it makes sense to dedicate one of our axes to it. The Bland-Altman plot, also known as the Tukey mean-difference plot and the MA-plot, shows the difference versus the average:
+
+## Data visualization principles: Bland-Altman plot
+
+```{r, echo=FALSE, fig.height=4}
+library(ggrepel)
+dat %>% 
+  mutate(year = paste0("life_expectancy_", year)) %>%
+  select(country, year, life_expectancy) %>% 
+  spread(year, life_expectancy) %>% 
+  mutate(average = (life_expectancy_2015 + life_expectancy_2010)/2,
+         difference = life_expectancy_2015 - life_expectancy_2010) %>%
+  ggplot(aes(average, difference, label = country)) + 
+  geom_point() +
+  geom_text_repel() +
+  geom_abline(lty = 2) +
+  xlab("Average of 2010 and 2015") + 
+  ylab("Difference between 2015 and 2010")
+```
+
+
+## Data visualization principles: encoding a third variable
+
+- We can give information about a third numeric variable using color or size (categorical with color or shape)
+- When considering colors, we have "sequential", "divergent", and "qualitative" palettes built into ggplot2
+  - Sequential: good for values that go low to high
+  - Divergent: values diverge from a center, equal emphasis on both sides
+  - Qualitative: a collection of colors that look "nice" together
+  - (self-defined options exist, like the colorblind palettes)
+- There are a LOT more options: see [ggplot2 reference](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
+
+## Extensions to ggplot2
+
+- `factoextra`: extract and visualize outputs of a multivariate analysis
+- `easyggplot2`: perform and easily customize ggplots
+- `ggfortify`: allow ggplot2 to handle some popular R packages
+- `GGally`: correlation matrices, scatterplot matrices, networks
+- `ggRandomForests`: graphics for random forests
+- `ggdendro`: dendrograms
+
+## Extensions to ggplot2
+
+- `ggmcmc`: tools for MCMC simulations
+- `ggeasy`: quick access to tweak commonly used ggplot2 theme settings
+- `patchwork`: more approaches to multi-plot layouts
+- `cowplot`: publication-ready theme formats
+- `gghighlight`: highlights ggplot2 geoms that match a given predicate
+- `ggridges`: better visualizations of multiple densities
+
+
+## Other cool tips
+
+- You can use %+% to change datasets:  `plot2 <- plot1 %+% different_data`
+
+
