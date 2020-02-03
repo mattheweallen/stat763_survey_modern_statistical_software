@@ -158,3 +158,15 @@ https://github.com/rocker-org/rocker/wiki/Using-the-RStudio-image
 sudo docker ps -a
 
 Supported by major industry players like Microsoft, Amazon, and Google.
+
+
+Docker makes best practices easier.
+
+Version controlled environments.
+
+Docker as a software logisitics provider.
+
+Can be used to run almost anything web servers, databases etc... Maybe not typically desktop applications, but can do that as well.
+
+
+Docker isn’t a programming language, and it isn’t a framework for building soft-ware. Docker is a tool that helps solve common problems such as installing, removing,upgrading,  distributing,  trusting,  and  running  software.  It’s  open  source  Linux  soft-ware, which means that anyone can contribute to it and that it has benefited from avariety  of  perspectives.  It’s  common  for  companies  to  sponsor  the  development  ofopen  source  projects.  In  this  case,  Docker  Inc.  is  the  primary  sponsor.  You  can  findout more about Docker Inc. at https://docker.com/company/.
