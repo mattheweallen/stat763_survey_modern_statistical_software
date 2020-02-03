@@ -1,0 +1,15 @@
+R tools for reading fit files
+
+https://cran.r-project.org/web/packages/cycleRtools/vignettes/cycling_data_analysis.html
+
+https://github.com/kuperov/fit
+
+https://www.reddit.com/r/rstats/comments/40hiww/how_can_i_read_garmin_fit_data_into_r/
+
+
+pro cycling data download
+http://www.velofacts.com/pro-cycling-database/
+
+
+Telling a story with data.
+https://www.dataquest.io/blog/data-science-portfolio-project/
