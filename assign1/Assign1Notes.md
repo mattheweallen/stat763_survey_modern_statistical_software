@@ -13,3 +13,7 @@ http://www.velofacts.com/pro-cycling-database/
 
 Telling a story with data.
 https://www.dataquest.io/blog/data-science-portfolio-project/
+
+Flex Dashboard
+https://arm.rbind.io/slides/flexdashboard.html#46
+

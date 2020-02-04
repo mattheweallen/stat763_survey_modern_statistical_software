@@ -130,7 +130,7 @@ $ ssh -L 8787:localhost:8787 matt@40.121.12.143
 Docker hub
 https://hub.docker.com/r/rocker/rstudio/
 
-sudo docker run --rm -d -p 8787:8787 -v $(pwd):/home/rstudio -e PASSWORD=admin rocker/rstudio
+sudo docker run --rm -d -p 8787:8787 -v $(pwd):/home/rstudio -e PASSWORD=admin rocker/verse
 
 rstudio
 rstudio
@@ -170,3 +170,29 @@ Can be used to run almost anything web servers, databases etc... Maybe not typic
 
 
 Docker isn’t a programming language, and it isn’t a framework for building soft-ware. Docker is a tool that helps solve common problems such as installing, removing,upgrading,  distributing,  trusting,  and  running  software.  It’s  open  source  Linux  soft-ware, which means that anyone can contribute to it and that it has benefited from avariety  of  perspectives.  It’s  common  for  companies  to  sponsor  the  development  ofopen  source  projects.  In  this  case,  Docker  Inc.  is  the  primary  sponsor.  You  can  findout more about Docker Inc. at https://docker.com/company/.
+
+
+Make Example Docker File with install pacakges tidyverse.
+
+
+```
+matt@docker-demo-vm:~$ sudo docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                  PORTS               NAMES
+c49c91e4149b        hello-world         "/hello"            2 days ago          Exited (0) 2 days ago                       trusting_jang
+matt@docker-demo-vm:~$ sudo docker run --rm -d -p 8787:8787 -v $(pwd):/home/rstudio -e PASSWORD=admin rocker/verse
+Unable to find image 'rocker/verse:latest' locally
+latest: Pulling from rocker/verse
+8f0fdd3eaac0: Already exists
+c42f03650681: Already exists
+e8d8a2a587cb: Already exists
+8070157c9f99: Already exists
+0a7a0529ec26: Already exists
+8781e7725be3: Already exists
+dfd244768473: Already exists
+0346eddd3dca: Pull complete
+444d6a84b975: Pull complete
+Digest: sha256:ce9e3c004bb2b0d6b5ca6235645b57d540d6012b7e3f5635d0c632c0ebae85af
+Status: Downloaded newer image for rocker/verse:latest
+e7e2f287427952d145f89c8a2d9c3516ba391e02c5fce51c448e495f5431177f
+
+```
