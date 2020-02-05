@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1580903356526.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "2E5BDF55",
+    "lastKnownWriteTime" : 1580903865,
+    "last_content_update" : 1580903865046,
+    "path" : "~/docker/Containers_Docker_R_Presentation.Rmd",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "90,43",
+        "scrollLine" : "81"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

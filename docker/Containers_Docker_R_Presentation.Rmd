@@ -42,6 +42,8 @@ knitr::opts_chunk$set(out.width = '80%', collapse = TRUE, warning=FALSE, message
 
 - Free to fail and safe to experiment with software without having to worry about undoing installations.
 
+## Why you should use Docker?
+
 - Easy onboarding.
   - Setting up a new analyst environment could be as easy running a command.
   
@@ -69,6 +71,25 @@ knitr::opts_chunk$set(out.width = '80%', collapse = TRUE, warning=FALSE, message
 
 - Writing to local VM filesystem. Use Git to version control work.
 
+## Demo
+```
+ssh -L 8787:localhost:8787 matt@40.121.12.143
+```
+```
+sudo docker run --rm -d -p 8787:8787 -v $(pwd):/home/rstudio -e PASSWORD=admin rocker/verse
+```
+Browse to
+```
+http://localhost:8787/
+```
+
+## Demo
+```
+sudo docker ps -a 
+```
+```
+sudo docker stop [Name or Hash of Container]
+```
 
 ## Example Hello World
 ```
