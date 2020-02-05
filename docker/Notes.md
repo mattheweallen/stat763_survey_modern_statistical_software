@@ -194,5 +194,4 @@ dfd244768473: Already exists
 Digest: sha256:ce9e3c004bb2b0d6b5ca6235645b57d540d6012b7e3f5635d0c632c0ebae85af
 Status: Downloaded newer image for rocker/verse:latest
 e7e2f287427952d145f89c8a2d9c3516ba391e02c5fce51c448e495f5431177f
-
 ```

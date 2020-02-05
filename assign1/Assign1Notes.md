@@ -17,3 +17,7 @@ https://www.dataquest.io/blog/data-science-portfolio-project/
 Flex Dashboard
 https://arm.rbind.io/slides/flexdashboard.html#46
 
+https://rmarkdown.rstudio.com/lesson-12.html
+
+
+https://rmarkdown.rstudio.com/flexdashboard/
