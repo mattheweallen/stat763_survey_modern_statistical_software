@@ -21,3 +21,8 @@ https://rmarkdown.rstudio.com/lesson-12.html
 
 
 https://rmarkdown.rstudio.com/flexdashboard/
+
+
+#
+https://rmarkdown.rstudio.com/flexdashboard/
+http://www.htmlwidgets.org/showcase_datatables.html
