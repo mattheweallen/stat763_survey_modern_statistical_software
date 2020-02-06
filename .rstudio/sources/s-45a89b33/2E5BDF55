@@ -7,13 +7,13 @@
     "folds" : "",
     "hash" : "0",
     "id" : "2E5BDF55",
-    "lastKnownWriteTime" : 1580903865,
-    "last_content_update" : 1580903865046,
+    "lastKnownWriteTime" : 1580989427,
+    "last_content_update" : 1580989427777,
     "path" : "~/docker/Containers_Docker_R_Presentation.Rmd",
     "project_path" : null,
     "properties" : {
-        "cursorPosition" : "90,43",
-        "scrollLine" : "81"
+        "cursorPosition" : "47,0",
+        "scrollLine" : "35"
     },
     "read_only" : false,
     "read_only_alternatives" : [

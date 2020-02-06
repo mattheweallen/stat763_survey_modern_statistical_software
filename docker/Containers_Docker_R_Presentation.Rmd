@@ -10,7 +10,7 @@ knitr::opts_chunk$set(out.width = '80%', collapse = TRUE, warning=FALSE, message
 
 ## What are containers?
 
-- Unix style operating system concept
+- Unix style operating system concept: Jail features that limits what a program can access since 1979, Sun Solaris 10 and Solaris Containers release in 2005 popularized term containers 
   - Linux containers are majority, but can also create Windows containers.
 - A containers has everything needed to run an application like Operating System, R, etc...
   - Challenge to think of exactly what is used to run an application
@@ -23,7 +23,7 @@ knitr::opts_chunk$set(out.width = '80%', collapse = TRUE, warning=FALSE, message
 
 - Docker is also a company.
 
-- Software logistics provider
+- Software logistics provider. Moves all the parts into place. Reuses parts.
 
 - Builds, runs, and ships containers.
 
@@ -32,6 +32,8 @@ knitr::opts_chunk$set(out.width = '80%', collapse = TRUE, warning=FALSE, message
 - Docker Hub has many images created by others.
 
 ## Why you should use Docker?
+
+- Repeatable and scalable environment from development to production.
 
 - Have you experienced?
   - It works on my machine!
@@ -49,7 +51,7 @@ knitr::opts_chunk$set(out.width = '80%', collapse = TRUE, warning=FALSE, message
   
 - Version control your environment through DockerFile
 
-- Clearly define dependencies. Best practice outside of Docker: requirements.txt or [R install Script](https://www.rdocumentation.org/packages/devtools/versions/1.13.6/topics/install_version).
+- Clearly define dependencies. Best practice outside of Docker: requirements.txt or [R install Script](https://www.rdocumentation.org/packages/devtools/versions/1.13.6/topics/install_version). (Repeatable Research)
 
 ## How to use
 
@@ -61,13 +63,15 @@ knitr::opts_chunk$set(out.width = '80%', collapse = TRUE, warning=FALSE, message
 
 ## Demo
 
+- Connect to VM through Git Bash, WSL, WSL2, Mac Terminal, etc...
+
 - Run RStudio from Azure VM
 
 - [Docker install on Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 
 - DockerFile build and run, but if using an existing image can just run.
 
-- [Example DockerFile](https://hub.docker.com/r/rocker/verse). Note the layers.
+- [Example DockerFile](https://hub.docker.com/r/rocker/verse). Note the layers, and image versions (Repeatable Research).
 
 - Writing to local VM filesystem. Use Git to version control work.
 

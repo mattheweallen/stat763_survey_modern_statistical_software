@@ -3126,7 +3126,7 @@ slide:not(.current) .plotly.html-widget{
 <slide class=""><hgroup><h2>What are containers?</h2></hgroup><article  id="what-are-containers">
 
 <ul>
-<li>Unix style operating system concept
+<li>Unix style operating system concept: Jail features that limits what a program can access since 1979, Sun Solaris 10 and Solaris Containers release in 2005 popularized term containers
 
 <ul>
 <li>Linux containers are majority, but can also create Windows containers.</li>
@@ -3148,7 +3148,7 @@ slide:not(.current) .plotly.html-widget{
 <ul>
 <li><p>Open source software</p></li>
 <li><p>Docker is also a company.</p></li>
-<li><p>Software logistics provider</p></li>
+<li><p>Software logistics provider. Moves all the parts into place. Reuses parts.</p></li>
 <li><p>Builds, runs, and ships containers.</p></li>
 <li><p>Creates containers with best practices.</p></li>
 <li><p>Docker Hub has many images created by others.</p></li>
@@ -3157,6 +3157,7 @@ slide:not(.current) .plotly.html-widget{
 </article></slide><slide class=""><hgroup><h2>Why you should use Docker?</h2></hgroup><article  id="why-you-should-use-docker">
 
 <ul>
+<li><p>Repeatable and scalable environment from development to production.</p></li>
 <li>Have you experienced?
 
 <ul>
@@ -3176,7 +3177,7 @@ slide:not(.current) .plotly.html-widget{
 <li>Setting up a new analyst environment could be as easy running a command.</li>
 </ul></li>
 <li><p>Version control your environment through DockerFile</p></li>
-<li><p>Clearly define dependencies. Best practice outside of Docker: requirements.txt or <a href='https://www.rdocumentation.org/packages/devtools/versions/1.13.6/topics/install_version' title=''>R install Script</a>.</p></li>
+<li><p>Clearly define dependencies. Best practice outside of Docker: requirements.txt or <a href='https://www.rdocumentation.org/packages/devtools/versions/1.13.6/topics/install_version' title=''>R install Script</a>. (Repeatable Research)</p></li>
 </ul>
 
 </article></slide><slide class=""><hgroup><h2>How to use</h2></hgroup><article  id="how-to-use">
@@ -3190,10 +3191,11 @@ slide:not(.current) .plotly.html-widget{
 </article></slide><slide class=""><hgroup><h2>Demo</h2></hgroup><article  id="demo">
 
 <ul>
+<li><p>Connect to VM through Git Bash, WSL, WSL2, Mac Terminal, etc…</p></li>
 <li><p>Run RStudio from Azure VM</p></li>
 <li><p><a href='https://docs.docker.com/install/linux/docker-ce/ubuntu/' title=''>Docker install on Ubuntu</a></p></li>
 <li><p>DockerFile build and run, but if using an existing image can just run.</p></li>
-<li><p><a href='https://hub.docker.com/r/rocker/verse' title=''>Example DockerFile</a>. Note the layers.</p></li>
+<li><p><a href='https://hub.docker.com/r/rocker/verse' title=''>Example DockerFile</a>. Note the layers, and image versions (Repeatable Research).</p></li>
 <li><p>Writing to local VM filesystem. Use Git to version control work.</p></li>
 </ul>
 
