@@ -26,3 +26,8 @@ https://rmarkdown.rstudio.com/flexdashboard/
 #
 https://rmarkdown.rstudio.com/flexdashboard/
 http://www.htmlwidgets.org/showcase_datatables.html
+
+tdf data
+https://www.r-bloggers.com/visualising-tour-de-france-data-in-r/
+
+https://github.com/alastairrushworth/tdf

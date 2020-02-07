@@ -1,0 +1,7 @@
+1581116763258:library(flexdashboard)
+1581116763408:devtools::install_github("alastairrushworth/tdf")
+1581116932446:#
+1581116932447:library(DT)
+1581117001273:datatable(editions, options = list(pageLength = 5))
+1581117042568:library(tdf)
+1581117049008:datatable(editions, options = list(pageLength = 5))

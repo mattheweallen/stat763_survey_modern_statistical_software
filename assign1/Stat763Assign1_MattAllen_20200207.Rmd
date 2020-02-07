@@ -1,0 +1,44 @@
+---
+title: "Untitled"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+
+#using image stat763/verse:1.0
+#sudo docker run --rm -d -p 8787:8787 -v $(pwd):/home/rstudio -e PASSWORD=admin stat763/verse:1.0
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+[Tour De France Data Source](https://github.com/alastairrushworth/tdf)
+
+```{r}
+devtools::install_github("alastairrushworth/tdf")
+#https://www.htmlwidgets.org/showcase_datatables.html
+library(DT) #Datatable
+library(tdf) #Tour De France Data
+datatable(editions, options = list(pageLength = 5))
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+
+```
+
+### Chart C
+
+```{r}
+
+```
+
