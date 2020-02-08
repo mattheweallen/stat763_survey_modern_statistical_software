@@ -1,101 +1,15 @@
-"0","devtools::install_github(""alastairrushworth/tdf"")
+"0","datatable(editions, options = list(pageLength = 5))
 "
-"2","Downloading GitHub repo alastairrushworth/tdf@master
+"2","It seems your data is too big for client-side DataTables. You may consider server-side processing: https://rstudio.github.io/DT/server.html"
+"2","Loading required package: lubridate
 "
-"1","  "
-"1","   checking for file ‘/tmp/RtmpG6mD5k/remotes1126789dd05/alastairrushworth-tdf-f3a91ca/DESCRIPTION’ ..."
-"1",""
-"1",""
-"1","  "
-"1","[32m✓[39m  [38;5;247mchecking for file ‘/tmp/RtmpG6mD5k/remotes1126789dd05/alastairrushworth-tdf-f3a91ca/DESCRIPTION’[39m[36m[39m"
-"1",""
-"1","
+"2","
+Attaching package: ‘lubridate’
+
 "
-"1",""
-"1",""
-"1",""
-"1","  "
-"1","[38;5;247m─[39m[38;5;247m  [39m[38;5;247mpreparing ‘tdf’:[39m[36m[39m"
-"1",""
-"1","
+"2","The following object is masked from ‘package:base’:
+
+    date
+
 "
-"1",""
-"1",""
-"1",""
-"1","  "
-"1","   checking DESCRIPTION meta-information ..."
-"1",""
-"1",""
-"1","  "
-"1","[32m✓[39m  [38;5;247mchecking DESCRIPTION meta-information[39m[36m[39m"
-"1",""
-"1","
-"
-"1",""
-"1",""
-"1",""
-"1","  "
-"1","[38;5;247m─[39m[38;5;247m  [39m[38;5;247mchecking for LF line-endings in source and make files and shell scripts[39m[36m[39m"
-"1",""
-"1","
-"
-"1",""
-"1",""
-"1",""
-"1","  "
-"1","[38;5;247m─[39m[38;5;247m  [39m[38;5;247mchecking for empty or unneeded directories[39m[36m[39m"
-"1",""
-"1","
-"
-"1","[38;5;247m─[39m[38;5;247m  [39m[38;5;247mlooking to see if a ‘data/datalist’ file should be added[39m[36m[39m"
-"1",""
-"1","
-"
-"1",""
-"1",""
-"1",""
-"1","  "
-"1","[38;5;247m─[39m[38;5;247m  [39m[38;5;247mbuilding ‘tdf_0.0.1.tar.gz’[39m[36m[36m (848ms)[36m[39m"
-"1",""
-"1","
-"
-"1",""
-"1",""
-"1",""
-"1","  "
-"1","   "
-"1",""
-"1","
-"
-"1",""
-"1",""
-"1",""
-"2","Installing package into ‘/usr/local/lib/R/site-library’
-(as ‘lib’ is unspecified)
-"
-"2","* installing *source* package ‘tdf’ ...
-"
-"2","** using staged installation
-"
-"2","** R
-"
-"2","** data
-"
-"2","*** moving datasets to lazyload DB
-"
-"2","** byte-compile and prepare package for lazy loading
-"
-"2","** help
-"
-"2","*** installing help indices
-"
-"2","** building package indices
-"
-"2","** testing if installed package can be loaded from temporary location
-"
-"2","** testing if installed package can be loaded from final location
-"
-"2","** testing if installed package keeps a record of temporary installation path
-"
-"2","* DONE (tdf)
-"
+"2","It seems your data is too big for client-side DataTables. You may consider server-side processing: https://rstudio.github.io/DT/server.html"

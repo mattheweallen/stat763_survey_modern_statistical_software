@@ -1,4 +1,9 @@
 .GlobalEnv
+package:lubridate
+package:tdf
+package:tibble
+package:DT
+package:flexdashboard
 tools:rstudio
 package:stats
 package:graphics

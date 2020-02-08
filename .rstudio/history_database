@@ -15,3 +15,117 @@
 1581165542907:datatable(editions, options = list(pageLength = 5))
 1581165605138:editions
 1581165644135:editions$stage_results
+1581181714949:library(tidyverse)
+1581181747955:mpg
+1581181850795:ggplot(data = mpg)
+1581181922035:ggplot(data = mpg) +
+1581181922062:geom_point(mapping = ase(x=displ,y=hwy))
+1581181932965:ggplot(data = mpg) +
+1581181932966:geom_point(mapping = aes(x=displ,y=hwy))
+1581182228042:ggplot(data = mpg)
+1581182270589:mtcars
+1581182368816:nrow(mtcars)
+1581182394002:ncol(mtcars)
+1581182406785:?mpg
+1581182452808:ggplot(data = mpg) +
+1581182452834:geom_point(mapping = aes(x=cyl,y=hwy))
+1581182488744:ggplot(data = mpg) +
+1581182488746:geom_point(mapping = aes(x=drv,y=class))
+1581183368802:?editions
+1581183400730:nrow(editions)
+1581183424761:devtools::install_github("alastairrushworth/tdf")
+1581183440764:#https://www.htmlwidgets.org/showcase_datatables.html
+1581183440765:library(tdf) #Tour De France Data
+1581183443248:?editions
+1581183445541:nrow(editions)
+1581183459061:ncol(editions)
+1581183530394:nrow(editions$stage_results)
+1581183595906:class(editions)
+1581183771922:nrow(editions$stage_results[0])
+1581183795695:editions$stage_results[0]
+1581183816418:class(editions$stage_results)
+1581184197031:#https://www.r-bloggers.com/how-to-use-lists-in-r/
+1581184197031:col(editions)
+1581184250124:#https://www.r-bloggers.com/how-to-use-lists-in-r/
+1581184250151:editions$edition
+1581184270074:#https://www.r-bloggers.com/how-to-use-lists-in-r/
+1581184270075:editions$start_date
+1581184369583:colnames(editions)
+1581184455592:hist(editions$nationality)
+1581184504170:hist(editions$distance)
+1581184583752:hist(editions$height)
+1581184605745:hist(editions$weight)
+1581184714563:hist(editions$stage_wins)
+1581184764963:hist(editions$time_overall)
+1581184780177:hist(editions$time_margin)
+1581184819309:hist(editions$distance)
+1581184875035:hist(editions$distance/editions$time_overall)
+1581184935567:class(editions$start_date)
+1581185009587:plot(year(editions$start_date),editions$distance)
+1581185176989:plot(year(editions$start_date),length(editions$stage_results))
+1581185209694:length(editions$stage_results)
+1581185236577:length(editions$stage_results[0])
+1581185248933:plot(year(editions$start_date),length(editions$stage_results[0]))
+1581185872389:editions$stage_results[0]
+1581185935275:editions$stage_results$`1903`
+1581186032246:class(editions$stage_results)
+1581186126474:tally(editions$stage_results)
+1581186147508:tally(editions$stage_results$`1903`)
+1581186168164:summarise(editions$stage_results)
+1581186254954:count(editions$stage_results$`1903`)
+1581186268305:editions$stage_results$`1903`
+1581186286772:nrow(editions$stage_results$`1903`)
+1581186743132:mtcars
+1581186939995:editions %>% unnest(stage_results)
+1581187404770:#https://stackoverflow.com/questions/43787663/how-to-count-rows-in-nested-data-frames-with-dplyr
+1581187404771:editions %>%
+1581187404772:mutate(num_stages = map_dbl(stage_results, nrow))
+1581187559475:editions %>%
+1581187559476:group_by(start_date) %>%
+1581187559476:mutate(N = nrow(data.frame(stage_results)))
+1581187574841:editions %>%
+1581187574868:group_by(start_date) %>%
+1581187574868:mutate(N = nrow(data.frame(stage_results)))
+1581187618823:#https://stackoverflow.com/questions/43787663/how-to-count-rows-in-nested-data-frames-with-dplyr
+1581187618824:editions %>%
+1581187618825:mutate(num_stages = map_dbl(stage_results, nrow))
+1581187697850:#https://stackoverflow.com/questions/43787663/how-to-count-rows-in-nested-data-frames-with-dplyr
+1581187697862:editions %>%
+1581187697862:mutate(num_stages = map_dfr(stage_results, nrow))
+1581187844595:sapply(editions$stage_results, nrow)
+1581188174510:editions %>%
+1581188174536:rowwise() %>%
+1581188174536:mutate(N = nrow(stage_results))
+1581188228876:editions$N
+1581188279310:colnames(editions)
+1581188396709:editions %>%
+1581188396735:rowwise() %>%
+1581188396736:mutate(Num_Stages = nrow(stage_results))
+1581188400173:colnames(editions)
+1581188430476:colnames(editions$stage_results)
+1581188470452:editions$stage_results
+1581188750270:apply(editions$stage_results, nrow)
+1581188822039:apply(editions$stage_results, 1, nrow)
+1581188840102:editions$stage_results
+1581188883698:count(editions$stage_results)
+1581188892846:nrow(editions$stage_results)
+1581188908223:nrow(editions$stage_results[1])
+1581189282063:editions %>% unnest(stage_results)
+1581189308438:unestestedfdsfs <- editions %>% unnest(stage_results)
+1581189337854:colnames(unestestedfdsfs)
+1581189719953:editions %>% count(stage_results)
+1581189778607:editions %>% group_by(start_date)  %>% count(stage_results)
+1581189791801:editions %>% group_by(start_date)  %>% tally(stage_results)
+1581190590415:editions %>% unnest(stage_results) %>% group_by(start_date)  %>% tally()
+1581190625986:nrow(editions)
+1581190660047:num_stages <- editions %>% unnest(stage_results) %>% group_by(start_date)  %>% tally()
+1581190669284:num_stages
+1581190694787:num_stages <- editions %>% unnest(stage_results) %>% group_by(start_date)  %>% tally()["n"]
+1581190706664:num_stages <- editions %>% unnest(stage_results) %>% group_by(start_date)  %>% tally()[2]
+1581190837437:num_stages <- editions %>% unnest(stage_results) %>% group_by(start_date)  %>% tally()[,"n"]
+1581190850012:num_stages <- editions %>% unnest(stage_results) %>% group_by(start_date)  %>% tally()
+1581190858491:num_stages[,"n"]
+1581191017708:editions %>% inner_join(num_stages)
+1581191092681:editions %>% inner_join(num_stages)
+1581191112193:colnames(editions)
+1581191277534:editions$stage_results$`2019`$`stage-21`

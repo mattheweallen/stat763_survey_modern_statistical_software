@@ -1,0 +1,10 @@
+library(flexdashboard)
+#using image stat763/verse:1.0
+#sudo docker run --rm -d -p 8787:8787 -v $(pwd):/home/rstudio -e PASSWORD=admin stat763/verse:1.0
+devtools::install_github("alastairrushworth/tdf")
+#https://www.htmlwidgets.org/showcase_datatables.html
+library(DT) #Datatable
+library(tdf) #Tour De France Data
+datatable(editions, options = list(pageLength = 5))
+editions
+editions$stage_results
