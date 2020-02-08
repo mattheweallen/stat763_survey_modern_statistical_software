@@ -25,6 +25,7 @@ devtools::install_github("alastairrushworth/tdf")
 library(DT) #Datatable
 library(tdf) #Tour De France Data
 datatable(editions, options = list(pageLength = 5))
+edit
 ```
 
 Column {data-width=350}

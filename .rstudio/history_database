@@ -5,3 +5,13 @@
 1581117001273:datatable(editions, options = list(pageLength = 5))
 1581117042568:library(tdf)
 1581117049008:datatable(editions, options = list(pageLength = 5))
+1581165364868:library(flexdashboard)
+1581165365090:#using image stat763/verse:1.0
+1581165365091:#sudo docker run --rm -d -p 8787:8787 -v $(pwd):/home/rstudio -e PASSWORD=admin stat763/verse:1.0
+1581165365194:devtools::install_github("alastairrushworth/tdf")
+1581165384780:#https://www.htmlwidgets.org/showcase_datatables.html
+1581165384807:library(DT) #Datatable
+1581165418905:library(tdf) #Tour De France Data
+1581165542907:datatable(editions, options = list(pageLength = 5))
+1581165605138:editions
+1581165644135:editions$stage_results
