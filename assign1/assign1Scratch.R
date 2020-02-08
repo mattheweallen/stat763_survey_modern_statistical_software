@@ -58,11 +58,24 @@ apply(editions$stage_results, 1, nrow)
 
 nrow(editions$stage_results[1])
 
+
+#get number of stages in each edition
 editions %>% group_by(start_date)  %>% tally(stage_results)
-
 num_stages <- editions %>% unnest(stage_results) %>% group_by(start_date)  %>% tally()
+editions_join_stage <- editions %>% inner_join(num_stages)
+#rename column
+colnames(editions_join_stage)[which(names(editions_join_stage) == "n")] <- "num_stages"
 
-editions %>% inner_join(num_stages) %>% mutate(editions)
+#length of stages decreasing
+plot(year(editions_join_stage$start_date), editions_join_stage$distance/editions_join_stage$num_stages)
+
+#nationality of winners
+editions %>% count(winner_name,nationality)
+
+colnames(editions_join_stage)
+
+#http://www.htmlwidgets.org/showcase_plotly.html
+
 
 colnames(editions)
 

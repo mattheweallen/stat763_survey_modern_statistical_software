@@ -129,3 +129,18 @@
 1581191092681:editions %>% inner_join(num_stages)
 1581191112193:colnames(editions)
 1581191277534:editions$stage_results$`2019`$`stage-21`
+1581192183942:editions_join_stage <- editions %>% inner_join(num_stages) %>% mutate(editions)
+1581192201779:editions_join_stage <- editions %>% inner_join(num_stages)
+1581192305140:editions_join_stage <- editions %>% inner_join(num_stages)
+1581192317350:colnames(editions_join_stage)
+1581192454446:colnames(dataframe)[which(names(dataframe) == "n")] <- "num_stages"
+1581192476802:colnames(editions_join_stage)[which(names(editions_join_stage) == "n")] <- "num_stages"
+1581192480396:colnames(editions_join_stage)
+1581192577282:plot(year(editions_join_stage$start_date),editions_join_stage$num_stages)
+1581192626173:plot(year(editions_join_stage$start_date), editions_join_stage$distance/editions_join_stage$num_stages)
+1581192780007:#nationality of winners
+1581192780033:editions %>% count(nationality)
+1581192833043:#nationality of winners
+1581192833044:editions %>% count(nationality,winner_name)
+1581192899737:#nationality of winners
+1581192899763:editions %>% count(winner_name,nationality)
