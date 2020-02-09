@@ -3,6 +3,7 @@ devtools::install_github("alastairrushworth/tdf")
 #https://www.htmlwidgets.org/showcase_datatables.html
 library(tdf) #Tour De France Data
 library(tidyverse)
+
 ?editions
 nrow(editions)
 ncol(editions)
@@ -179,14 +180,15 @@ devtools::install_github("alastairrushworth/tdf")
 #https://www.htmlwidgets.org/showcase_datatables.html
 library(tdf) #Tour De France Data
 library(tidyverse)
+library(lubridate) #is this needed, try again after moving other library calls up
 num_stages <- editions %>% unnest(stage_results) %>% group_by(start_date)  %>% tally()
 editions_join_stage <- editions %>% inner_join(num_stages)
 #rename column
 colnames(editions_join_stage)[which(names(editions_join_stage) == "n")] <- "num_stages"
-
+editions
 tdf_data <- mutate(editions_join_stage, year = year(start_date), month = month(start_date)) %>%
-  select(edition,year,month,winner_name,distance,time_overall,time_margin,stage_wins,stages_led,height,weight,age,nationality,num_stages)
-
+  select(edition,year,month,winner_name,nickname,age, distance,time_overall,time_margin,stage_wins,stages_led,height,weight,age,nationality,num_stages)
+tdf_data
 # winners_nationality <- tdf_data %>% 
 #   group_by(nationality) %>% 
 #   tally() %>%
@@ -195,10 +197,19 @@ tdf_data <- mutate(editions_join_stage, year = year(start_date), month = month(s
 
 library(plotly)
 
+winners_nationality_data <- tdf_data %>%
+  select(year, winner_name, nickname, age, nationality)
+#https://rstudio.github.io/DT/
+library(DT)
+datatable(winners_nationality_data, options = list(pageLength = 20), rownames = FALSE)
+
+#who are the oldest and yougest winners, average?
+
 winners_nationality_plot <- ggplot(data = tdf_data) +
   geom_bar(mapping = aes(x = nationality))
 #p <- ggplot(data = diamonds, aes(x = cut, fill = clarity)) +
 #  geom_bar(position = "dodge")
+#When was the last time a French person won?
 ggplotly(winners_nationality_plot)
 
 
@@ -218,18 +229,27 @@ distance_plot <- ggplot(data = tdf_data) +
   geom_point(mapping= aes(x = year, y =  distance, colour = nationality)) +
   theme(legend.position="none")
 
+ggplotly(distance_plot)
+
 #https://stackoverflow.com/questions/35618260/remove-legend-ggplot-2-2
   #geom_text(aes(x = year, y = distance, label = nationality), 
   #          show.legend = FALSE)
 
+num_stages_plot <- ggplot(data = tdf_data) +
+  geom_point(mapping= aes(x = year, y =  num_stages))
+num_stages_plot
+
 ave_stage_distance <- ggplot(data = tdf_data) +
   geom_point(mapping= aes(x = year, y =  distance / num_stages))
+
+#add column for isFrench, isAmerican, LeMond slaying the Badger. Famous Rivalry between LeMond and Badger Did he also slay the French hopes of victory?
 
 #distance_plot <- distance_plot +
 #  geom_point(mapping= aes(x = year, y =  distance / num_stages))
 
-ggplotly(distance_plot)
+ggplotly(ave_stage_distance)
 #note the breaks from 1914 to 1919, and 1939 to 1947, WWI and WWII
+#discontinuities after the wars
 
 ggplotly(ave_stage_distance)
 
@@ -242,5 +262,4 @@ ggplotly(ave_stage_distance)
 
 #american winners, one with *, winner at the end of the race.
 
-library(DT)
-datatable(tdf_data, options = list(pageLength = 5))
+
