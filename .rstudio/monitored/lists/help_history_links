@@ -1,3 +1,5 @@
 help/library/ggplot2/html/mpg.html,R: Fuel economy data from 1999 and 2008 for 38 popular models of...
-help/library/ggplot2/html/geom_point.html,R: Points
 help/library/ggplot2/html/facet_wrap.html,R: Wrap a 1d ribbon of panels into 2d
+help/library/dplyr/html/top_n.html,R: Select top (or bottom) n rows (by value)
+help/library/ggplot2/html/geom_point.html,R: Points
+help/library/ggplot2/html/ggplot.html,R: Create a new ggplot

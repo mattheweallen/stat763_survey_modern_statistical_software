@@ -7,13 +7,13 @@
     "folds" : "",
     "hash" : "0",
     "id" : "328A2E11",
-    "lastKnownWriteTime" : 1581250602,
-    "last_content_update" : 1581250602064,
+    "lastKnownWriteTime" : 1581262565,
+    "last_content_update" : 1581262565,
     "path" : "~/r4ds/chapter1.R",
     "project_path" : null,
     "properties" : {
         "cursorPosition" : "82,20",
-        "scrollLine" : "74",
+        "scrollLine" : "0",
         "tempName" : "Untitled1"
     },
     "read_only" : false,

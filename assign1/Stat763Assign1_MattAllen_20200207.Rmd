@@ -8,7 +8,11 @@ output:
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
+library(DT) #Datatable
+devtools::install_github("alastairrushworth/tdf")
+library(tdf) #Tour De France Data
 
+#do latern rouge
 #using image stat763/verse:1.0
 #sudo docker run --rm -d -p 8787:8787 -v $(pwd):/home/rstudio -e PASSWORD=admin stat763/verse:1.0
 ```
@@ -20,10 +24,9 @@ Column {data-width=650}
 [Tour De France Data Source](https://github.com/alastairrushworth/tdf)
 
 ```{r}
-devtools::install_github("alastairrushworth/tdf")
+#show reshaped data set in data table with citation
 #https://www.htmlwidgets.org/showcase_datatables.html
-library(DT) #Datatable
-library(tdf) #Tour De France Data
+
 datatable(editions, options = list(pageLength = 5))
 ```
 

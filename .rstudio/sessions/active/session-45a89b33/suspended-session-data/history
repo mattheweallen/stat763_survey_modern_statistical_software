@@ -8,3 +8,124 @@ library(tdf) #Tour De France Data
 datatable(editions, options = list(pageLength = 5))
 editions
 editions$stage_results
+devtools::install_github("alastairrushworth/tdf")
+#https://www.htmlwidgets.org/showcase_datatables.html
+library(tdf) #Tour De France Data
+?editions
+editions$stage_results[[99]][1]
+editions$stage_results[[99]][5]
+#latern rouge
+latern_rouge_data <- editions %>% unnest(stage_results)
+library(tidyverse)
+#latern rouge
+latern_rouge_data <- editions %>% unnest(stage_results)
+top_n(latern_rouge_data, 10)
+?top_n
+latern_rouge_data %>% top_n(5)
+latern_rouge_data
+#latern rouge
+latern_rouge_data <- editions %>%
+unnest(stage_results) %>%
+unnest(stage_results)
+rlang::last_error()
+#latern rouge
+latern_rouge_data <- editions %>%
+unnest(stage_results)
+latern_rouge_data
+latern_rouge_data <- latern_rouge_data %>%
+unnest(stage_results)
+latern_rouge_data$stage_results[[1]]
+glimpse(latern_rouge_data)
+latern_rouge_data <- latern_rouge_data %>%
+unnest(stage_results[[1]])
+latern_rouge_data <- latern_rouge_data %>%
+unnest(stage_results[1])
+speariment <- editions %>% map(unlist) %>% as_data_frame()
+speariment <- editions %>% map(unlist) %>% as_tibble()
+speariment
+speariment <- editions %>% bind_rows(editions) %>%    # make larger sample data
+mutate_if(is.list, simplify_all) %>%    # flatten each list element internally
+unnest()    # expand
+speariment
+glimpse(speriment)
+glimpse(speariment)
+s2 <- editions %>% unnest(stage_results)
+s2
+glimpse(s2)
+#flatten example
+x <- replicate(2, sample(4), simplify = FALSE)
+x
+glimpse(s2)
+s2 <- s2 %>% unnest(stage_results)
+s2 <- s2 %>% unnest(stage_results[[]])
+glimpse(s2)
+s2 <- s2 %>% bind_rows(s2) %>%    # make larger sample data
+mutate_if(is.list, simplify_all) %>%    # flatten each list element internally
+unnest()    # expand
+glimpse(s2)
+s2
+s2 <- editions %>% unnest(stage_results)
+glimpse(s2)
+s2 <- s2 %>% bind_rows(s2) %>%    # make larger sample data
+mutate_if(is.list, simplify_all) #%>%    # flatten each list element internally
+#unnest()    # expand
+glimpse(s2)
+s2
+editions[1,]
+editions[1,"stage_results"]
+latern_rouge_data$stage_results[[1]]
+num_stages <- editions %>% unnest(stage_results) %>% group_by(start_date)  %>% tally()
+editions_join_stage <- editions %>% inner_join(num_stages)
+editions_join_stage
+num_stages <- editions %>% unnest(stage_results) %>% group_by(start_date)  %>% tally()
+editions_join_stage <- editions %>% inner_join(num_stages)
+#rename column
+colnames(editions_join_stage)[which(names(editions_join_stage) == "n")] <- "num_stages"
+tdf_data <- mutatate(editions_join_stage, year = year(start_date), month = month(start_date)) %>%
+select(edition,year,month,winner,distance,time_overall,time_margin,stage_winds,stages_led,height,weight,age,nationality)
+tdf_data <- mutate(editions_join_stage, year = year(start_date), month = month(start_date)) %>%
+select(edition,year,month,winner,distance,time_overall,time_margin,stage_winds,stages_led,height,weight,age,nationality)
+tdf_data <- mutate(editions_join_stage, year = year(start_date), month = month(start_date)) %>%
+select(edition,year,month,winner_name,distance,time_overall,time_margin,stage_winds,stages_led,height,weight,age,nationality)
+tdf_data <- mutate(editions_join_stage, year = year(start_date), month = month(start_date)) %>%
+select(edition,year,month,winner_name,distance,time_overall,time_margin,stage_wins,stages_led,height,weight,age,nationality,num_stages)
+glipse(tdf_data)
+glimpse(tdf_data)
+head(tdf_data)
+hist(as.factor(tdf_data$nationality))
+boxplot(as.factor(tdf_data$nationality))
+boxplot(tdf_data$nationality)
+barplot(tdf_data$nationality)
+summary(tdf_data)
+summary(as.factor(tdf_data$nationality))
+plot(as.factor(tdf_data$nationality))
+ggplot(data = tdf_data) +
+geom_bar(mapping = aes(x = nationality))
+winners_nationality <- tdf_data %>%
+group_by(nationality) %>%
+mutate(num_wins = tally())
+winners_nationality <- tdf_data %>%
+group_by(nationality) %>%
+tally()
+winners_nationality
+winners_nationality <- tdf_data %>%
+group_by(nationality) %>%
+tally() %>%
+mutate(num_wins = reorder(nationality, n)) #%>%
+winners_nationality
+winners_nationality <- tdf_data %>%
+group_by(nationality) %>%
+tally() %>%
+mutate(num_wins = reorder(n)) #%>%
+winners_nationality <- tdf_data %>%
+group_by(nationality) %>%
+tally() %>%
+mutate(num_wins = reorder(n)) #%>%
+winners_nationality <- tdf_data %>%
+group_by(nationality) %>%
+tally() %>%
+mutate(num_wins = reorder(nationality, n)) #%>%
+winners_nationality
+#mutate(nationfality = reorder(state, murder_rate)) %>%
+ggplot(data = tdf_data) +
+geom_bar(mapping = aes(x = nationality))
