@@ -1,0 +1,247 @@
+---
+title: "Data Wrangling"
+author: "STAT 763 - Survey of Modern Statistical Software"
+output: ioslides_presentation
+---
+
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(out.width = '80%', collapse = TRUE, warning=FALSE, message=FALSE)
+```
+
+## Agenda
+
+- Joins
+- Binding
+- Set operators
+
+- Readings: R4DS Chapters 13
+- Other sources: 
+  - [SQL vs dplyr](https://blog.exploratory.io/why-sql-is-not-for-analysis-but-dplyr-is-5e180fef6aa7)
+  - [dplyr for databases](https://blog.exploratory.io/using-dplyr-to-query-databases-directly-instead-of-using-sql-fed43f059ed6)
+
+## Population size and electoral votes
+
+Suppose we want to explore the relationship between population size for US states and electoral votes. We have the population size in this table:
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(dslabs)
+data(murders)
+head(murders)
+```
+
+## Electoral votes
+
+and electoral votes in this one:
+
+```{r}
+data(polls_us_election_2016)
+head(results_us_election_2016)
+```
+
+## Goal
+
+```{r ev-vs-population, message=FALSE, warning=FALSE, echo=FALSE}
+library(ggrepel)
+tab <- left_join(murders, results_us_election_2016, by = "state") %>%
+  select(-others) %>% rename(ev = electoral_votes)
+tab %>% ggplot(aes(population/10^6, ev, label = abb)) +
+  geom_point() +
+  geom_text_repel() + 
+  scale_x_continuous(trans = "log2") +
+  scale_y_continuous(trans = "log2") +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+## cbind?
+
+Just concatenating these two tables together will not work since the order of the states is not the same.
+
+```{r}
+identical(results_us_election_2016$state, murders$state)
+```
+
+## Joining in dplyr
+
+Joining in `dplyr` is pretty straightforward, and similar to SQL
+
+- Verbs are similar between the two approaches
+- Common tasks in a data analysis are easier in `dplyr`
+- Uncommon tasks are more challenging in `dplyr`
+
+## Joins
+
+- It is not always the case that each row in one table has a matching row in the other
+- Join options:
+  - Left Join (`left_join`)
+  - Right Join ('right_join`)
+  - Inner Join (`inner_join`)
+  - Full Join ('full_join`)
+  - Semi Join (`semi_join`)
+  - Anti Join (`anti_join`)
+  
+## Murders example
+
+```{r}
+tab_1 <- slice(murders, 1:6) %>% select(state, population)
+tab_1
+```
+
+## Murders example
+
+```{r}
+tab_2 <- results_us_election_2016 %>% 
+  filter(state%in%c("Alabama", "Alaska", "Arizona", 
+                    "California", "Connecticut", "Delaware")) %>% 
+  select(state, electoral_votes) %>% rename(ev = electoral_votes)
+tab_2
+```
+
+## Left join
+
+Starting with `tab_1`, add `ev` data for whichever states are available in `tab_2` (missing values encoded in `ev`)
+
+```{r}
+#left_join(tab_1, tab_2, by = "state")
+tab_1 %>% left_join(tab_2, by = "state")
+```
+
+## Right join
+
+Conceptually, `tab_2` is our starting table, and we add population data to it (missing values in `population`)
+
+```{r}
+tab_1 %>% right_join(tab_2, by = "state")
+```
+
+## Inner join
+
+Conceptually, the intersection (no missing values)
+
+```{r}
+inner_join(tab_1, tab_2, by = "state")
+```
+
+## Full join
+
+Conceptually the union (missing values in `population` AND `ev`)
+
+```{r}
+full_join(tab_1, tab_2, by = "state")
+```
+
+## Semi join
+
+Keep parts of the first table for which information exists in the second
+
+```{r}
+semi_join(tab_1, tab_2, by = "state")
+```
+
+## Anti join
+
+The opposite of `semi_join`
+
+```{r}
+anti_join(tab_1, tab_2, by = "state")
+```
+
+## Back to the goal
+
+```{r, message=FALSE, warning=FALSE}
+library(ggrepel)
+tab <- left_join(murders, results_us_election_2016, by = "state") %>%
+  select(-others) %>% rename(ev = electoral_votes)
+tab %>% ggplot(aes(population/10^6, ev, label = abb)) +
+  geom_point() +
+  geom_text_repel() + 
+  scale_x_continuous(trans = "log2") +
+  scale_y_continuous(trans = "log2") +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+## Binding columns
+
+Rather than trying to match by a variable, we might want to simply combine datasets
+
+```{r}
+tab_1 <- tab[, 1:3]
+tab_2 <- tab[, 4:6]
+tab_3 <- tab[, 7:8]
+new_tab <- bind_cols(tab_1, tab_2, tab_3)
+head(new_tab)
+# What type of object is new_tab?
+```
+
+## Binding rows
+
+```{r}
+tab_1 <- tab[1:2,]
+tab_2 <- tab[3:4,]
+bind_rows(tab_1, tab_2)
+```
+
+## Set operators
+
+- `intersect`
+- `union`
+- `setdiff`
+- `setequal`
+
+## Intersect
+
+```{r}
+tab_1 <- tab[1:5,]
+tab_2 <- tab[3:7,]
+dplyr::intersect(tab_1, tab_2)
+```
+
+## Union
+
+```{r}
+tab_1 <- tab[1:5,]
+tab_2 <- tab[3:7,]
+dplyr::union(tab_1, tab_2) 
+```
+
+## Setdiff
+
+```{r}
+tab_1 <- tab[1:5,]
+tab_2 <- tab[3:7,]
+dplyr::setdiff(tab_1, tab_2)
+```
+
+## Setdiff
+
+```{r}
+tab_1 <- tab[1:5,]
+tab_2 <- tab[3:7,]
+dplyr::setdiff(tab_2, tab_1)
+```
+
+## Setequal
+
+```{r}
+dplyr::setequal(tab_1, tab_2)
+```
+
+
+## Comparisons
+
+R jargon | Database jargon | dplyr jargon
+--------|----------------|------------
+dataframe | table | either!
+collection of data frames | database | either!
+conditional indexing | `SELECT`, `FROM`, `WHERE`, `HAVING` | `filter()`
+`d*ply()` | `GROUP BY` | `group_by`
+`order()` | `ORDER BY` | `arrange`
+`base` functions | `SELECT` functions | `summarize`
+`base` functions | `SELECT` functions | `mutate`
+
+## Databases
+
+The `dbplyr` library provides functionality for connecting to databases and using dplyr (rather than SQL variants)
+
+- Second reference link compares `dbplyr` and `dplyr` to SQL commands
+- Take a look at "Exploratory" - the software referenced in that link

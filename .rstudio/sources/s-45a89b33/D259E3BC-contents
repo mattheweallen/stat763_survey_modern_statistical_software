@@ -54,6 +54,7 @@ editions %>%
 editions$stage_results
 
 
+
 apply(editions$stage_results, 1, nrow)
 
 nrow(editions$stage_results[1])
@@ -87,3 +88,11 @@ nrow(editions)
 
 
 editions$stage_results$`2019`$`stage-21`
+
+
+class(editions$stage_results)
+class(editions$stage_results[1])
+editions$stage_results[1]$`1903`$`stage-1`
+
+
+editions$stage_results[[99]][1]

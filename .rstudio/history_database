@@ -144,3 +144,33 @@
 1581192833044:editions %>% count(nationality,winner_name)
 1581192899737:#nationality of winners
 1581192899763:editions %>% count(winner_name,nationality)
+1581199853402:editions$stage_results[1,]
+1581199875393:editions$stage_results[1]
+1581199899621:editions$stage_results[0]
+1581199949163:editions$stage_results[1]
+1581199990927:length(editions$stage_results[1])
+1581200000741:nrow(editions$stage_results[1])
+1581200017840:class(editions$stage_results[1])
+1581200054384:class(editions$stage_results)
+1581200056350:class(editions$stage_results[1])
+1581200118764:nrow(data.table(editions$stage_results[1]))
+1581200131292:nrow(as.datatable(editions$stage_results[1]))
+1581200147530:nrow(data.frame(editions$stage_results[1]))
+1581200156097:nrow(as.data.frame(editions$stage_results[1]))
+1581200162153:nrow(as.dataframe(editions$stage_results[1]))
+1581200186331:editions$stage_results[1]
+1581200191376:editions$stage_results[1]
+1581200209135:editions$stage_results[1,1]
+1581200221897:editions$stage_results[1][1]
+1581200233504:editions$stage_results[1][1]
+1581200254199:editions$stage_results[1]
+1581200396014:editions$stage_results[[1]]
+1581200446985:editions$stage_results[1]$[]
+1581200491733:editions$stage_results[1]$`1903`$`stage-1`
+1581201767781:editions$stage_results[1]
+1581201777384:devtools::install_github("alastairrushworth/tdf")
+1581201789171:#https://www.htmlwidgets.org/showcase_datatables.html
+1581201789197:library(tdf) #Tour De France Data
+1581201795660:editions$stage_results[1]
+1581201812687:editions$stage_results[[1]][1]
+1581201872560:editions$stage_results[[99]][1]
