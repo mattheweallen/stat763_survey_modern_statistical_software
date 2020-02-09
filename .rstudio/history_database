@@ -174,3 +174,94 @@
 1581201795660:editions$stage_results[1]
 1581201812687:editions$stage_results[[1]][1]
 1581201872560:editions$stage_results[[99]][1]
+1581247905445:library(tidyverse)
+1581248021988:#Exercises page 12
+1581248022014:#Ex1
+1581248022015:ggplot(data = mpg) +
+1581248022015:geom_point(
+1581248022015:mapping = aes(x = displ, y = hwy, color = "blue")
+1581248022016:)
+1581248036928:#Exercises page 12
+1581248036954:#Ex1
+1581248036955:ggplot(data = mpg) +
+1581248036955:geom_point(
+1581248036955:mapping = aes(x = displ, y = hwy), color = "blue"
+1581248036955:)
+1581248061960:#Ex2
+1581248061961:?mpg
+1581248090942:mpg
+1581248210285:#Ex3
+1581248210286:ggplot(data = mpg) +
+1581248210286:geom_point(mapping = aes(x=displ,y=hwy))
+1581248251353:#Ex3
+1581248251380:ggplot(data = mpg) +
+1581248251381:geom_point(mapping = aes(x = displ, y = hwy, color = city))
+1581248276344:#Ex3
+1581248276345:ggplot(data = mpg) +
+1581248276346:geom_point(mapping = aes(x = displ, y = hwy, color = cty))
+1581248320916:ggplot(data = mpg) +
+1581248320917:geom_point(mapping = aes(x = displ, y = hwy, size = cty))
+1581248336357:ggplot(data = mpg) +
+1581248336384:geom_point(mapping = aes(x = displ, y = hwy, shape = cty))
+1581248432652:#categorical variable
+1581248432653:#continuous variable
+1581248432653:ggplot(data = mpg) +
+1581248432653:geom_point(mapping = aes(x = displ, y = hwy, color = trans))
+1581248457519:ggplot(data = mpg) +
+1581248457519:geom_point(mapping = aes(x = displ, y = hwy, size = trans))
+1581248466665:ggplot(data = mpg) +
+1581248466691:geom_point(mapping = aes(x = displ, y = hwy, shape = trans))
+1581248547139:#ex4 map same variable to different aesthetics
+1581248547165:ggplot(data = mpg) +
+1581248547166:geom_point(mapping = aes(x = displ, y = cty, size = cty))
+1581248594035:#ex5 stroke
+1581248594062:?geom_point
+1581248845519:#ex6
+1581248845545:ggplot(data = mpg) +
+1581248845545:geom_point(mapping = aes(x = displ, y = hwy, color = displ < 5))
+1581249485513:#facets
+1581249485514:ggplot(data = mpg) +
+1581249485514:geom_point(mapping = aes(x = displ, y = hwy)) +
+1581249485514:facet_grid(~ class, nrow = 2 )
+1581249502093:#facets
+1581249502119:ggplot(data = mpg) +
+1581249502119:geom_point(mapping = aes(x = displ, y = hwy)) +
+1581249502119:facet_wrap(~ class, nrow = 2 )
+1581249599069:ggplot(data = mpg) +
+1581249599070:geom_point(mapping = aes(x = displ, y = hwy)) +
+1581249599071:facet_grid(drv ~ cyl)
+1581249634418:ggplot(data = mpg) +
+1581249634445:geom_point(mapping = aes(x = displ, y = hwy)) +
+1581249634446:facet_grid(. ~ cyl)
+1581249648638:ggplot(data = mpg) +
+1581249648664:geom_point(mapping = aes(x = displ, y = hwy)) +
+1581249648665:facet_grid(drv ~ cyl)
+1581249671272:ggplot(data = mpg) +
+1581249671298:geom_point(mapping = aes(x = displ, y = hwy)) +
+1581249671299:facet_grid(. ~ cyl)
+1581249770937:##facets
+1581249770939:ggplot(data = mpg) +
+1581249770940:geom_point(mapping = aes(x = displ, y = hwy)) +
+1581249770940:facet_wrap(~ class, nrow = 2 )
+1581249791256:#ex1
+1581249791256:ggplot(data = mpg) +
+1581249791257:geom_point(mapping = aes(x = displ, y = hwy)) +
+1581249791257:facet_grid(. ~ cty)
+1581249888247:ggplot(data = mpg) +
+1581249888247:geom_point(mapping = aes(x = drv, y = cyl))
+1581249954526:#ex2
+1581249954552:ggplot(data = mpg) +
+1581249954552:geom_point(mapping = aes(x = displ, y = hwy)) +
+1581249954552:facet_grid(drv ~ cyl)
+1581250315302:#ex3
+1581250315303:ggplot(data = mpg) +
+1581250315304:geom_point(mapping = aes(x = displ, y = hwy)) +
+1581250315304:facet_grid(drv ~ .)
+1581250369063:ggplot(data = mpg) +
+1581250369090:geom_point(mapping = aes(x = displ, y = hwy)) +
+1581250369091:facet_grid(. ~ cyl)
+1581250448298:#ex4
+1581250448324:ggplot(data = mpg) +
+1581250448325:geom_point(mapping = aes(x = displ, y = hwy)) +
+1581250448326:facet_wrap(~ class, nrow = 2 )
+1581250504231:?facet_wrap
