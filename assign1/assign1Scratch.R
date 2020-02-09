@@ -181,6 +181,9 @@ devtools::install_github("alastairrushworth/tdf")
 library(tdf) #Tour De France Data
 library(tidyverse)
 library(lubridate) #is this needed, try again after moving other library calls up
+library(DT)
+library(plotly)
+
 num_stages <- editions %>% unnest(stage_results) %>% group_by(start_date)  %>% tally()
 editions_join_stage <- editions %>% inner_join(num_stages)
 #rename column
@@ -195,12 +198,22 @@ tdf_data
 #   mutate(num_wins = reorder(nationality, n)) #%>%
 # winners_nationality  
 
-library(plotly)
+
 
 winners_nationality_data <- tdf_data %>%
-  select(year, winner_name, nickname, age, nationality)
+  select(nationality) %>% #select(year, winner_name, nickname, age, nationality)
+  group_by(nationality) %>%
+  tally(name = "NumberWins")
+#https://dplyr.tidyverse.org/reference/arrange.html
+ordered_winners_nationality_data <- arrange(winners_nationality_data, desc(NumberWins))  
+datatable(ordered_winners_nationality_data, options = list(pageLength = 20), rownames = FALSE)
+#winners_nationality_data <- winners_nationality_data %>%
+#  order_by(NumberWins, cumsum(NumberWins))
+
+winners_nationality_data
+  #https://dplyr.tidyverse.org/reference/tally.html
 #https://rstudio.github.io/DT/
-library(DT)
+
 datatable(winners_nationality_data, options = list(pageLength = 20), rownames = FALSE)
 
 #who are the oldest and yougest winners, average?
@@ -262,4 +275,5 @@ ggplotly(ave_stage_distance)
 
 #american winners, one with *, winner at the end of the race.
 
+#wins over over threshold of 10 by nation
 
