@@ -340,3 +340,10 @@ winners_nationality_nickname <- tdf_data %>%
   select(year, winner_name, nickname, age, nationality) #%>% #select(year, winner_name, nickname, age, nationality)
   #group_by(nationality) %>%
   #tally(name = "Number Wins")
+
+tdf_data %>%
+  mutate(war_label = case_when(year == 1914 ~ 'Start WWI',
+                               year == 1919 ~ 'End WWI',
+                               year == 1939 ~ 'Start WWII',
+                               year == 1947 ~ 'End WWII',
+                                TRUE ~ "NA"))
