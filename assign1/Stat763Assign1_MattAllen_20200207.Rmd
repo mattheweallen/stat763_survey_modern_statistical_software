@@ -20,6 +20,7 @@ library(lubridate)
 library(DT) #Datatable
 library(plotly)
 library(tdf) #Tour De France Data
+library(ggrepel)
 
 #tally up the number of stages for each edition.
 #there is a column in the editions data set that is a list of lists
@@ -58,10 +59,18 @@ ggplotly(num_stages_plot)
 
 ```{r}
 ave_stage_distance <- ggplot(data = tdf_data) +
-  geom_point(mapping= aes(x = year, y =  distance / num_stages)) + 
+  geom_point(mapping= aes(x = year, y =  distance / num_stages), 
+             color = ifelse(tdf_data$year == 1914 | tdf_data$year == 1919 | tdf_data$year == 1939 | tdf_data$year == 1947,"red","black")) + 
+  geom_text_repel(data=subset(tdf_data, year==1914),aes(x = year, y = distance / num_stages,label="Start WWI")) +
   xlab('Year of Race') + 
   ylab('Total Distance (km) / Number of Stages') + 
-  ggtitle('Average length of Stage Number of Stages by Year')
+  ggtitle('Average length of Stage by Year')
+  #geom_text_repel(data=subset(tdf_data, year==1914), nudge_y = .05,
+  #          aes(x = year, y = distance / num_stages,label="Start WWI")) 
+  #geom_text_repel(aes(x = year, y = distance / num_stages)) #+
+  #geom_text(data=subset(tdf_data, year==1919),
+  #          aes(x = year, y = distance / num_stages,label="End WWI")) +
+  #geom_text_repel()
 
 ggplotly(ave_stage_distance)
 ```
@@ -103,11 +112,11 @@ tdf_data_1985_2005 <- tdf_data %>%
   
 
 ave_speed <- ggplot(data = tdf_data_1985_2005) +
-  geom_point(mapping= aes(x = year, y =  distance / time_overall, colour = winner_name)) + 
+  geom_point(mapping= aes(x = year, y =  distance / time_overall, shape = winner_name)) + 
   xlab('Year of Race') + 
   ylab('Average Speed (km/h)') + 
   ggtitle('Average Speed by Winner Over Entire Race') +
-  labs(color = "Winner Name")
+  labs(shape = "Winner Name")
   
 
 ggplotly(ave_speed)
