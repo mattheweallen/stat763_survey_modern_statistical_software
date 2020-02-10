@@ -2,7 +2,7 @@
 title: "A brief history of the Tour De France"
 output: 
   flexdashboard::flex_dashboard:
-    orientation: columns
+    orientation: rows
     vertical_layout: fill
 ---
 
@@ -37,42 +37,61 @@ tdf_data <- mutate(editions_join_stage, year = year(start_date), month = month(s
   select(edition,year,month,winner_name,nickname,age, distance,time_overall,time_margin,stage_wins,stages_led,height,weight,age,nationality,num_stages)
 ```
 
-Column {data-width=650}
+Row
 -----------------------------------------------------------------------
 
-### Chart A
+### The earliest editions of the Tour de France had very few stages ...
 
 
 ```{r}
-datatable(tdf_data, options = list(pageLength = 5))
+num_stages_plot <- ggplot(data = tdf_data) +
+  geom_point(mapping= aes(x = year, y =  num_stages)) + 
+  xlab('Year of Race') + 
+  ylab('Number of Stages') + 
+  ggtitle('Number of Stages by Year')
+  
+ggplotly(num_stages_plot)
 ```
 
-Column {data-width=350}
+### ... but they were really long by today's standards. Note the breaks for World War I and II.
+
+
+```{r}
+ave_stage_distance <- ggplot(data = tdf_data) +
+  geom_point(mapping= aes(x = year, y =  distance / num_stages)) + 
+  xlab('Year of Race') + 
+  ylab('Total Distance (km) / Number of Stages') + 
+  ggtitle('Average length of Stage Number of Stages by Year')
+
+ggplotly(ave_stage_distance)
+```
+
+Row
 -----------------------------------------------------------------------
 
 ### The French have the most wins, but there has been a drought since 1985.
 
 ```{r}
-#mutate names
-
-winners_nationality_data <- tdf_data %>%
+#make table of win counts by nationality
+winners_nationality <- tdf_data %>%
   select(nationality) %>% #select(year, winner_name, nickname, age, nationality)
   group_by(nationality) %>%
   tally(name = "Number Wins")
 
+#make table with nationality and last year won
+last_year_by_nationality <- tdf_data %>% 
+  select(nationality, year) %>%
+  group_by(nationality) %>%
+  filter(year == max(year))
 
+#join the two and rename
+winner_nationality_last_year <- winners_nationality %>% 
+  inner_join(last_year_by_nationality) %>%
+  arrange(desc(`Number Wins`)) %>% 
+  rename(`Nationality` = nationality, `Last Year Won` = year )  
 
-#https://dplyr.tidyverse.org/reference/arrange.html
-ordered_winners_nationality_data <- arrange(winners_nationality_data, desc(`Number Wins`))  
-datatable(ordered_winners_nationality_data, options = list(pageLength = 20), rownames = FALSE)
-#winners_nationality_data <- winners_nationality_data %>%
-#  order_by(NumberWins, cumsum(NumberWins))
-
-winners_nationality_data
-  #https://dplyr.tidyverse.org/reference/tally.html
-#https://rstudio.github.io/DT/
-
-datatable(winners_nationality_data, options = list(pageLength = 20), rownames = FALSE)
+#create datatable
+datatable(winner_nationality_last_year, options = list(pageLength = 20), rownames = FALSE)
 
 ```
 

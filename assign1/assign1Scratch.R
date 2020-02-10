@@ -254,11 +254,20 @@ ggplotly(distance_plot)
   #          show.legend = FALSE)
 
 num_stages_plot <- ggplot(data = tdf_data) +
-  geom_point(mapping= aes(x = year, y =  num_stages))
-num_stages_plot
+  geom_point(mapping= aes(x = year, y =  num_stages)) + 
+  xlab('Year of Race') + 
+  ylab('Number of Stages') + 
+  ggtitle('Number of Stages by Year')
+  
+ggplotly(num_stages_plot)
 
 ave_stage_distance <- ggplot(data = tdf_data) +
-  geom_point(mapping= aes(x = year, y =  distance / num_stages))
+  geom_point(mapping= aes(x = year, y =  distance / num_stages)) + 
+  xlab('Year of Race') + 
+  ylab('Total Distance (km) / Number of Stages') + 
+  ggtitle('Average length of Stage Number of Stages by Year')
+
+ggplotly(ave_stage_distance)
 
 #add column for isFrench, isAmerican, LeMond slaying the Badger. Famous Rivalry between LeMond and Badger Did he also slay the French hopes of victory?
 
@@ -298,6 +307,16 @@ last_year_by_nationality <- tdf_data %>%
   
 last_year_by_nationality
 
-winner_nationality_last_year <- winners_nationality %>% inner_join(last_year_by_nationality)
+winner_nationality_last_year <- winners_nationality %>% 
+  inner_join(last_year_by_nationality) %>%
+  arrange(desc(`Number Wins`)) %>% 
+  rename(`Nationality` = nationality, `Last Win` = year )  
 winner_nationality_last_year
-arrange(winner_nationality_last_year, desc(`Number Wins`)) 
+
+
+#famous rivalry between greg lemond and the badger. greg lemonds with started the drought.
+#greg lemond has noted when he came back that everyone was riding a lot faster.
+#it shows in the data
+#an american in paris. the only american winner of the tour de france without an *.
+
+#four charts,  nationality year table
