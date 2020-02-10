@@ -283,3 +283,21 @@ ggplotly(ave_stage_distance)
 #wins over over threshold of 10 by nation
 #history of TDF when will they win again
 
+#https://stackoverflow.com/questions/24237399/how-to-select-the-rows-with-maximum-values-in-each-group-with-dplyr
+winners_nationality <- tdf_data %>%
+  select(nationality) %>% #select(year, winner_name, nickname, age, nationality)
+  group_by(nationality) %>%
+  tally(name = "Number Wins")
+
+
+last_year_by_nationality <- tdf_data %>% 
+  select(nationality, year) %>%
+  group_by(nationality) %>%
+  filter(year == max(year)) #%>%
+  #arrange()
+  
+last_year_by_nationality
+
+winner_nationality_last_year <- winners_nationality %>% inner_join(last_year_by_nationality)
+winner_nationality_last_year
+arrange(winner_nationality_last_year, desc(`Number Wins`)) 

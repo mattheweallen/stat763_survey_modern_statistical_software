@@ -50,7 +50,7 @@ datatable(tdf_data, options = list(pageLength = 5))
 Column {data-width=350}
 -----------------------------------------------------------------------
 
-### The French have the most wins, but there has been a drought.
+### The French have the most wins, but there has been a drought since 1985.
 
 ```{r}
 #mutate names
