@@ -2,8 +2,8 @@
 title: "A Brief History of the Tour De France"
 output: 
   flexdashboard::flex_dashboard:
+    theme: cerulean
     orientation: rows
-    vertical_layout: fill
 ---
 
 [Tour De France Data Source](https://github.com/alastairrushworth/tdf)
