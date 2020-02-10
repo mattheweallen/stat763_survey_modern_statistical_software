@@ -14,7 +14,7 @@ FROM rocker/verse:latest
 # https://github.com/eddelbuettel/littler/blob/master/inst/examples/install2.r
 RUN install2.r --error \
     flexdashboard \
-    plotly
-    #methods \
+    plotly \
+    ggrepel 
     #jsonlite \
     #tseries
