@@ -320,3 +320,23 @@ winner_nationality_last_year
 #an american in paris. the only american winner of the tour de france without an *.
 
 #four charts,  nationality year table
+
+
+tdf_data_1985_2005 <- tdf_data %>%
+  filter(year >= 1985 & year <= 2005)
+  
+
+ave_speed <- ggplot(data = tdf_data_1985_2005) +
+  geom_point(mapping= aes(x = year, y =  distance / time_overall, colour = winner_name)) + 
+  xlab('Year of Race') + 
+  ylab('Total Distance (km) / Time for all stages') + 
+  ggtitle('Average Speed by Winner Over Entire Race') +
+  labs(color = "Winner Name")
+  
+
+ggplotly(ave_speed)
+
+winners_nationality_nickname <- tdf_data %>%
+  select(year, winner_name, nickname, age, nationality) #%>% #select(year, winner_name, nickname, age, nationality)
+  #group_by(nationality) %>%
+  #tally(name = "Number Wins")

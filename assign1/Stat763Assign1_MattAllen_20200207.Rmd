@@ -1,5 +1,5 @@
 ---
-title: "A brief history of the Tour De France"
+title: "A Brief History of the Tour De France"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
@@ -40,7 +40,7 @@ tdf_data <- mutate(editions_join_stage, year = year(start_date), month = month(s
 Row
 -----------------------------------------------------------------------
 
-### The earliest editions of the Tour de France had very few stages ...
+### The earliest editions of the Tour de France had very few stages compared to today ...
 
 
 ```{r}
@@ -69,7 +69,7 @@ ggplotly(ave_stage_distance)
 Row
 -----------------------------------------------------------------------
 
-### The French have the most wins, but there has been a drought since 1985.
+### The French have the most wins, but there has been a drought since 1985 when Bernard Hinault (the Badger) won.
 
 ```{r}
 #make table of win counts by nationality
@@ -95,9 +95,21 @@ datatable(winner_nationality_last_year, options = list(pageLength = 20), rowname
 
 ```
 
-### Chart C
+### The French last win in 1985 came the year before Greg LeMond (L’Americain) slayed the Badger, and six years before the doping era, which was ended by another American.
 
 ```{r}
+tdf_data_1985_2005 <- tdf_data %>%
+  filter(year >= 1985 & year <= 2005)
+  
 
+ave_speed <- ggplot(data = tdf_data_1985_2005) +
+  geom_point(mapping= aes(x = year, y =  distance / time_overall, colour = winner_name)) + 
+  xlab('Year of Race') + 
+  ylab('Average Speed (km/h)') + 
+  ggtitle('Average Speed by Winner Over Entire Race') +
+  labs(color = "Winner Name")
+  
+
+ggplotly(ave_speed)
 ```
 
