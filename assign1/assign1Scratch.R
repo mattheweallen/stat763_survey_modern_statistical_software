@@ -180,18 +180,23 @@ devtools::install_github("alastairrushworth/tdf")
 #https://www.htmlwidgets.org/showcase_datatables.html
 library(tdf) #Tour De France Data
 library(tidyverse)
-library(lubridate) #is this needed, try again after moving other library calls up
+#library(lubridate) #is this needed, try again after moving other library calls up
 library(DT)
 library(plotly)
 
-num_stages <- editions %>% unnest(stage_results) %>% group_by(start_date)  %>% tally()
-editions_join_stage <- editions %>% inner_join(num_stages)
+num_stages <- editions %>% 
+  unnest(stage_results) %>% 
+  group_by(start_date)  %>% 
+  tally(name = "num_stages")
+editions_join_stage <- editions %>% 
+  inner_join(num_stages)
 #rename column
-colnames(editions_join_stage)[which(names(editions_join_stage) == "n")] <- "num_stages"
-editions
+#colnames(editions_join_stage)[which(names(editions_join_stage) == "n")] <- "num_stages"
+glimpse(editions)
 tdf_data <- mutate(editions_join_stage, year = year(start_date), month = month(start_date)) %>%
   select(edition,year,month,winner_name,nickname,age, distance,time_overall,time_margin,stage_wins,stages_led,height,weight,age,nationality,num_stages)
 tdf_data
+
 # winners_nationality <- tdf_data %>% 
 #   group_by(nationality) %>% 
 #   tally() %>%

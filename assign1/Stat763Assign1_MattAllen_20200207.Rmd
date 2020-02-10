@@ -1,41 +1,78 @@
 ---
-title: "Untitled"
+title: "A brief history of the Tour De France"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
 ---
 
+[Tour De France Data Source](https://github.com/alastairrushworth/tdf)
+
 ```{r setup, include=FALSE}
+##dashboard was built using the Docker image stat763/verse:1.0
+
+#data set can be installed by running command below
+#devtools::install_github("alastairrushworth/tdf")
+
+library(tidyverse)
 library(flexdashboard)
+library(lubridate)
 library(DT) #Datatable
-devtools::install_github("alastairrushworth/tdf")
+library(plotly)
 library(tdf) #Tour De France Data
 
-#do latern rouge
-#using image stat763/verse:1.0
-#sudo docker run --rm -d -p 8787:8787 -v $(pwd):/home/rstudio -e PASSWORD=admin stat763/verse:1.0
+#tally up the number of stages for each edition.
+#there is a column in the editions data set that is a list of lists
+#this code unnests, does a tally and then does inner join back to original data set
+#not sure if there is a better way to do this?
+num_stages <- editions %>% 
+  unnest(stage_results) %>% 
+  group_by(start_date)  %>% 
+  tally(name = "num_stages")
+editions_join_stage <- editions %>% 
+  inner_join(num_stages)
+
+#create month and year columns and subset the original data set.
+tdf_data <- mutate(editions_join_stage, year = year(start_date), month = month(start_date)) %>%
+  select(edition,year,month,winner_name,nickname,age, distance,time_overall,time_margin,stage_wins,stages_led,height,weight,age,nationality,num_stages)
 ```
 
 Column {data-width=650}
 -----------------------------------------------------------------------
 
 ### Chart A
-[Tour De France Data Source](https://github.com/alastairrushworth/tdf)
+
 
 ```{r}
-#show reshaped data set in data table with citation
-#https://www.htmlwidgets.org/showcase_datatables.html
-
-datatable(editions, options = list(pageLength = 5))
+datatable(tdf_data, options = list(pageLength = 5))
 ```
 
 Column {data-width=350}
 -----------------------------------------------------------------------
 
-### Chart B
+### The French have the most wins, but there has been a drought.
 
 ```{r}
+#mutate names
+
+winners_nationality_data <- tdf_data %>%
+  select(nationality) %>% #select(year, winner_name, nickname, age, nationality)
+  group_by(nationality) %>%
+  tally(name = "Number Wins")
+
+
+
+#https://dplyr.tidyverse.org/reference/arrange.html
+ordered_winners_nationality_data <- arrange(winners_nationality_data, desc(`Number Wins`))  
+datatable(ordered_winners_nationality_data, options = list(pageLength = 20), rownames = FALSE)
+#winners_nationality_data <- winners_nationality_data %>%
+#  order_by(NumberWins, cumsum(NumberWins))
+
+winners_nationality_data
+  #https://dplyr.tidyverse.org/reference/tally.html
+#https://rstudio.github.io/DT/
+
+datatable(winners_nationality_data, options = list(pageLength = 20), rownames = FALSE)
 
 ```
 
