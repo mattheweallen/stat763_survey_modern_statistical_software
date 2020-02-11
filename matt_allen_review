@@ -1,0 +1,12 @@
+Scoring Rubric
+Your presentation will be assessed based on the following criteria:
+    1. Presentation addressed each aspect of the prompt
+    2. The presentation was clear and well-organized
+    3. The presenter spoke clearly, made effective use of eye contact, and demonstrated interest and/or authority in the subject matter.
+Peer Review
+Each student in the class will be responsible for providing feedback on each of the other student presentations in the class. Students should use the assignment description and rubric to guide their review. These peer reviews will be due before class the Tuesday after the presentation. (Example: if student A presents on Feb 6, all other students will provide feedback by Feb 11.) These reviews should include the following:
+    1. Describe one (or more) positive aspects of the presentation.
+    I am very interested in this topic, and hope that came through. The technical failures were in retrospect a validation of the robustness of using a container environment for doing Data Science work.
+
+    2. Provide constructive criticism of one (or more) aspects of the presentation that you feel could be improved. As this is constructive, provide some justification and/or advice on ways to improve.
+    I reviewed the initial criticism from the group with a team at work. We are working on improving my first presentation, and sharing it to a Data Science forum at work. It was good to get direct feedback from other students. One thing that was clear was that even before mentioning containers, I should have provided a motivation, and then illustrated the business value of using Docker. The concepts of containers could have been shown at a higher level.
