@@ -347,3 +347,26 @@ tdf_data %>%
                                year == 1939 ~ 'Start WWII',
                                year == 1947 ~ 'End WWII',
                                 TRUE ~ "NA"))
+
+tdf_data
+library(ggrepel)
+
+tdf_data_1985_2005 <- tdf_data %>%
+  filter(year >= 1985 & year <= 2005)
+
+#http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/#a-colorblind-friendly-palette
+cbPalette <- c("#000000","#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+
+
+ggplot(data = tdf_data_1985_2005) +
+  geom_point(mapping= aes(x = year, y =  distance / time_overall, color = winner_name, label = nickname)) + 
+  geom_text_repel(aes(x = year, y =  distance / time_overall, label = nickname)) +
+  xlab('Year of Race') + 
+  ylab('Average Speed (km/h)') + 
+  ggtitle('Average Speed by Winner Over Entire Race') +
+  labs(color = "Winner Name") +
+  scale_colour_manual(values=cbPalette) +
+  theme_bw()
+
+tdf_data

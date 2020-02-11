@@ -112,7 +112,7 @@ cbPalette <- c("#000000","#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", 
 
 
 ave_speed <- ggplot(data = tdf_data_1985_2005) +
-  geom_point(mapping= aes(x = year, y =  distance / time_overall, color = winner_name)) + 
+  geom_point(mapping= aes(x = year, y =  distance / time_overall, color = winner_name, label = nickname)) + 
   xlab('Year of Race') + 
   ylab('Average Speed (km/h)') + 
   ggtitle('Average Speed by Winner Over Entire Race') +
