@@ -48,7 +48,8 @@ num_stages_plot <- ggplot(data = tdf_data) +
   geom_point(mapping= aes(x = year, y =  num_stages)) + 
   xlab('Year of Race') + 
   ylab('Number of Stages') + 
-  ggtitle('Number of Stages by Year')
+  ggtitle('Number of Stages by Year') +
+  theme_bw()
   
 ggplotly(num_stages_plot)
 ```
@@ -65,8 +66,7 @@ ave_stage_distance <- ggplot(data = tdf_data) +
   ggtitle('Average Length of Stages by Year') +
   annotate("text", x = 1917, y = 380, label = "World War I", size = 3) +
   annotate("text", x = 1943, y = 145, label = "World War II", size = 3) +
-  annotate("rect", xmin = 1914, xmax = 1919, ymin = 358, ymax = 370,alpha = .2) +
-  annotate("rect", xmin = 1939, xmax = 1947, ymin = 162, ymax = 221,alpha = .2)
+  theme_bw()
  
 
 ggplotly(ave_stage_distance)
@@ -117,7 +117,8 @@ ave_speed <- ggplot(data = tdf_data_1985_2005) +
   ylab('Average Speed (km/h)') + 
   ggtitle('Average Speed by Winner Over Entire Race') +
   labs(color = "Winner Name") +
-  scale_colour_manual(values=cbPalette)
+  scale_colour_manual(values=cbPalette) +
+  theme_bw()
   
 ggplotly(ave_speed)
 ```
