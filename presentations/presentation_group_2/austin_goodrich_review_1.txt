@@ -1,0 +1,14 @@
+Scoring Rubric
+Your presentation will be assessed based on the following criteria:
+    1. Presentation addressed each aspect of the prompt
+    2. The presentation was clear and well-organized
+    3. The presenter spoke clearly, made effective use of eye contact, and demonstrated interest and/or authority in the subject matter.
+Peer Review
+Each student in the class will be responsible for providing feedback on each of the other student presentations in the class. Students should use the assignment description and rubric to guide their review. These peer reviews will be due before class the Tuesday after the presentation. (Example: if student A presents on Feb 6, all other students will provide feedback by Feb 11.) These reviews should include the following:
+     1. Describe one (or more) positive aspects of the presentation.
+   I really liked the content of your presentation. You did a good job of keeping some more technical things like HTTP Get at a high level. The content of the presentation could be very useful.
+    2. Provide constructive criticism of one (or more) aspects of the presentation that you feel could be improved. As this is constructive, provide some justification and/or advice on ways to improve.
+    I think you realized that the graphics were too small as you were presenting, and that could be fixed. In the slides themselves instead of showing an API Key, you could just put text like your_api_key_here.
+    There could have been more audience engagement. I thought you were speaking clearly, but were not actually looking at the audience.
+
+    It was a good presentation though overall, and I found it interesting.
