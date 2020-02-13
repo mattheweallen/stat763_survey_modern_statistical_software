@@ -1,0 +1,317 @@
+---
+title: "Date and Time"
+author: "STAT 763 - Survey of Modern Statistical Software"
+output: ioslides_presentation
+---
+
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(out.width = '80%', collapse = TRUE, warning=FALSE, message=FALSE)
+```
+
+## Agenda
+
+- Dates
+- Times
+- Date-times
+
+- Readings: R4DS Chapters 16
+
+## Dates
+
+```{r}
+library(tidyverse)
+library(dslabs)
+data("polls_us_election_2016")
+polls_us_election_2016 %>% head
+polls_us_election_2016$startdate %>% head
+```
+
+## Dates
+
+These values are _not_ strings, and not numbers!
+
+```{r}
+class(polls_us_election_2016$startdate)
+as.numeric(polls_us_election_2016$startdate) %>% head
+as.Date("1970-01-01") %>% as.numeric
+```
+
+## Dates and times
+
+There are three types of date/time data that refer to an instant in time:
+
+- A date. Tibbles print this as `<date>`.
+- A time within a day. Tibbles print this as `<time>`.
+- A date-time is a date plus a time: it uniquely identifies an instant in time (typically to the nearest second). Tibbles print this as `<dttm>`
+
+R doesn’t have a native class for storing times. If you need one, you can use the `hms` package
+
+## Dates in other functions
+
+We can exploit the numeric format for positions, but keep the strings for labels:
+
+```{r echo=FALSE}
+polls_us_election_2016 %>% filter(pollster == "Ipsos" & state =="U.S.") %>%
+  ggplot(aes(startdate, rawpoll_trump)) +
+  geom_line()
+```
+
+## lubridate
+
+The `tidyverse` includes functionality for dealing with dates through the `lubridate` package.
+
+```{r}
+library(lubridate)
+set.seed(2002)
+dates <- sample(polls_us_election_2016$startdate, 10) %>% sort
+dates
+```
+
+## lubridate functions
+
+```{r}
+tibble(date = dates, 
+       month = month(dates),
+       day = day(dates),
+       year = year(dates))
+```
+
+## lubridate functions
+
+```{r}
+month(dates, label = TRUE)
+```
+
+## Dates and times
+
+To get the current date or date-time you can use `today()` or `now()`:
+
+```{r}
+today()
+now()
+```
+
+## Dates and times
+
+There are three ways you’re likely to create a date/time:
+
+- From a string.
+- From individual date-time components.
+- From an existing date/time object.
+
+## Parsers
+
+`ymd` will try to convert a string to YYYY-MM-DD format:
+
+```{r}
+x <- c(20090101, "2009-01-02", "2009 01 03", "2009-1-4",
+       "2009-1, 5", "Created on 2009 1 6", "200901 !!! 07")
+ymd(x)
+```
+
+## Parsers
+
+What if our date was formatted differently?
+
+```{r}
+x <- "09/01/02"
+ymd(x)
+mdy(x)
+ydm(x)
+myd(x)
+dmy(x)
+dym(x)
+```
+
+## Parsers
+
+We can create date-time objects too:
+
+```{r}
+ymd_hms("2017-01-31 20:11:59")
+mdy_hm("01/31/2017 08:01")
+ymd(x, tz = "UTC")
+```
+
+## Combining columns 
+
+```{r}
+library(nycflights13)
+flights %>% select(year, month, day, hour, minute)
+```
+
+## Combining columns
+
+```{r}
+flights %>% 
+  select(year, month, day, hour, minute) %>% 
+  mutate(departure = make_datetime(year, month, day, hour, minute))
+```
+
+## Converting columns
+
+```{r}
+flights %>% select(arr_time, dep_time)
+```
+
+## Converting columns
+
+```{r eval=FALSE}
+make_datetime_100 <- function(year, month, day, time) {
+  make_datetime(year, month, day, time %/% 100, time %% 100)
+}
+
+flights_dt <- flights %>% 
+  filter(!is.na(dep_time), !is.na(arr_time)) %>% 
+  mutate(
+    dep_time = make_datetime_100(year, month, day, dep_time),
+    arr_time = make_datetime_100(year, month, day, arr_time),
+    sched_dep_time = make_datetime_100(year, month, day, sched_dep_time),
+    sched_arr_time = make_datetime_100(year, month, day, sched_arr_time)
+  ) %>% 
+  select(origin, dest, ends_with("delay"), ends_with("time"))
+```
+
+## Converting columns
+
+```{r echo=FALSE}
+make_datetime_100 <- function(year, month, day, time) {
+  make_datetime(year, month, day, time %/% 100, time %% 100)
+}
+
+flights_dt <- flights %>% 
+  filter(!is.na(dep_time), !is.na(arr_time)) %>% 
+  mutate(
+    dep_time = make_datetime_100(year, month, day, dep_time),
+    arr_time = make_datetime_100(year, month, day, arr_time),
+    sched_dep_time = make_datetime_100(year, month, day, sched_dep_time),
+    sched_arr_time = make_datetime_100(year, month, day, sched_arr_time)
+  ) %>% 
+  select(origin, dest, ends_with("delay"), ends_with("time"))
+```
+
+## Using date-times
+
+Note that when you use date-times in a numeric context (like in a histogram), 1 means 1 second, so a binwidth of 86400 means one day. For dates, 1 means 1 day.
+
+```{r eval=FALSE}
+flights_dt %>% 
+  filter(dep_time < ymd(20130102)) %>% 
+  ggplot(aes(dep_time)) + 
+  geom_freqpoly(binwidth = 600) # 600 s = 10 minutes
+```
+
+## Other types
+
+```{r}
+as_datetime(today())
+as_date(now())
+
+as_datetime(36000) #Seconds since UNIX Epoch
+as_date(3650) #Days since UNIX Epoch
+```
+
+## Accessor functions
+
+- `year()`
+- `month()` (`label = TRUE` and `abbr = FALSE` options)
+- `mday()` (day of the month)
+- `yday()` (day of the year)
+- `wday()` (day of the week, `label = TRUE` and `abbr = FALSE` options)
+- `hour()`
+- `minute()`
+- `second()`
+
+## Modification functions
+
+For plotting/summarizing, it's sometimes useful to round the date to a nearby unit of time:
+
+- `floor_date()`
+- `round_date()`
+- `ceiling_date()`
+
+## Durations
+
+Durations calculated by seconds:
+```{r}
+dseconds(15)
+dminutes(10)
+dhours(c(12, 24))
+ddays(0:5)
+dweeks(3)
+dyears(1)
+```
+
+## Duration calculations
+
+```{r}
+2 * dyears(1)
+dyears(1) + dweeks(12) + dhours(15)
+tomorrow <- today() + ddays(1)
+last_year <- today() - dyears(1)
+```
+
+## Duration calculations
+
+```{r}
+one_pm <- ymd_hms("2016-03-12 13:00:00", tz = "America/New_York")
+one_pm
+one_pm + ddays(1)
+```
+
+## Periods
+
+More "human-friendly" calculations:
+
+```{r}
+one_pm
+one_pm + days(1)
+```
+
+## Periods
+
+```{r}
+seconds(15)
+minutes(10)
+hours(c(12, 24))
+days(7)
+months(1:6)
+weeks(3)
+years(1)
+```
+
+## Flights example
+
+```{r}
+flights_dt %>% 
+  filter(arr_time < dep_time) %>%
+  select(dep_time, arr_time)
+```
+
+## Flights example
+
+```{r}
+flights_dt <- flights_dt %>% 
+  mutate(
+    overnight = arr_time < dep_time,
+    arr_time = arr_time + days(overnight * 1),
+    sched_arr_time = sched_arr_time + days(overnight * 1)
+  )
+```
+
+## Intervals
+
+```{r}
+years(1) / days(1)
+next_year <- today() + years(1)
+(today() %--% next_year) / ddays(1)
+```
+
+## Time zones
+
+See the complete list of all time zone names with `OlsonNames()`:
+
+```{r}
+length(OlsonNames())
+head(OlsonNames())
+```
