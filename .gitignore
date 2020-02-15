@@ -39,6 +39,4 @@ vignettes/*.pdf
 .Renviron
 
 # rstudio folder
-.rstudio/
-
-docker_rstudio/.rstudio
+/*.rstudio/
