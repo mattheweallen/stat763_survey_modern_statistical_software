@@ -11,6 +11,29 @@
 FROM rocker/verse:latest
 
 #https://github.com/aabor/rstudio/blob/master/rstudio-text/Dockerfile
+# install poppler, some dependencies of other R packages
+RUN apt-get update && apt-get install -y \
+    ## poppler to install pdftools to work with .pdf files
+    libpoppler-cpp-dev \
+    ## system dependency of hunspell (devtools)
+    libhunspell-dev \
+    ## system dependency of hadley/pkgdown
+    libmagick++-dev \
+    ## (GSL math library dependencies)
+    # for topicmodels on which depends textmineR
+    gsl-bin \
+    libgsl0-dev \
+    librdf0-dev \
+    && apt-get clean
+
+# Adobe Acrobat pdf files
+RUN install2.r --error \ 
+    # Text Extraction, Rendering and Converting of PDF Documents. Utilities based on 'libpoppler' for extracting text,
+    # fonts, attachments and metadata from a PDF file. Also supports high quality rendering of PDF documents info PNG,
+    # JPEG, TIFF format, or into raw bitmap vectors
+    pdftools \
+    && rm -rf /tmp/downloaded_packages/
+
 # Install R packages
 # https://github.com/eddelbuettel/littler/blob/master/inst/examples/install2.r
 RUN install2.r --error \
