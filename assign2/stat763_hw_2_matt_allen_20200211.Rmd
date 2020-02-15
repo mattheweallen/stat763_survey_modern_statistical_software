@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library("pdftools")
 ```
 
 ## R Markdown
@@ -32,4 +33,13 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 
 ```{r readdata}
 library("pdftools")
+#temp_file <- tempfile()
+#url <- paste0("http://www.pnas.org/content/suppl/2015/09/16/",
+#              "1510159112.DCSupplemental/pnas.201510159SI.pdf")
+#download.file(url, temp_file)
+#txt <- pdf_text(temp_file)
+#file.remove(temp_file)
+txt <- pdf_text('/home/rstudio/assign2/heights.pdf')
+
+
 ```
