@@ -26,3 +26,5 @@ flights_dt <- flights %>%
 flights_dt
 flights
 ?flights
+
+60*60*24
