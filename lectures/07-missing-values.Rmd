@@ -1,0 +1,839 @@
+---
+title: "Missing Values"
+author: "STAT 763 - Survey of Modern Statistical Software"
+output: ioslides_presentation
+---
+
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(out.width = '80%', collapse = TRUE, warning=FALSE, message=FALSE)
+```
+
+## Agenda
+
+- Missing value patterns/diagnostics
+- Imputation techniques
+- Extensions
+
+- Readings: 
+  - [Flexible Imputation of Missing Data](https://stefvanbuuren.name/fimd/)
+  - [mice tutorial](https://datascienceplus.com/imputing-missing-data-with-r-mice-package/)
+  
+
+## Missing values
+
+Using the `airquality` dataset as an example:
+
+```{r}
+source("mi.hist.R")
+library(mice)
+library(tidyverse)
+data("airquality")
+glimpse(airquality)
+```
+
+## Missing values
+
+R's usual approach is to omit _listwise_ (omit any rows that are not complete) -- It works!  Right?  
+```{r}
+fit <- lm(Ozone ~ Wind, data = airquality)
+summary(fit)
+```
+
+## Missing values
+
+
+```{r eval=FALSE}
+airquality2 <- cbind(airquality, predict(fit))
+# Error: arguments imply differing number of rows: 153, 116
+```
+
+`R` dropped the missing values silently, so we can't put the observed and predicted values together easily
+
+## Missing values
+
+Investigating the missing values:
+
+```{r}
+naprint(na.action(fit))
+colSums(is.na(airquality))
+```
+
+## Complete data
+
+`R` has a few built-in options for listwise deletion (or "complete case" analyses):
+
+```{r eval=FALSE}
+na.omit()
+complete.cases()
+```
+
+## Complete data
+
+```{r}
+airquality2 <- cbind(na.omit(airquality[, c("Ozone", "Wind")]),
+                     predicted = predict(fit))
+```
+
+## Visual inspection
+
+Abayomi convention for the colors:
+
+- Blue refers to the observed part of the data, 
+- red to the synthetic part of the data (also called the *imputed values* or *imputations*), and 
+- black to the combined data (also called the *imputed data* or *completed data*)
+
+## Visual inspection
+
+```{r echo=FALSE}
+par(mfrow=c(1,2))
+lwd <- 0.6
+plot(predicted ~ Ozone, data = airquality2, type = "n",
+     lwd = lwd, ylim = c(-20, 165), xlim = c(-20, 165),
+     ylab = "Ozone predicted (ppb)",
+     xlab = "Ozone measured (ppb)", axes = FALSE)
+axis(1, lwd = lwd)
+axis(2, lwd = lwd, las = 1)
+abline(0, 1, lty = 3, lwd = 0.6)
+points(predicted ~ Ozone, data = airquality2,
+       lwd = 1.5, col = mdc(1))
+box(lwd = lwd)
+fit2 <- lm(Ozone ~ Wind, data = airquality, na.action = na.exclude)
+plot(predicted ~ Ozone, data = airquality2, type = "n",
+     ylim = c(-20, 165), xlim = c(-20, 165),
+     ylab = " Ozone predicted (ppb)",
+     xlab = "Ozone measured (ppb)",
+     axes = FALSE)
+axis(1, lwd = lwd)
+axis(2, lwd = lwd, las = 1)
+abline(0, 1, lty = 3, lwd = 0.6)
+pred2 <- cbind(1, airquality$Wind) %*% coef(fit)
+abline(h = pred2[ici(predict(fit2))], col = mdc(2), lwd = 0.6, lty = 1)
+box(lwd = lwd)
+par(mfrow=c(1,1))
+```
+
+## Improving the model?
+
+Try to find a better predictive model by including solar radiation (`Solar.R`) into the model as
+
+```{r}
+fit2 <- lm(Ozone ~ Wind + Solar.R, data = airquality)
+naprint(na.action(fit2))
+```
+
+Changing the model changed the data used!
+
+## Important questions
+
+Methodological and statistical issues associated with this procedure:
+
+- Can we compare the regression coefficients from both models?
+- Should we attribute differences in the coefficients to changes in the model or to changes in the subsample?
+- Do the estimated coefficients generalize to the study population?
+- Do we have enough cases to detect the effect of interest?
+- Are we making the best use of the costly collected data?
+
+## Response models
+
+Rubin (1976): every data point has some likelihood of being missing.
+
+- The process that governs these probabilities is called the *missing data mechanism* or *response mechanism*. 
+- The model for the process is called the *missing data model* or *response model*.
+
+## Missing values in surveys
+
+                     Intentional       Unintentional
+  ------------------ ----------------- ----------------
+  Unit nonresponse   Sampling          Refusal
+                                       Self-selection
+  Item nonresponse   Matrix sampling   Skip question
+                     Branching         Coding error
+                     
+
+## MCAR
+
+If the probability of being missing is the same for all cases, then the
+data are said to be missing completely at random (MCAR)
+
+- A weighing scale ran out of batteries
+- Population members were not chosen in the sample
+
+## MAR
+
+If the probability of being missing is the same only within groups defined by the *observed* data, then the data are missing at random (MAR)
+
+- when placed on a soft surface, a weighing scale may produce more missing values than when placed on a hard surface
+  - If we know surface type and if we can assume MCAR *within* the type of surface, then the data are MAR
+- when we take a sample from a population, where the probability to be included depends on some known property.
+
+Modern missing data methods generally start from the MAR assumption.
+
+## MNAR
+
+Missing not at random (MNAR) means that the probability of being missing varies for reasons that are unknown to us
+
+- the weighing scale mechanism may wear out over time, producing more missing data as time progresses, but we may fail to note this
+- in public opinion research: MNAR occurs if those with weaker opinions respond less often.
+
+## MNAR
+
+MNAR is the most complex case. Strategies to resolve MNAR include:
+
+- find more data about the causes for the missingness
+- perform what-if analyses to see how sensitive the results are under various scenarios
+
+## Ad-hoc approaches
+
+Listwise deletion:
+
+- Super convenient (default behavior in many packages/softwares) 
+- Generally fine for MCAR, except loss of potential information (data reduction)
+  - may observe reductions of more than 50%
+  - produces standard errors and significance levels that are correct for the reduced subset of data, but that are often larger relative to all available data
+
+## Ad-hoc approaches
+
+Listwise deletion:
+
+- If not MCAR, can severely bias estimates of means, regression coefficients and correlations.
+- The implications of the missing data are different depending on where they occur (outcomes or predictors), and the parameter and model form of the complete-data model.
+- can introduce inconsistencies in reporting (based on active set of variables)
+
+## Ad-hoc approaches
+
+Listwise deletion:
+
+- Little and Rubin (2002) argue that it is difficult to formulate rules of thumb since the consequences of using listwise deletion depend on more than the missing data rate alone
+- Vach (1994, 113): "It is often supposed that there exists something like a critical missing rate up to which missing values are not too dangerous. The belief in such a global missing rate is rather stupid."
+
+## Ad-hoc approaches
+
+Pairwise deletion (available-case analysis):
+
+- calculates the means and (co)variances on all observed data
+
+```{r}
+data <- airquality[, c("Ozone", "Solar.R", "Wind")]
+mu <- colMeans(data, na.rm = TRUE)
+cv <- cov(data, use = "pairwise")
+```
+
+## Ad-hoc approaches
+
+Pairwise deletion (available-case analysis):
+
+- `lm()` in `R` doesn't take means and covariances as inputs
+- `lavaan` package can handle these
+
+## Ad-hoc approaches
+
+Pairwise deletion (available-case analysis):
+
+- Under MCAR, it produces consistent estimates of mean, correlations and covariances
+  - estimates can be biased if the data are not MCAR
+- Covariance and/or correlation matrix may not be positive definite
+- Problems are generally more severe for highly correlated variables 
+- Not clear what sample size should be used for calculating standard errors
+- Requires numerical data that follow an approximate normal distribution
+
+## Ad-hoc approaches
+
+Mean imputation:
+
+- Replace numeric missing values with mean, use mode for categorical
+
+```{r}
+library(mice)
+imp <- mice(airquality, method = "mean", m = 1, maxit = 1)
+```
+
+- `method=mean` implies mean imputation
+- `m = 1`: create 1 imputed dataset
+- `maxit = 1`: no iteration
+
+## Ad-hoc approaches
+
+Mean imputation:
+
+```{r echo=FALSE}
+par(mfrow=c(1,2))
+lwd <- 0.6
+data <- mice::complete(imp)
+Yobs <- airquality[,"Ozone"]
+Yimp <- data[,"Ozone"]
+mi.hist(Yimp, Yobs,b=seq(-20,200,10),type="continuous",
+        gray=F,lwd = lwd,
+        obs.lwd=1.5, mis.lwd=1.5, imp.lwd=1.5,
+        obs.col=mdc(4), mis.col=mdc(5), imp.col="transparent",
+        mlt=0.08,main="",xlab="Ozone (ppb)",
+        axes = FALSE)
+box(lwd = 1)
+plot(data[cci(imp),2:1],col=mdc(1), lwd=1.5,ylab="Ozone (ppb)",
+     xlab="Solar Radiation (lang)",ylim=c(-10,170),
+     axes = FALSE)
+points(data[ici(imp),2:1],col=mdc(2),lwd=1.5)
+axis(1, lwd = lwd)
+axis(2, lwd = lwd, las = 1)
+box(lwd = 1)
+par(mfrow=c(1,1))
+```
+
+## Ad-hoc approaches
+
+Mean imputation:
+
+- Distorts the mean and standard deviation
+- Distorts relationship between variables
+- Maybe reasonable when there are only a handful of missing values (MCAR), or for a rapid fix
+
+## Ad-hoc approaches
+
+Regression imputation:
+
+- Build a model based on observed data, use model to predict missing data
+
+```{r}
+fit <- lm(Ozone ~ Solar.R, data = airquality)
+pred <- predict(fit, newdata = ic(airquality))
+```
+
+## Ad-hoc approaches
+
+Regression imputation:
+```{r}
+data <- airquality[, c("Ozone", "Solar.R")]
+imp <- mice(data, method = "norm.predict", seed = 1,
+           m = 1, print = FALSE)
+xyplot(imp, Ozone ~ Solar.R)
+```
+
+## Ad-hoc approaches
+
+Regression imputation:
+
+```{r echo=FALSE}
+par(mfrow=c(1,2))
+lwd <- 0.6
+Yobs <- airquality[,"Ozone"]
+Yimp <- Yobs
+Yimp[ici(airquality)] <- pred
+ss <- cci(airquality$Solar.R)
+data <- data.frame(Ozone=Yimp, Solar.R=airquality$Solar.R)
+mi.hist(Yimp[ss], Yobs[ss],b=seq(-20,200,10),type="continuous",
+        gray=F, lwd = lwd,
+        obs.lwd=1.5, mis.lwd=1.5, imp.lwd=1.5,
+        obs.col=mdc(4),mis.col=mdc(5), imp.col="transparent",
+        mlt=0.08,main="",xlab="Ozone (ppb)", axes = FALSE)
+box(lwd = 1)
+plot(data[cci(imp),2:1],col=mdc(1),lwd=1.5,
+     ylab="Ozone (ppb)", xlab="Solar Radiation (lang)",
+     ylim=c(-10,170), axes = FALSE)
+points(data[ici(imp),2:1],col=mdc(2),lwd=1.5)
+axis(1, lwd = lwd)
+axis(2, lwd = lwd, las = 1)
+box(lwd = 1)
+par(mfrow=c(1,1))
+```
+
+## Ad-hoc approaches
+
+Regression imputation:
+
+- Imputed values vary less than observed values
+- Affects the correlation between variables
+- Unbiased estimates under MCAR, unbiased regression weights under MAR if accounting for reasons for missingness
+
+## Ad-hoc approaches
+
+- Stochastic regression imputation: add some noise to predictions
+- Last observation carried forward (LOCF) and baseline observation carried forward (BOCF) are approaches for longitudinal data
+- Indicator method: replace missing values with 0 and include a "missing value indicator" variable
+
+## Multiple imputation
+
+- Creates $m>1$ datasets
+- Three main steps in multiple imputation: 
+  - imputation, (plausible values are drawn from a distribution specifically modeled for each missing entry)
+  - analysis, (applying the analytic method that we would have used had the data been complete)
+  - pooling (pool the $m$ parameter estimates into one estimate, and to estimate its variance)
+
+## Multiple imputation
+
+- Provides a mechanism for dealing with the inherent uncertainty of the imputations themselves
+- Separates the solution of the missing data problem from the solution of the complete-data problem
+
+## Multiple imputation
+
+```{r echo=FALSE}
+cit  <- c(     2017, 75, 381, NA,
+               2016, 81, 328, NA,
+               2015, 59, 306, NA,
+               2014, 55, 281, NA,
+               2013, 45, 233, NA,
+               2012, 47, 214, NA,
+               2011, 55, 181, NA,
+               2010, 44, 157, NA,
+               2009, 38, 111, NA,
+               2008, 28, 102, NA,
+               2007, 34, 113, NA,
+               2006, 19, 75, NA,
+               2005, 21, 63, NA,
+               2004,  7, 44, NA,
+               2003, 18, 38, NA,
+               2002, 15, 36, NA,
+               2001, 14, 35, 57,
+               2000,  8, 19, 33,
+               1999,  6, 18, 47,
+               1998,  6, 12, 22,
+               1997,  6, 16, 29,
+               1996,  5, 12, 28,
+               1995,  3, 5, 20,
+               1994,  4, 7, 34,
+               1993,  3, 6, 15,
+               1992, NA, 4, NA,
+               1991,  3, 4, 19,
+               1990,  2, 3, 15,
+               1989, NA, 2, 11,
+               1988, NA, 1, 13,
+               1987, NA, 3, 10,
+               1986,  2, 3, 5,
+               1985, NA, NA, 1,
+               1984, NA, 1, 2,
+               1983, NA, NA, 5,
+               1982, NA, NA, 2,
+               1981, NA, NA, 1,
+               1980, NA, NA, 5,
+               1979, NA, NA, 2,
+               1978, NA, NA, 1,
+               1977, NA, NA, 2)
+cit <- matrix(cit, nr=2018-1977, nc=4, byrow=TRUE)
+cit <- as.data.frame(cit)
+names(cit) <- c("Year","Title","Abstract","All")
+par(cex = 0.7, lwd = 0.5)
+plot(x = cit$Year, y = cit$Abstract, type="o",log="y",
+     xlim = c(1975,2017), ylim = c(1,400),
+     ylab="Number of publications (log)", xlab="Year",
+     pch=24, bg = "white",
+     axes=FALSE)
+axis(1, at = seq(1977, 2017, 5), lwd = par("lwd"))
+axis(2, lwd = par("lwd"), las=1)
+lines(x=cit$Year, y=cit$Title, pch=15, type="o")
+lines(x=cit$Year, y=cit$All, pch=16, type="o")
+legend(x=1975,y=200,legend=c('early publications',
+                            '"multiple imputation" in abstract',
+                            '"multiple imputation" in title'),
+       pch=c(16,2,15), bty="n")
+```
+
+## Other approaches (not covered)
+
+- Prevention
+- Weighting procedures
+- Likelihood-based approaches
+
+## Variation
+
+After imputing data, we can define three sources of variation:
+
+- the variance caused by the fact that we are taking a sample rather than observing the entire population. This is the conventional statistical measure of variability;
+- the extra variance caused by the fact that there are missing values in the sample;
+- the extra simulation variance caused by the fact that total variance is estimated for finite imputations
+  - can decrease this source by using more imputated data sets
+
+Our goal is to provide estimates that are both *unbiased* and *confidence valid*
+
+## Not prediction
+
+Worth noting: methods that create the best predictions **DO NOT** create the best imputations (and generally create _single imputations_).
+
+## Univariate missing data
+
+Weekly gas consumption and average external temperature (I made one missing value, temp=5):
+
+```{r echo=FALSE}
+library(MASS)
+data(whiteside)
+whiteside[47,"Gas"] <- NA #make one missing value, temp=5
+qplot(Temp, Gas, data=whiteside)
+```
+
+## Univariate missing data
+
+Predict method (using a regression line):
+
+- `meth=norm.predict` in `mice`
+
+```{r echo=FALSE, echo=FALSE, fig.width=5.5, fig.height=3.75}
+data <- whiteside
+data[47,"Gas"] <- NA
+lwd <- 1.5
+plot(x=data$Temp, y=data$Gas, col=mdc(1), lwd=lwd,
+     xlab=expression(paste("Temperature (", degree, "C)")),
+     ylab="Gas consumption (cubic feet)", cex.lab = 1,
+     axes = FALSE)
+axis(1, lwd = 0.7)
+axis(2, lwd = 0.7, las = 1)
+box(lwd = 0.7)
+abline(m1<-lm(Gas~Temp, data=data, na.action=na.omit), col=mdc(4))
+points(5,4.04, lwd=lwd, col=mdc(2),pch=19)
+```
+
+## Univariate missing data
+
+Predict + noise method (using a regression line and multiple draws):
+
+- Estimate standard deviation in the dataset
+- Draw from a random normal with estimated standard deviation
+- `meth=norm.nob` in `mice`
+
+```{r echo=FALSE, echo=FALSE, fig.width=5.5, fig.height=3.75}
+plot(x=data$Temp, y=data$Gas, col=mdc(1), lwd=lwd,
+     xlab=expression(paste("Temperature (", degree, "C)")),
+     ylab="Gas consumption (cubic feet)", cex.lab = 1.6,
+     axes = FALSE)
+axis(1, lwd = 0.7)
+axis(2, lwd = 0.7, las = 1)
+box(lwd = 0.7)
+imp <- mice(data, m=1, maxit=0)
+pred <- imp$pred
+pred["Gas","Insul"] <- 0
+imp <- mice(data, m=5, pred=pred, meth="norm.nob", maxit=1, print=FALSE, seed=45433)
+abline(m1<-lm(Gas~Temp, data=data, na.action=na.omit), col=mdc(4))
+points(rep(5,5),imp$imp$Gas, lwd=lwd, col=mdc(2),pch=19)
+```
+
+## Univariate missing data
+
+Predict + noise + parameter uncertainty method:
+
+- Bayesian methods draw the parameters directly from their posterior distributions
+- Bootstrap methods resample the observed data and re-estimate the parameters from the resampled data.
+- `meth=norm` or `meth=norm.boot` in `mice`
+
+```{r echo=FALSE, echo=FALSE, fig.width=5.5, fig.height=3.75}
+plot(x=data$Temp, y=data$Gas, col=mdc(1), lwd=lwd,
+     xlab=expression(paste("Temperature (", degree, "C)")),
+     ylab="Gas consumption (cubic feet)", cex.lab = 1.6,
+     axes = FALSE)
+axis(1, lwd = 0.7)
+axis(2, lwd = 0.7, las = 1)
+box(lwd = 0.7)
+imp <- mice(data, m=1, maxit=0)
+pred <- imp$pred
+pred["Gas","Insul"] <- 0
+betadump <- vector("list", 0)
+imp <- mice(data, m=5, pred=pred, meth="norm.boot", maxit=1, print=FALSE, seed=83126)
+abline(m1<-lm(Gas~Temp, data=data, na.action=na.omit), col=mdc(4))
+betadump <- matrix(betadump, nc=2, byrow=TRUE)
+#for (i in 1:5) abline(coef=unlist(betadump[i,]), col=mdc(5))
+points(rep(5,5),imp$imp$Gas, lwd=lwd, col=mdc(2),pch=19)
+```
+
+## Univariate missing data
+
+Method                Bias   % Bias   Coverage   CI Width    RMSE
+---------------- --------- -------- ---------- ---------- -------
+`norm.predict`      0.0000      0.0      0.652      0.114   0.063
+`norm.nob`         -0.0001      0.0      0.908      0.226   0.064
+`norm`             -0.0001      0.0      0.951      0.314   0.066
+`norm.boot`        -0.0001      0.0      0.941      0.299   0.066
+Listwise deletion   0.0001      0.0      0.946      0.251   0.063
+
+: Properties of $\beta_1$ under imputation of missing
+$y$ by five methods for the normal linear model ($n_\mathrm{sim} =
+10000$).
+
+## Univariate missing data
+
+Method               Bias   % Bias   Coverage   CI Width    RMSE
+---------------- --------- -------- ---------- ---------- -------
+`norm.predict`     -0.1007     34.7      0.359      0.160   0.118
+`norm.nob`          0.0006      0.2      0.924      0.202   0.056
+`norm`              0.0075      2.6      0.955      0.254   0.058
+`norm.boot`        -0.0014      0.5      0.946      0.238   0.058
+Listwise deletion  -0.0001      0.0      0.946      0.251   0.063
+
+: Properties of $\beta_1$ under imputation of missing 
+$x$ by five methods for the normal linear model ($n_\mathrm{sim} = 10000$)
+
+
+
+## Univariate missing data
+
+Predict + noise + parameter uncertainty + second predictor method:
+
+- The data indicate that the house was insulated
+
+```{r echo=FALSE, echo=FALSE, fig.width=5.5, fig.height=3.75}
+pch <- c(rep(3,26),rep(1,30))
+plot(x=data$Temp, y=data$Gas, col=mdc(1), lwd=lwd, pch=pch,
+     xlab=expression(paste("Temperature (", degree, "C)")),
+     ylab="Gas consumption (cubic feet)", cex.lab = 1.6,
+     axes = FALSE)
+axis(1, lwd = 0.7)
+axis(2, lwd = 0.7, las = 1)
+box(lwd = 0.7)
+imp <- mice(data, m=5, meth="norm", maxit=1, print=FALSE, seed=11727)
+abline(m1<-lm(Gas~Temp, data=data, na.action=na.omit, subset=Insul=="Before"), col=mdc(4))
+abline(m2<-lm(Gas~Temp, data=data, na.action=na.omit, subset=Insul=="After"), col=mdc(4))
+points(rep(5,5),imp$imp$Gas, lwd=lwd, col=mdc(2),pch=19)
+legend(x="bottomleft", legend=c("before insulation","after insulation"), pch=c(3,1),bty="n", pt.lwd=lwd, cex = 1.6, pt.cex = 1, y.intersp = 0.6)
+```
+
+## Univariate missing data
+
+Predictive mean matching method:
+
+- Hot deck method, where values are imputed using values from the complete cases matched with respect to some metric
+- Calculate the predicted value, then select a small number of candidate donors from the observed data. 
+- The selection is done such that the predicted values are close. 
+- Randomly select one donor from the candidates, and use the observed gas consumption that belongs to that donor as the synthetic value
+
+## Univariate missing data
+
+```{r echo=FALSE, echo=FALSE, fig.width=5.5, fig.height=4.75}
+data <- whiteside
+lwd <- 1.5
+data[47,"Gas"] <- NA
+
+pch <- c(rep(3,26),rep(1,30))
+plot(x=data$Temp, y=data$Gas, col=mdc(1), lwd=lwd, pch=pch,
+     xlab=expression(paste("Temperature (", degree, "C)")),
+     ylab="Gas consumption (cubic feet)", axes = FALSE)
+axis(1, lwd = 0.7, cex.axis = 1)
+axis(2, lwd = 0.7, las = 1, cex.axis = 1)
+box(lwd = 0.7)
+betadump <- vector("list", 0)
+imp <- mice(data, m=5, meth="pmm", maxit=1, print=FALSE, seed=68006)
+#betadump <- matrix(unlist(betadump), nc=3, byrow=TRUE)
+m1<-lm(Gas~Temp+Insul, data=data, na.action=na.omit)
+an <- coef(m1)[1]
+ai <- an + coef(m1)[3]
+b <- coef(m1)[2]
+abline(a=ai, b=b, col=mdc(4))
+abline(a=an, b=b, col=mdc(4))
+# for (i in 56:56) {
+#    abline(a=unlist(betadump[i,1]), b=unlist(betadump[i,2]), col=mdc(5))
+#    abline(a=unlist(betadump[i,1])+unlist(betadump[i,3]), b=unlist(betadump[i,2]), col=mdc(5))
+# }
+# points(rep(5,5),imp$imp$Gas, lwd=lwd, col=mdc(2), pch=20)
+eta <- 0.6
+ylo <- ai+b*(5-eta)
+yhi <- ai+b*(5+eta)
+lines(x=c(5-eta,5+eta),y=c(ylo,yhi),lwd=3,col=mdc(4))
+an <- 7.05; ai<-an-1.7; b <- -0.38
+xlo1 <- (ylo-ai)/b
+xhi1 <- (yhi-ai)/b
+xlo2 <- (ylo-an)/b
+xhi2 <- (yhi-an)/b
+abline(a=an, b=b, col=mdc(5))
+abline(a=ai, b=b, col=mdc(5))
+lines(x=c(xlo1,xhi1),y=c(ylo,yhi),lwd=3,col=mdc(5))
+lines(x=c(xlo2,xhi2),y=c(ylo,yhi),lwd=3,col=mdc(5))
+abline(v=c(5-eta,5+eta),h=c(ylo,yhi),col=mdc(4),lty=3)
+rect(xlo1,0,xhi1,8,col=hcl(0,100,40,0.05),border=NA)
+rect(xlo2,0,xhi2,8,col=hcl(0,100,40,0.05),border=NA)
+
+donors <- subset(data, (Insul=="After"&Temp>xlo1&Temp<xhi1)
+                 |    (Insul=="Before"&Temp>xlo2&Temp<xhi2))
+points(x=donors$Temp, y=donors$Gas, cex=1.8, col=mdc(5), lwd=lwd)
+legend(x="bottomleft", legend=c("before insulation","after insulation"), pch=c(3,1),bty="n", pt.lwd=lwd)
+
+
+```
+
+## Univariate missing data
+
+|Method               |       |  Bias|% Bias| Coverage|CI Width|  RMSE|
+|---------------------|------:|-----:|-----:|--------:|-------:|-----:|
+|Missing $y$, $n = 50$|    $d$|      |      |         |        |      |
+|`pmm`                |     1 | 0.016|   5.4|    0.884|   0.252| 0.071|
+|`pmm`                |     3 | 0.028|   9.7|    0.890|   0.242| 0.070|
+|`pmm`                |     5 | 0.039|  13.6|    0.876|   0.241| 0.075|
+|`pmm`                |    10 | 0.065|  22.4|    0.806|   0.245| 0.089|
+
+## Univariate missing data
+
+|Method               |       |  Bias|% Bias| Coverage|CI Width|  RMSE|
+|---------------------|------:|-----:|-----:|--------:|-------:|-----:|
+|Missing $x$          |       |      |      |         |        |      |
+|`pmm`                |     1 |-0.002|   0.8|    0.916|   0.223| 0.063|
+|`pmm`                |     3 | 0.002|   0.9|    0.931|   0.228| 0.061|
+|`pmm`                |     5 | 0.008|   2.8|    0.938|   0.237| 0.062|
+|`pmm`                |    10 | 0.028|   9.6|    0.946|   0.261| 0.067|
+|Listwise deletion    |       | 0.000|   0.0|    0.946|   0.251| 0.063|
+
+## Other methods
+
+Why not use classification/regression trees or random forests?
+
+- You can! (`cart` and `rf` functions in `mice`)
+- Essentially the same as `pmm`, just a different model
+
+## Univariate missing data
+
+The ideas for numeric data extend nicely to categorical data
+
+- Methods include `logreg` and `polyreg`
+- These methods employ data augmentation to prohibit infinite estimates (under perfect separation)
+
+## Mice methods
+
+```{r}
+methods(mice)
+```
+
+## Multivariate missing data
+
+Types of missing patterns:
+
+- _Univariate and multivariate_: univariate if there is only one variable with missing data.
+- _Monotone and non-monotone (or general)_: monotone if the variables can be ordered such that if $Y_j$ is missing then all variables $Y_k$ with $k>j$ are also missing (e.g., logitudinal)
+- _Connected and unconnected_: connected if any observed data point can be reached from any other observed data point through a sequence of horizontal or vertical moves (like the rook in chess).
+
+## Multivariate missing data
+
+```{r echo=FALSE, echo=FALSE, fig.width=5.5, fig.height=4.75}
+data <- matrix(sample(1:100,4*8*3,replace=TRUE),nrow=8*4,
+                dimnames=list(NULL,c("A","B","C")))
+data <- as.data.frame(data)
+data[c(31:32),"A"] <- NA
+data[c(15:16,22:24,30:32),"B"] <- NA
+data[c(6:8,12:16,17:21,27:29),"C"] <- NA
+mdpat <- cbind(expand.grid(rec = 8:1, pat = 1:4, var = 1:3), r=as.numeric(as.vector(is.na(data))))
+pattern1 <- data[1:8,]
+pattern2 <- data[9:16,]
+pattern3 <- data[17:24,]
+pattern4 <- data[25:32,]
+types <-  c("Univariate","Monotone","File matching","General")
+levelplot(r~var+rec|as.factor(pat), data=mdpat,
+            as.table=TRUE, aspect="iso",
+            shrink=c(0.9),
+            col.regions = mdc(1:2),
+            colorkey=FALSE,
+            scales=list(draw=FALSE),
+            xlab="", ylab="",
+            between = list(x=1,y=0),
+            strip = strip.custom(bg = "grey95", style = 1,
+                                 factor.levels = types))
+```                                 
+
+## Diagnostics
+
+`md.pattern` from `mice`:
+
+```{r echo=FALSE}
+md.pattern(pattern4, plot = TRUE)
+```
+
+## Influx and outflux
+
+- Influx ($I_j$): The coefficient is equal to the number of variable pairs with one missing and one observed, divided by the total number of observed data cells.
+  - depends on the proportion of missing data of the variable. 
+  - influx of a completely observed variable is equal to 0, whereas for completely missing variables it is 1. 
+  - For two variables with the same proportion of missing data, the variable with higher influx is better connected to the observed data, and might thus be easier to impute.
+
+## Influx and outflux
+
+- Outflux ($O_j$) is the number of variable pairs with one observed and one missing, divided by the total number of incomplete data cells. 
+  - depends on the proportion of missing data of the variable. 
+  - outflux of a completely observed variable is equal to 1, whereas outflux of a completely missing variable is equal to 0. 
+  - For two variables having the same proportion of missing data, the variable with higher outflux is better connected to the missing data, and thus potentially more useful for imputing other variables.
+
+## Influx and outflux
+
+```{r}
+flux(pattern4)[,1:3]
+```
+
+## Issues with multivariate imputation
+
+Most imputation models for $Y_j$ use the remaining columns $Y_{-j}$ as predictors. The rationale is that conditioning on $Y_{-j}$ preserves the relations among the $Y_j$ in the imputed data. identified various
+practical problems that can occur in multivariate missing data:
+
+- The predictors $Y_{-j}$ themselves can contain missing values;
+- “Circular” dependence can occur, where $Y_j^\mathrm{mis}$ depends on $Y_h^\mathrm{mis}$, and $Y_h^\mathrm{mis}$ depends on $Y_j^\mathrm{mis}$ with $h \neq j$, because in general $Y_j$ and $Y_h$ are correlated, even given other variables;
+
+## Issues with multivariate imputation
+
+- Variables are often of different types (e.g., binary, unordered, ordered, continuous), thereby making the application of theoretically convenient models, such as the multivariate normal, theoretically inappropriate;
+- Especially with large $p$ and small $n$, collinearity or empty cells can occur;
+
+## Issues with multivariate imputation
+
+- The ordering of the rows and columns can be meaningful, e.g., as in longitudinal data;
+- The relation between $Y_j$ and predictors $Y_{-j}$ can be complex, e.g., nonlinear, or subject to censoring processes;
+- Imputation can create impossible combinations, such as pregnant fathers.
+
+
+## Example - air quality
+
+```{r}
+data <- airquality[-c(5,6)] # remove cat. preds. for example
+data[4:10,3] <- rep(NA, 7)
+data[1:5, 4] <- NA
+summary(data)
+```
+
+## Example - missing pattern
+
+```{r}
+md.pattern(data, plot=TRUE)
+```
+
+## Example - missing pattern
+
+```{r}
+library(VIM)
+aggr_plot <- aggr(data, col=c('navyblue','red'), numbers=TRUE, sortVars=TRUE, labels=names(data), cex.axis=.7, gap=3, ylab=c("Histogram of missing data","Pattern"))
+```
+
+## Example - missing pattern
+
+```{r}
+marginplot(data[c(1,2)])
+```
+
+## Example - flux
+
+```{r}
+flux(data)[,1:3]
+```
+
+## Example - flux
+
+```{r}
+fluxplot(data)
+```
+
+## Example - imputing data
+
+```{r}
+tempData <- mice(data,m=10,maxit=50,meth='pmm',seed=500)
+completedData <- mice::complete(tempData,1) #replace missing with first dataset
+```
+
+## Example - inspecting imputations
+
+```{r}
+xyplot(tempData,Ozone ~ Wind+Temp+Solar.R,pch=18,cex=1)
+```
+
+## Example - inspecting imputations
+
+```{r}
+densityplot(tempData)
+```
+
+## Example - inspecting imputations
+
+```{r}
+stripplot(tempData, pch = 20, cex = 1.2)
+```
+
+## Example - pooling
+
+```{r}
+modelFit1 <- with(tempData,lm(Temp~ Ozone+Solar.R+Wind))
+summary(pool(modelFit1))
+```
