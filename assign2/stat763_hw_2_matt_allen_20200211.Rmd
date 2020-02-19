@@ -33,6 +33,10 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 
 ```{r readdata}
 library("pdftools")
+#filenames
+heights_file_name <- '/home/rstudio/assign2/heights.pdf'
+ice_cream_file_name <- '/home/rstudio/assign2/ice_cream.csv'
+
 #temp_file <- tempfile()
 #url <- paste0("http://www.pnas.org/content/suppl/2015/09/16/",
 #              "1510159112.DCSupplemental/pnas.201510159SI.pdf")
