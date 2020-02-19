@@ -169,9 +169,15 @@ heights <- tibble(id = ids, reported_date = dates, sex = sex, height_text = str_
 #as.numeric(heights$height_text)
 #which(is.na(as.numeric(heights$height_text)))
 weird_heights <- heights$height_text[which(is.na(as.numeric(heights$height_text)))]
+length(weird_heights)
 str_squish(weird_heights)
 #str_view(c("abc", "def", "fgh"), "abc")
-str_view(str_squish(weird_heights),pattern = "\\d'")
+str_view(str_squish(weird_heights),pattern = "\\d'\\d+")
+
+#got a bunch on this, took care of 47 with 30 left to find
+sum(is.na(str_extract(str_squish(weird_heights),pattern = "\\d'\\d+")))
+
+
 #str_view_all(c("abc", "def", "fgh"), "d|e")
 
 #(fruit, "^([aeiou])")
