@@ -87,18 +87,25 @@ create_heights_tibble <- function(heights_pdf_text) {
   
   
   
-  testy <- tibble()
+  testy <- tibble(heights_col_names)
   for(page in heights) {
     #if(page_num == 1 && row_num == 1) {
       #the first page has the row headers so need to process that one differently
       #heights_col_names <- str_split(heights[[1]][1],"\\s+")
       #create data table
     #}
-    for(row in page) {
+    rows = str_split(page,"\\s+")
+    
+    #for(row in rows) {
+      #if(length(row) == length(heights_col_names)) {
+    bind_rows(testy,row)
+      #}
       
-    }
-    row_num <- 1
-    page_num = page_num + 1
+    #}
+    
+    
+    #row_num <- 1
+    #page_num = page_num + 1
     
   }
   return(testy)
@@ -113,4 +120,17 @@ for(page in heights) {
   rbind()
 }
 
+
+which(length(heights[[2]])==3)
+heights[2]
+
+test2 <- str_split(heights[[2]],"\\s+")
+which(length(test2) == 3)
+
+#https://www.r-bloggers.com/extracting-pdf-text-with-r-and-creating-tidy-data/
+heights <- pdf_text(heights_file_name) %>%
+  read_lines()
+
+heights[1]
+str_split(heights[2:length(heights)],"\\s+")
 ```
