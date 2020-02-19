@@ -168,12 +168,21 @@ heights <- tibble(id = ids, reported_date = dates, sex = sex, height_text = str_
 
 #as.numeric(heights$height_text)
 #which(is.na(as.numeric(heights$height_text)))
-heights$height_text[which(is.na(as.numeric(heights$height_text)))]
+weird_heights <- heights$height_text[which(is.na(as.numeric(heights$height_text)))]
+str_squish(weird_heights)
+#str_view(c("abc", "def", "fgh"), "abc")
+str_view(str_squish(weird_heights),pattern = "\\d'")
+#str_view_all(c("abc", "def", "fgh"), "d|e")
 
-recode(heights$height_text, 
-                          `Antigua and Barbuda` = "Barbuda",
-                          `Dominican Republic` = "DR",
-                          `St. Vincent and the Grenadines` = "St. Vincent",
-                          `Trinidad and Tobago` = "Trinidad")
+#(fruit, "^([aeiou])")
+
+#recode(heights$height_text, 
+#                          `Antigua and Barbuda` = "Barbuda",
+#                          `Dominican Republic` = "DR",
+#                          `St. Vincent and the Grenadines` = "St. Vincent",
+#                          `Trinidad and Tobago` = "Trinidad")
+
+#in str_view documentation
+#https://www.garrickadenbuie.com/project/regexplain/
 
 ```
