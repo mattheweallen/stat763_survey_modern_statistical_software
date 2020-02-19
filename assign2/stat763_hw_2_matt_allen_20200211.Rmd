@@ -32,6 +32,7 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 
 
 ```{r readdata}
+library(tidyverse)
 library("pdftools")
 #filenames
 heights_file_name <- '/home/rstudio/assign2/heights.pdf'
@@ -43,7 +44,17 @@ ice_cream_file_name <- '/home/rstudio/assign2/ice_cream.csv'
 #download.file(url, temp_file)
 #txt <- pdf_text(temp_file)
 #file.remove(temp_file)
-txt <- pdf_text('/home/rstudio/assign2/heights.pdf')
+heights <- pdf_text(heights_file_name)
+ice_cream <- read.csv2(ice_cream_file_name,sep=",")
+#str_split(ice_cream_raw$preference,",")
+#https://tidyr.tidyverse.org/reference/separate.html
 
+ice_cream <- ice_cream %>%
+  separate(preference, c("Preference_1","Preference_2","Preference_3"), 
+           sep = ",", remove = TRUE, convert = FALSE, extra = "warn", fill = "warn") %>%
+  mutate_all(str_trim)
+
+
+  
 
 ```
