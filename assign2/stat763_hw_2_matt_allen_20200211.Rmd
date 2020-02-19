@@ -136,7 +136,29 @@ heights <- pdf_text(heights_file_name) %>%
 
 
 #get rid of empty rows
+#can use string split n to throw away empty rows?
+#https://stringr.tidyverse.org/reference/str_split.html
 heights <- heights[which(str_length(heights) > 0)]
 
-heights
+#str_length(heights)
+#length(heights)
+
+#str_split(heights[2:length(heights)],"Male|Female", simplify = TRUE)[1:length(heights)]
+
+library(lubridate)
+split_on_sex <- str_split(heights[2:length(heights)],"Male|Female", simplify = TRUE)
+split_on_sex
+dates <- mdy_hm(split_on_sex[1:length(heights)-1,1])
+
+
+
+ids <- str_extract(split_on_sex[1:length(heights)-1,2],"([a-zA-Z0-9_]*)$")
+#heights_text <- str_extract(split_on_sex[1:length(heights)-1,2],"([a-zA-Z0-9_]*)$")
+heights_text <- str_sub(split_on_sex[1:length(heights)-1,2],1,str_length(split_on_sex[1:length(heights)-1,2])-str_length(ids))
+length(heights_text)
+#length(ids)
+
+#length(dates)
+sex <- str_extract(heights[2:length(heights)],"Male|Female")
+length(sex)
 ```
