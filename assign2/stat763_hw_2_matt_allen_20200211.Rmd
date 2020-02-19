@@ -48,11 +48,11 @@ ice_cream_file_name <- '/home/rstudio/assign2/ice_cream.csv'
 
 
 
-ice_cream_raw <- read.csv2(ice_cream_file_name,sep=",")
+#ice_cream_raw <- read.csv2(ice_cream_file_name,sep=",")
 #str_split(ice_cream_raw$preference,",")
 #https://tidyr.tidyverse.org/reference/separate.html
 
-ice_cream <- ice_cream_raw %>%
+ice_cream <- read.csv2(ice_cream_file_name,sep=",") %>%
   separate(preference, c("Preference_1","Preference_2","Preference_3"), 
            sep = ",", remove = TRUE, convert = FALSE, extra = "warn", fill = "warn") %>%
   mutate_all(str_trim)
@@ -63,74 +63,80 @@ ice_cream <- ice_cream_raw %>%
 
 
 
-str_split(heights[[2]],"\\s+")
+#str_split(heights[[2]],"\\s+")
 
-heights
-
-
-
-
-blarg <- ice_cream_raw %>%
-  separate(preference, heights_col_names, 
-           sep = "\\s+", remove = TRUE, convert = FALSE, extra = "warn", fill = "warn")
-
-
-#https://stackoverflow.com/questions/48833807/initialize-an-empty-tibble-with-column-names-and-0-rows
-
-create_heights_tibble <- function(heights_pdf_text) {
-  page_num <- 1
-  row_num <- 2 # start row num at 2 because first page has columns
-  
-  
-  heights <- str_split(heights_pdf_text, "\n") 
-  heights_col_names <- str_split(heights[[page_num]][row_num],"\\s+")
-  
-  
-  
-  testy <- tibble(heights_col_names)
-  for(page in heights) {
-    #if(page_num == 1 && row_num == 1) {
-      #the first page has the row headers so need to process that one differently
-      #heights_col_names <- str_split(heights[[1]][1],"\\s+")
-      #create data table
-    #}
-    rows = str_split(page,"\\s+")
-    
-    #for(row in rows) {
-      #if(length(row) == length(heights_col_names)) {
-    bind_rows(testy,row)
-      #}
-      
-    #}
-    
-    
-    #row_num <- 1
-    #page_num = page_num + 1
-    
-  }
-  return(testy)
-}
-
-heights <- create_heights_tibble(pdf_text(heights_file_name))
-
-
-##
-for(page in heights) {
-  rows = str_split(page,"\\s+")
-  rbind()
-}
-
-
-which(length(heights[[2]])==3)
-heights[2]
-
-test2 <- str_split(heights[[2]],"\\s+")
-which(length(test2) == 3)
+# heights
+# 
+# 
+# 
+# 
+# blarg <- ice_cream_raw %>%
+#   separate(preference, heights_col_names, 
+#            sep = "\\s+", remove = TRUE, convert = FALSE, extra = "warn", fill = "warn")
+# 
+# 
+# #https://stackoverflow.com/questions/48833807/initialize-an-empty-tibble-with-column-names-and-0-rows
+# 
+# create_heights_tibble <- function(heights_pdf_text) {
+#   page_num <- 1
+#   row_num <- 2 # start row num at 2 because first page has columns
+#   
+#   
+#   heights <- str_split(heights_pdf_text, "\n") 
+#   heights_col_names <- str_split(heights[[page_num]][row_num],"\\s+")
+#   
+#   
+#   
+#   testy <- tibble(heights_col_names)
+#   for(page in heights) {
+#     #if(page_num == 1 && row_num == 1) {
+#       #the first page has the row headers so need to process that one differently
+#       #heights_col_names <- str_split(heights[[1]][1],"\\s+")
+#       #create data table
+#     #}
+#     rows = str_split(page,"\\s+")
+#     
+#     #for(row in rows) {
+#       #if(length(row) == length(heights_col_names)) {
+#     bind_rows(testy,row)
+#       #}
+#       
+#     #}
+#     
+#     
+#     #row_num <- 1
+#     #page_num = page_num + 1
+#     
+#   }
+#   return(testy)
+# }
+# 
+# heights <- create_heights_tibble(pdf_text(heights_file_name))
+# 
+# 
+# ##
+# for(page in heights) {
+#   rows = str_split(page,"\\s+")
+#   rbind()
+# }
+# 
+# 
+# which(length(heights[[2]])==3)
+# heights[2]
+# 
+# test2 <- str_split(heights[[2]],"\\s+")
+# which(length(test2) == 3)
 
 #https://www.r-bloggers.com/extracting-pdf-text-with-r-and-creating-tidy-data/
 heights <- pdf_text(heights_file_name) %>%
   read_lines()
 
-heights[1]
-heights_split <- str_split(heights[2:length(heights)],"\\s+")
+#heights[2]
+#heights_split <- str_split(heights[2:length(heights)],"\\s+")
+
+
+#get rid of empty rows
+heights <- heights[which(str_length(heights) > 0)]
+
+heights
 ```
