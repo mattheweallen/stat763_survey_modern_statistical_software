@@ -161,4 +161,5 @@ length(heights_text)
 #length(dates)
 sex <- str_extract(heights[2:length(heights)],"Male|Female")
 length(sex)
+heights <- tibble(id = ids, reported_date = dates, sex = sex, height_text = heights_text)
 ```
