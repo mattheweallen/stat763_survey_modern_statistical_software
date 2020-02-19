@@ -132,5 +132,5 @@ heights <- pdf_text(heights_file_name) %>%
   read_lines()
 
 heights[1]
-str_split(heights[2:length(heights)],"\\s+")
+heights_split <- str_split(heights[2:length(heights)],"\\s+")
 ```
