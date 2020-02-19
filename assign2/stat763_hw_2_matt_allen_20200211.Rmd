@@ -161,5 +161,19 @@ length(heights_text)
 #length(dates)
 sex <- str_extract(heights[2:length(heights)],"Male|Female")
 length(sex)
-heights <- tibble(id = ids, reported_date = dates, sex = sex, height_text = heights_text)
+heights <- tibble(id = ids, reported_date = dates, sex = sex, height_text = str_trim(heights_text))
+
+
+#work on recode height text
+
+#as.numeric(heights$height_text)
+#which(is.na(as.numeric(heights$height_text)))
+heights$height_text[which(is.na(as.numeric(heights$height_text)))]
+
+recode(heights$height_text, 
+                          `Antigua and Barbuda` = "Barbuda",
+                          `Dominican Republic` = "DR",
+                          `St. Vincent and the Grenadines` = "St. Vincent",
+                          `Trinidad and Tobago` = "Trinidad")
+
 ```
