@@ -1,0 +1,11 @@
+https://link.springer.com/referenceworkentry/10.1007%2F978-3-642-04898-2_82
+https://www.aclweb.org/anthology/W01-1720.pdf
+https://books.google.com/books?hl=en&lr=&id=YiFDxbEX3SUC&oi=fnd&pg=PR16&ots=v_yhoujION&sig=zrweEvgoU7MtAFrU3xGcNAhAtOE#v=onepage&q&f=false
+manning
+Natural Language Processing in Action: Understanding, analyzing, and generating text with Python 
+
+https://www.manning.com/books/natural-language-processing-in-action?query=natural%20lan
+https://livebook.manning.com/book/natural-language-processing-in-action/chapter-6/25
+
+manning buy one get one free with code BOGO
+
