@@ -16,6 +16,8 @@ knitr::opts_chunk$set(echo = FALSE)
 
 library(tidyverse)
 student_data <- read.csv2(paste(getwd(),data_file_name,sep="/"),sep=",")
+
+#https://r4ds.had.co.nz/factors.html
 ```
 
 
