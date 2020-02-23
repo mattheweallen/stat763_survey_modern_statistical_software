@@ -137,6 +137,14 @@ cleaned_heigths_data <- convert_cm_heights(heights$height_text, cleaned_heigths_
 
 #add cleaned heights to heights table
 heights$cleaned_heigths_data <- cleaned_heigths_data
+
+#join heights and ice cream data
+students_ice_cream_heights <- inner_join(ice_cream, heights, by = c("student_IDs" = "id"))
+
+#write to file
+write.csv(ice_cream,"cleaned_ice_cream.csv")
+write.csv(heights,"cleaned_heights.csv")
+write.csv(heights,"cleaned_ice_cream_join_heights.csv")
 ```
 
 
