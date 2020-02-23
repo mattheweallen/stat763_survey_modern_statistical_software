@@ -5,8 +5,17 @@ date: "2/15/2020"
 output: html_document
 ---
 
+```{r change_file_names_here, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+#update the name of your file here
+#heights filename
+heights_file_name <- 'heights.pdf'
+#ice cream filename
+ice_cream_file_name <- 'ice_cream.csv'
+```
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 #built in stat 763 container
 #used example here to install poppler to container OS.
 #poppler is needed for pdftools
@@ -17,77 +26,10 @@ library(pdftools)
 library(lubridate)
 ```
 
-```{r change_file_names_here, include=FALSE}
-#update the name of your file here
-#heights filename
-heights_file_name <- 'heights.pdf'
-#ice cream filename
-ice_cream_file_name <- 'ice_cream.csv'
-```
+```{r my_functions, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
 
-
-```{r data_clean, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
-#--start create tibble for ice cream--#
-ice_cream <- read.csv2(paste(getwd(),ice_cream_file_name,sep="/")
-                       ,sep=",") %>%
-  separate(preference, c("Preference_1","Preference_2","Preference_3"), 
-           sep = ",", remove = TRUE, convert = FALSE, extra = "warn", fill = "warn") %>%
-  mutate_all(str_trim)
-
-#--start create tibble for height--#
-heights <- pdf_text(paste(getwd(),heights_file_name,sep="/")) %>%
-  read_lines()
-
-#get rid of empty rows
-heights <- heights[which(str_length(heights) > 0)]
-
-#split data by Male and Female
-split_on_sex <- str_split(heights[2:length(heights)],"Male|Female", simplify = TRUE)
-
-#convert dates after split
-dates <- mdy_hm(split_on_sex[1:length(heights)-1,1])
-
-#get ids
-ids <- str_extract(split_on_sex[1:length(heights)-1,2],"([a-zA-Z0-9_]+)$")
-
-#get the heights text
-#takes second column of split_on_sex
-#and gets substr from beginning of string
-#to (the length of the entire string - the length of the id)
-heights_text <- str_sub(split_on_sex[1:length(heights)-1,2], 
-                        1,
-                        str_length(split_on_sex[1:length(heights)-1,2])-str_length(ids)) %>%
-                str_squish() %>%
-                str_trim()  %>%
-                str_replace("^6'$","72") %>%
-                str_replace("^Five foot eight inches$","68")  %>%
-                str_replace("\"","")
-               
-
-
-
-#str_replace("^6'$","72") 
-# #recode some values in heights_text
-# heights_text <- recode(heights_text,
-#                          "6'" = "72",
-#                          "Five foot eight inches" = "68",
-#                          "69\"" = "69")
-
-
-#str_replace("6' 12","^6'$","72") 
-
-#pull Male and Female from data
-sex <- str_extract(heights[2:length(heights)],"Male|Female")
-
-#make tibble from vector created above
-heights <- tibble(id = ids, reported_date = dates, sex = sex, 
-                  height_text = heights_text)
-
-
-#number na before cleaning
-#sum(is.na(as.numeric(heights$height_text)))
+#function to clean heights data that are in feet and inches
 clean_heights <- function(height_text) {
   #attempt to convert to numeric for all data.
   converted_heights <- as.numeric(height_text)
@@ -129,8 +71,7 @@ clean_heights <- function(height_text) {
   return(converted_heights)
 }
 
-cleaned_heigths_data <- clean_heights(heights$height_text)
-
+#function to convert to cm
 convert_cm_heights <- function(height_text, converted_heights) {
   cm_which = str_which(height_text,pattern = "cm$")
   cm_heights_converted_to_inches = as.numeric(str_split(height_text[cm_which],"cm$",simplify = TRUE)[,1])*0.393701
@@ -138,32 +79,64 @@ convert_cm_heights <- function(height_text, converted_heights) {
   return(converted_heights)
 }
 
-#str_which(heights$height_text,pattern = "cm$")
+```
+
+```{r data_clean, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+#--start create tibble for ice cream--#
+ice_cream <- read.csv2(paste(getwd(),ice_cream_file_name,sep="/")
+                       ,sep=",") %>%
+  separate(preference, c("Preference_1","Preference_2","Preference_3"), 
+           sep = ",", remove = TRUE, convert = FALSE, extra = "warn", fill = "warn") %>%
+  mutate_all(str_trim)
+
+#--start create tibble for height--#
+heights <- pdf_text(paste(getwd(),heights_file_name,sep="/")) %>%
+  read_lines()
+
+#get rid of empty rows
+heights <- heights[which(str_length(heights) > 0)]
+
+#split data by Male and Female
+split_on_sex <- str_split(heights[2:length(heights)],"Male|Female", simplify = TRUE)
+
+#convert dates after split
+dates <- mdy_hm(split_on_sex[1:length(heights)-1,1])
+
+#get ids
+ids <- str_extract(split_on_sex[1:length(heights)-1,2],"([a-zA-Z0-9_]+)$")
+
+#get the heights text
+#takes second column of split_on_sex
+#and gets substr from beginning of string
+#to (the length of the entire string - the length of the id)
+heights_text <- str_sub(split_on_sex[1:length(heights)-1,2], 
+                        1,
+                        str_length(split_on_sex[1:length(heights)-1,2])-str_length(ids)) %>%
+                str_squish() %>%
+                str_trim()  %>%
+                str_replace("^6'$","72") %>%
+                str_replace("^Five foot eight inches$","68")  %>%
+                str_replace("\"","")
+
+#pull Male and Female from data
+sex <- str_extract(heights[2:length(heights)],"Male|Female")
+
+#make tibble from vector created above
+heights <- tibble(id = ids, reported_date = dates, sex = sex, 
+                  height_text = heights_text)
 
 
+
+#clean up feet and height data
+cleaned_heigths_data <- clean_heights(heights$height_text)
+
+#convert cm height data
 cleaned_heigths_data <- convert_cm_heights(heights$height_text, cleaned_heigths_data)
 
-
+#add cleaned heights to heights table
 heights$cleaned_heigths_data <- cleaned_heigths_data
-
-
-# sum(is.na(cleaned_heigths_data))
-# 
-# 
-# 
-# heights$height_text[which(is.na(cleaned_heigths_data))]
-# 
-# 
-# 
-# 
-# 
-# testy <- tibble(height_text = heights$height_text, cleaned_heigths_data = cleaned_heigths_data)
-
-#str_split("165 cm","cm")
-
-#entered_as_feet = which(cleaned_heigths_data >= 5 & cleaned_heigths_data <= 7)
-#entered_as_feet
-#cleaned_heigths_data[entered_as_feet] = cleaned_heigths_data[entered_as_feet]*10
 ```
 
 
