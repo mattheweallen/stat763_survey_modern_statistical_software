@@ -94,8 +94,11 @@ clean_heights <- function(height_text) {
   #weird_heights <- str_squish(weird_heights)
   
     #any(str_detect(x, ","))
-  if(any(str_detect(heights_text, "\\d'\\d+"))) {
-    ft_inches_which = str_which(height_text,pattern = "\\d'\\d+")
+  
+  #check for pattern like 5'11 inside string.
+  pattern_1 <- "\\d'\\s*\\d+"
+  if(any(str_detect(heights_text, pattern_1))) {
+    ft_inches_which = str_which(height_text,pattern = pattern_1)
     #pattern_to_split <- heights$height_text[ft_inches]
     split_on_tick = str_split(pattern_to_split,"'", simplify = TRUE)
     #str_which(heights$height_text,pattern = "\\d'\\d+")
@@ -104,11 +107,14 @@ clean_heights <- function(height_text) {
     #take the feet part multiply by 12 and add the inches part to it
     converted_heights[ft_inches_which] = as.numeric(split_on_tick[,1])*12 +   as.numeric(str_extract(split_on_tick[,2],"\\d+"))
   }
+  
+  
   return(converted_heights)
 }
-sum(is.na(clean_heights(heights$height_text)))
+cleaned_heigths_data <- clean_heights(heights$height_text)
+sum(is.na(cleaned_heigths_data))
 
-
+heights$height_text[which(is.na(cleaned_heigths_data))]
 ```
 
 
