@@ -18,14 +18,15 @@ library(tidyverse)
 student_data <- read.csv2(paste(getwd(),data_file_name,sep="/"),sep=",")
 ```
 
-```{r report, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-#todo include a template syntax with some simple statistic
-#check notes for other stuff may just need one or two graphs
 
+## Summary of the student ice cream and student heights survey from file `r data_file_name`
+
+```{r report, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+summary(student_data)
 ```
 
-Number of Students not reporting Ice Cream `r "matt is cool"`
+
 
 ## R Markdown
 

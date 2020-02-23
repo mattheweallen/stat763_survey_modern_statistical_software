@@ -1,2 +1,8 @@
 https://stats.stackexchange.com/questions/27827/cleaning-data-of-inconsistent-format-in-r
 
+#https://rmarkdown.rstudio.com/authoring_quick_tour.html
+#https://rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf
+
+#todo include a template syntax with some simple statistic
+#todo check notes for other stuff may just need one or two graphs
+
