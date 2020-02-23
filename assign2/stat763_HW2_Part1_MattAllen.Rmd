@@ -1,5 +1,5 @@
 ---
-title: "Stat 763 HW 2"
+title: "Stat 763 HW 2 Part 1"
 author: "Matt Allen"
 date: "2/15/2020"
 output: html_document
