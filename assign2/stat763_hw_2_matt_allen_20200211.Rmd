@@ -110,11 +110,22 @@ clean_heights <- function(height_text) {
   split_pattern_1 = "\\s*['\\s]+\\s*"
   split_pattern_2 = "\\s*ft\\s*"
   split_pattern_3 = "\\s*feet\\s*"
+  split_pattern_4 = "\\s*\\*\\s*"
+  split_pattern_5 = "\\s*\\,\\s*"
+  split_pattern_6 = "\\s+\\.\\s*"
+  split_pattern_7 = "\\s+feet and\\s*"
+  
   
   #pattern_1 = paste0("\\d",split_pattern_1,"\\d*")
   #pattern_2 = paste0("\\d",split_pattern_2,"\\d*")
   
-  patterns = c(split_pattern_1, split_pattern_2, split_pattern_3)
+  patterns = c(split_pattern_1, 
+               split_pattern_2, 
+               split_pattern_3, 
+               split_pattern_4, 
+               split_pattern_5, 
+               split_pattern_6,
+               split_pattern_7)
   
   for(p in patterns) {
     number_pattern = paste0("\\d",p,"\\d*")
