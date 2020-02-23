@@ -64,30 +64,49 @@ heights_text <- str_sub(split_on_sex[1:length(heights)-1,2],
 sex <- str_extract(heights[2:length(heights)],"Male|Female")
 
 #make tibble from vector created above
-heights <- tibble(id = ids, reported_date = dates, sex = sex, height_text = str_trim(heights_text))
+heights <- tibble(id = ids, reported_date = dates, sex = sex, 
+                  height_text = str_squish(str_trim(heights_text)))
 
-#attempt to convert to numeric for all data.
-converted_heights <- as.numeric(heights$height_text)
 
-#find all the heights that did not converted by getting the is.na rows
-weird_heights <- heights$height_text[which(is.na(converted_heights))]
+#str_view(weird_heights,pattern = "\\d'\\d+")
 
-#tidy the insides of the strings
-weird_heights <- str_squish(weird_heights)
+#ft_inches <- str_which(heights$height_text,pattern = "\\d'\\d+")
 
-#test pattern
-str_view(weird_heights,pattern = "\\d'\\d+")
-
-ft_inches <- str_which(heights$height_text,pattern = "\\d'\\d+")
-
-pattern_to_split <- heights$height_text[ft_inches]
-blarg1 <- str_split(pattern_to_split,"'", simplify = TRUE)
-as.numeric(blarg1[,1])*12 + as.numeric(str_extract(blarg1[,2],"\\d+"))
+#pattern_to_split <- heights$height_text[ft_inches]
+#blarg1 <- str_split(pattern_to_split,"'", simplify = TRUE)
+#as.numeric(blarg1[,1])*12 + as.numeric(str_extract(blarg1[,2],"\\d+"))
 
 
 #got a bunch on this, took care of 47 with 30 left to find
-sum(is.na(str_extract(str_squish(weird_heights),pattern = "\\d'\\d+")))
+#sum(is.na(str_extract(str_squish(weird_heights),pattern = "\\d'\\d+")))
 
+#number na before cleaning
+sum(is.na(as.numeric(heights$height_text)))
+
+clean_heights <- function(height_text) {
+  #attempt to convert to numeric for all data.
+  converted_heights <- as.numeric(height_text)
+
+  #find all the heights that did not converted by getting the is.na rows
+  #weird_heights <- heights$height_text[which(is.na(converted_heights))]
+
+  #tidy the insides of the strings
+  #weird_heights <- str_squish(weird_heights)
+  
+    #any(str_detect(x, ","))
+  if(any(str_detect(heights_text, "\\d'\\d+"))) {
+    ft_inches_which = str_which(height_text,pattern = "\\d'\\d+")
+    #pattern_to_split <- heights$height_text[ft_inches]
+    split_on_tick = str_split(pattern_to_split,"'", simplify = TRUE)
+    #str_which(heights$height_text,pattern = "\\d'\\d+")
+    #blarg1 <- str_split(pattern_to_split,"'", simplify = TRUE)
+    
+    #take the feet part multiply by 12 and add the inches part to it
+    converted_heights[ft_inches_which] = as.numeric(split_on_tick[,1])*12 +   as.numeric(str_extract(split_on_tick[,2],"\\d+"))
+  }
+  return(converted_heights)
+}
+sum(is.na(clean_heights(heights$height_text)))
 
 
 ```
