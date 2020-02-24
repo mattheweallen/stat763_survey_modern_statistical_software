@@ -17,10 +17,12 @@ data_file_name <- 'cleaned_ice_cream_full_join_heights.csv'
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(flexdashboard)
+library(DT) #Datatable
+library(plotly)
 #https://r4ds.had.co.nz/factors.html
 
 student_data <- read.csv2(paste(getwd(),data_file_name,sep="/"),sep=",")
-student_data$height <- as.numeric(student_data$cleaned_heigths_data)
+student_data$height <- as.numeric(as.character(student_data$cleaned_heigths_data))
 ```
 
 
@@ -90,10 +92,33 @@ p + geom_violin()
 
 #https://ggplot2.tidyverse.org/reference/geom_histogram.html
 
-p <- ggplot(student_data_filtered_54_to_90, aes(x=height)) 
+p <- ggplot(student_data_filtered_54_to_90, aes(x=height))
 p + geom_histogram(position="identity", colour="grey40", alpha=0.2, bins = 10) +
     facet_grid(. ~ sex)
+#datatable(student_data, options = list(pageLength = 20), rownames = FALSE)
 
+
+#http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html
+# Histogram on a Categorical variable
+g <- ggplot(student_data_ice_cream, aes(Preference_1))
+g + geom_bar(aes(fill=sex), width = 0.5) + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) + 
+  labs(title="Histogram on Categorical Variable", 
+       subtitle="Manufacturer across Vehicle Classes") 
+
+
+
+g <- ggplot(student_data_ice_cream, aes(Preference_2))
+g + geom_bar(aes(fill=sex), width = 0.5) + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) + 
+  labs(title="Histogram on Categorical Variable", 
+       subtitle="Manufacturer across Vehicle Classes") 
+
+g <- ggplot(student_data_ice_cream, aes(Preference_3))
+g + geom_bar(aes(fill=sex), width = 0.5) + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) + 
+  labs(title="Histogram on Third Ice Cream Preference", 
+       subtitle="by Female and Male") 
 ```
 
 Column {data-width=350}
