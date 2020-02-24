@@ -41,44 +41,46 @@ student_data$height <- as.numeric(as.character(student_data$cleaned_heigths_data
 # --number of-- students completed both ice cream and heights survey
 # --number of-- students complete just ice cream survey
 # --number of-- students completed heights survey
-num_students_ice_cream <- sum(!is.na(student_data$Preference_1))
-num_students_height <- sum(!is.na(student_data$height_text))
-num_students_height_not_converted <- sum(is.na(student_data$cleaned_heigths_data)) #number not converted
-num_students_ice_cream_and_height <- sum(!is.na(student_data$height_text) & !is.na(student_data$Preference_1))
+# num_students_ice_cream <- sum(!is.na(student_data$Preference_1))
+# num_students_height <- sum(!is.na(student_data$height_text))
+# num_students_height_not_converted <- sum(is.na(student_data$cleaned_heigths_data)) #number not converted
+# num_students_ice_cream_and_height <- sum(!is.na(student_data$height_text) & !is.na(student_data$Preference_1))
+# 
+# #number of values outside of height range
+# #number of questionable heights 8 feet (96 inches) to 4 feet (48 inches)
+# num_students_ice_cream_and_height_very_tall <- sum(student_data$cleaned_heigths_data > 96)
 
-#number of values outside of height range
-#number of questionable heights 8 feet (96 inches) to 4 feet (48 inches)
-num_students_ice_cream_and_height_very_tall <- sum(student_data$cleaned_heigths_data > 96)
 
-
-student_data_no_na_height <- drop_na(student_data, height)
+#student_data_no_na_height <- drop_na(student_data, height)
 #p <- ggplot(student_data_no_na_height, aes(sex, height))
 #p + geom_boxplot()
 
 
 #filter data heights to range 4 feet 6 inches to 7 feet 6 inches
-student_data_filtered_54_to_90 <- student_data_no_na_height %>% filter(height > 54 & height & height < 90)
+student_data_filtered_48_to_96 <- student_data %>% 
+  drop_na(height) %>%
+  filter(height > 48 & height & height < 96)
 
 #p <- ggplot(student_data_filtered_54_to_90, aes(sex, height))
 #p + geom_boxplot()
 # 
 student_data_ice_cream <- drop_na(student_data, height, Preference_1)
 ```
-
+### Data Source `r data_file_name`
 
 Row
 -----------------------------------------------------------------------
 
-### Chart B
+### Data Heights filtered to range 4 feet (48 inches) inches to 8 feet (96 inches)
 
 ```{r}
-p <- ggplot(student_data_filtered_54_to_90, aes(x=height))
+p <- ggplot(student_data_filtered_48_to_96, aes(x=height))
 p + geom_histogram(position="identity", colour="grey40", alpha=0.2, bins = 10) +
     facet_grid(. ~ sex)
 ```
 
 
-### Chart B
+### Ice Cream 
 ```{r}
 
 #num_rows <- nrow(student_data_ice_cream)
@@ -97,9 +99,11 @@ student_data_ice_cream_pivot_longer$PreferenceNumber <- as.factor(student_data_i
 #class(student_data_ice_cream_pivot_longer$Flavor)
 
 #summary(student_data_ice_cream_pivot_longer)
-
-g <- ggplot(student_data_ice_cream_pivot_longer, aes(Flavor))
-g + geom_bar(aes(fill=sex), width = 0.5) + 
+#https://www.r-graph-gallery.com/267-reorder-a-variable-in-ggplot2.html
+student_data_ice_cream_pivot_longer %>%
+  mutate(Flavor = fct_reorder(Flavor, PreferenceNumber, .fun='length', .desc = TRUE )) %>%
+ggplot(aes(Flavor)) +
+geom_bar(aes(fill=sex), width = 0.5) + 
   theme(axis.text.x = element_text(angle=65, vjust=0.6)) + 
   labs(title="Histogram on First Ice Cream Preference", 
        subtitle="by Female and Male") +
@@ -113,7 +117,7 @@ Row
 -----------------------------------------------------------------------
 
 
-### Summary of the student ice cream and student heights survey from file `r data_file_name`
+### 
 ```{r}
 
 # 
