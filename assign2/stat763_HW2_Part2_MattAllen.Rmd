@@ -66,8 +66,33 @@ student_data_filtered_54_to_90 <- student_data_no_na_height %>% filter(height > 
 p <- ggplot(student_data_filtered_48_to_96, aes(sex, height))
 p + geom_boxplot()
 
+student_data_ice_cream <- drop_na(student_data, height, Preference_1)
+
+p <- ggplot(student_data_ice_cream, aes(Preference_1, height))
+p + geom_boxplot()
+
+#there seems to be no difference between average height and preference
+
+p <- ggplot(student_data_ice_cream, aes(Preference_2, height))
+p + geom_boxplot()
 
 
+p <- ggplot(student_data_ice_cream, aes(Preference_3, height))
+p + geom_boxplot()
+
+
+p <- ggplot(student_data_ice_cream, aes(Preference_1, sex))
+p + geom_boxplot()
+
+
+p <- ggplot(student_data_ice_cream, aes(Preference_1, height))
+p + geom_violin()
+
+#https://ggplot2.tidyverse.org/reference/geom_histogram.html
+
+p <- ggplot(student_data_filtered_54_to_90, aes(x=height)) 
+p + geom_histogram(position="identity", colour="grey40", alpha=0.2, bins = 10) +
+    facet_grid(. ~ sex)
 
 ```
 
