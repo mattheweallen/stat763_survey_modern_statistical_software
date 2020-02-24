@@ -63,7 +63,7 @@ p + geom_boxplot()
 #filter data heights to range 4 feet 6 inches to 7 feet 6 inches
 student_data_filtered_54_to_90 <- student_data_no_na_height %>% filter(height > 54 & height & height < 90)
 
-p <- ggplot(student_data_filtered_48_to_96, aes(sex, height))
+p <- ggplot(student_data_filtered_54_to_90, aes(sex, height))
 p + geom_boxplot()
 
 student_data_ice_cream <- drop_na(student_data, height, Preference_1)
