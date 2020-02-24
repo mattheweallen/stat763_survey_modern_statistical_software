@@ -37,20 +37,17 @@ student_data_filtered_48_to_96 <- student_data %>%
 #remove rows with na in them
 student_data_ice_cream <- drop_na(student_data_filtered_48_to_96, height, Preference_1)
 ```
-### Data Source `r data_file_name`
+### Student Ice Cream Preferences and Heights Survey
 
-### Data for the plots was filtered to range 4 feet (48 inches) inches to 8 feet (96 inches)
 Row
 -----------------------------------------------------------------------
-
-
 
 ```{r}
 #Plot Heights
 p <- ggplot(student_data_filtered_48_to_96, aes(x=height))
 p + geom_histogram(position="identity", colour="grey40", alpha=0.2, bins = 10) + 
-  labs(title="Student Heights", 
-       subtitle="by sex") +
+  labs(title="Student Heights by Sex", 
+       subtitle="data filtered to range 48 inches to 96 inches") +
     facet_grid(. ~ sex)
 ```
 
@@ -72,26 +69,26 @@ student_data_ice_cream_pivot_longer %>%
 ggplot(aes(Flavor)) +
 geom_bar(aes(fill=sex), width = 0.5) + 
   theme(axis.text.x = element_text(angle=65, vjust=0.6)) + 
-  labs(title="Student Ice Cream Preferences", 
-       subtitle="by sex") +
+  labs(title="Student Ice Cream Preferences by Sex", 
+       subtitle="data filtered to range 48 inches to 96 inches") +
 facet_grid(. ~ PreferenceNumber)
 ```
 
 ```{r}
+#plot number one ice cream preference by height
 p <- ggplot(student_data_ice_cream, aes(Preference_1, height))
 p + geom_boxplot() + 
-  labs(title="Student Height", subtitle="by Number One Ice Cream Preference")
+  labs(title="Student Height by Number One Ice Cream Preference", subtitle="data filtered to range 48 inches to 96 inches")
 ```
+
+
 
 
 Row
 -----------------------------------------------------------------------
+### Data Source file name is `r data_file_name`. Original Data Set with `r num_students_height_not_converted` heights not converted.
 
-
-### Original Data Set with `r num_students_height_not_converted` heights not converted.
 ```{r}
 #output all the data
 datatable(student_data, options = list(pageLength = 20), rownames = FALSE)
 ```
-
-
