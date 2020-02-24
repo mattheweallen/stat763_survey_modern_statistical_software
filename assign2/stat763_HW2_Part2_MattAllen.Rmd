@@ -2,7 +2,10 @@
 title: "Stat 763 HW 2 Part 2"
 author: "Matt Allen"
 date: "2/15/2020"
-output: html_document
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
 ---
 
 ```{r change_file_names_here, include=FALSE}
@@ -12,40 +15,34 @@ data_file_name <- 'cleaned_ice_cream_full_join_heights.csv'
 ```
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-
 library(tidyverse)
-student_data <- read.csv2(paste(getwd(),data_file_name,sep="/"),sep=",")
-
+library(flexdashboard)
 #https://r4ds.had.co.nz/factors.html
+
+student_data <- read.csv2(paste(getwd(),data_file_name,sep="/"),sep=",")
 ```
 
 
-## Summary of the student ice cream and student heights survey from file `r data_file_name`
+Column {data-width=650}
+-----------------------------------------------------------------------
 
-```{r report, include=TRUE}
-knitr::opts_chunk$set(echo = TRUE)
-summary(student_data)
+### Summary of the student ice cream and student heights survey from file `r data_file_name`
+```{r}
+
 ```
 
+Column {data-width=350}
+-----------------------------------------------------------------------
 
+### Chart B
 
-## R Markdown
+```{r}
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
 ```
 
-## Including Plots
+### Chart C
 
-You can also embed plots, for example:
+```{r}
 
-```{r pressure, echo=FALSE}
-plot(pressure)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
