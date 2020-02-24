@@ -4,8 +4,8 @@ author: "Matt Allen"
 date: "2/15/2020"
 output: 
   flexdashboard::flex_dashboard:
-    orientation: columns
-    vertical_layout: fill
+    theme: cerulean
+    orientation: rows
 ---
 
 ```{r change_file_names_here, include=FALSE}
@@ -23,14 +23,8 @@ library(plotly)
 
 student_data <- read.csv2(paste(getwd(),data_file_name,sep="/"),sep=",")
 student_data$height <- as.numeric(as.character(student_data$cleaned_heigths_data))
-```
 
 
-Column {data-width=650}
------------------------------------------------------------------------
-
-### Summary of the student ice cream and student heights survey from file `r data_file_name`
-```{r}
 # https://dplyr.tidyverse.org/reference/summarise.html
 # student_data %>%
 #   group_by(sex)
@@ -54,85 +48,110 @@ num_students_ice_cream_and_height <- sum(!is.na(student_data$height_text) & !is.
 
 #number of values outside of height range
 #number of questionable heights 8 feet (96 inches) to 4 feet (48 inches)
-sum(student_data$cleaned_heigths_data > 96)
+num_students_ice_cream_and_height_very_tall <- sum(student_data$cleaned_heigths_data > 96)
 
 
 student_data_no_na_height <- drop_na(student_data, height)
-p <- ggplot(student_data_no_na_height, aes(sex, height))
-p + geom_boxplot()
+#p <- ggplot(student_data_no_na_height, aes(sex, height))
+#p + geom_boxplot()
 
 
 #filter data heights to range 4 feet 6 inches to 7 feet 6 inches
 student_data_filtered_54_to_90 <- student_data_no_na_height %>% filter(height > 54 & height & height < 90)
 
-p <- ggplot(student_data_filtered_54_to_90, aes(sex, height))
-p + geom_boxplot()
-
+#p <- ggplot(student_data_filtered_54_to_90, aes(sex, height))
+#p + geom_boxplot()
+# 
 student_data_ice_cream <- drop_na(student_data, height, Preference_1)
-
-p <- ggplot(student_data_ice_cream, aes(Preference_1, height))
-p + geom_boxplot()
-
-#there seems to be no difference between average height and preference
-
-p <- ggplot(student_data_ice_cream, aes(Preference_2, height))
-p + geom_boxplot()
-
-
-p <- ggplot(student_data_ice_cream, aes(Preference_3, height))
-p + geom_boxplot()
-
-
-p <- ggplot(student_data_ice_cream, aes(Preference_1, sex))
-p + geom_boxplot()
-
-
-p <- ggplot(student_data_ice_cream, aes(Preference_1, height))
-p + geom_violin()
-
-#https://ggplot2.tidyverse.org/reference/geom_histogram.html
-
-p <- ggplot(student_data_filtered_54_to_90, aes(x=height))
-p + geom_histogram(position="identity", colour="grey40", alpha=0.2, bins = 10) +
-    facet_grid(. ~ sex)
-#datatable(student_data, options = list(pageLength = 20), rownames = FALSE)
-
-
-#http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html
-# Histogram on a Categorical variable
-g <- ggplot(student_data_ice_cream, aes(Preference_1))
-g + geom_bar(aes(fill=sex), width = 0.5) + 
-  theme(axis.text.x = element_text(angle=65, vjust=0.6)) + 
-  labs(title="Histogram on Categorical Variable", 
-       subtitle="Manufacturer across Vehicle Classes") 
-
-
-
-g <- ggplot(student_data_ice_cream, aes(Preference_2))
-g + geom_bar(aes(fill=sex), width = 0.5) + 
-  theme(axis.text.x = element_text(angle=65, vjust=0.6)) + 
-  labs(title="Histogram on Categorical Variable", 
-       subtitle="Manufacturer across Vehicle Classes") 
-
-g <- ggplot(student_data_ice_cream, aes(Preference_3))
-g + geom_bar(aes(fill=sex), width = 0.5) + 
-  theme(axis.text.x = element_text(angle=65, vjust=0.6)) + 
-  labs(title="Histogram on Third Ice Cream Preference", 
-       subtitle="by Female and Male") 
 ```
 
-Column {data-width=350}
+
+Row
 -----------------------------------------------------------------------
 
 ### Chart B
 
 ```{r}
-
+p <- ggplot(student_data_filtered_54_to_90, aes(x=height))
+p + geom_histogram(position="identity", colour="grey40", alpha=0.2, bins = 10) +
+    facet_grid(. ~ sex)
 ```
 
-### Chart C
 
+### Chart B
 ```{r}
 
+#num_rows <- nrow(student_data_ice_cream)
+#rep("Preference 1",num_rows)
+#sex <- student_data_ice_cream$sex
+
+#preferences <- tibble(sex=,preference)
+
+#https://tidyr.tidyverse.org/reference/pivot_longer.html
+student_data_ice_cream_pivot_longer <- student_data_ice_cream %>%
+  pivot_longer(c("Preference_1","Preference_2","Preference_3"),
+               names_to = "PreferenceNumber", values_to = "Flavor")
+
+
+student_data_ice_cream_pivot_longer$PreferenceNumber <- as.factor(student_data_ice_cream_pivot_longer$PreferenceNumber) 
+#class(student_data_ice_cream_pivot_longer$Flavor)
+
+#summary(student_data_ice_cream_pivot_longer)
+
+g <- ggplot(student_data_ice_cream_pivot_longer, aes(Flavor))
+g + geom_bar(aes(fill=sex), width = 0.5) + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) + 
+  labs(title="Histogram on First Ice Cream Preference", 
+       subtitle="by Female and Male") +
+facet_grid(. ~ PreferenceNumber)
 ```
+
+
+
+
+Row
+-----------------------------------------------------------------------
+
+
+### Summary of the student ice cream and student heights survey from file `r data_file_name`
+```{r}
+
+# 
+# p <- ggplot(student_data_ice_cream, aes(Preference_1, height))
+# p + geom_boxplot()
+# 
+# #there seems to be no difference between average height and preference
+# 
+# p <- ggplot(student_data_ice_cream, aes(Preference_2, height))
+# p + geom_boxplot()
+# 
+# 
+# p <- ggplot(student_data_ice_cream, aes(Preference_3, height))
+# p + geom_boxplot()
+# 
+# 
+# p <- ggplot(student_data_ice_cream, aes(Preference_1, sex))
+# p + geom_boxplot()
+# 
+# 
+# p <- ggplot(student_data_ice_cream, aes(Preference_1, height))
+# p + geom_violin()
+
+#https://ggplot2.tidyverse.org/reference/geom_histogram.html
+datatable(student_data, options = list(pageLength = 20), rownames = FALSE)
+
+#datatable(student_data, options = list(pageLength = 20), rownames = FALSE)
+
+
+#http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html
+# Histogram on a Categorical variable
+
+
+
+
+
+
+
+```
+
 
