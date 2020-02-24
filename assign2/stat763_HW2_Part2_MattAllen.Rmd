@@ -35,19 +35,22 @@ student_data_filtered_48_to_96 <- student_data %>%
   filter(height > 48 & height & height < 96)
 
 #remove rows with na in them
-student_data_ice_cream <- drop_na(student_data, height, Preference_1)
+student_data_ice_cream <- drop_na(student_data_filtered_48_to_96, height, Preference_1)
 ```
 ### Data Source `r data_file_name`
 
+### Data for the plots was filtered to range 4 feet (48 inches) inches to 8 feet (96 inches)
 Row
 -----------------------------------------------------------------------
+
+
 
 ```{r}
 #Plot Heights
 p <- ggplot(student_data_filtered_48_to_96, aes(x=height))
 p + geom_histogram(position="identity", colour="grey40", alpha=0.2, bins = 10) + 
   labs(title="Student Heights", 
-       subtitle="filtered to range 4 feet (48 inches) inches to 8 feet (96 inches)") +
+       subtitle="by sex") +
     facet_grid(. ~ sex)
 ```
 
@@ -70,11 +73,15 @@ ggplot(aes(Flavor)) +
 geom_bar(aes(fill=sex), width = 0.5) + 
   theme(axis.text.x = element_text(angle=65, vjust=0.6)) + 
   labs(title="Student Ice Cream Preferences", 
-       subtitle="by Female and Male") +
+       subtitle="by sex") +
 facet_grid(. ~ PreferenceNumber)
 ```
 
-
+```{r}
+p <- ggplot(student_data_ice_cream, aes(Preference_1, height))
+p + geom_boxplot() + 
+  labs(title="Student Height", subtitle="by Number One Ice Cream Preference")
+```
 
 
 Row
