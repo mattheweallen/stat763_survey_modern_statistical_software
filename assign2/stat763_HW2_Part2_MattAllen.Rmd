@@ -19,51 +19,22 @@ library(tidyverse)
 library(flexdashboard)
 library(DT) #Datatable
 library(plotly)
-#https://r4ds.had.co.nz/factors.html
 
+#read the data
 student_data <- read.csv2(paste(getwd(),data_file_name,sep="/"),sep=",")
+
+#convert height column to numeric
 student_data$height <- as.numeric(as.character(student_data$cleaned_heigths_data))
 
-
-# https://dplyr.tidyverse.org/reference/summarise.html
-# student_data %>%
-#   group_by(sex)
-#   summarise(mean = mean(cleaned_heights_data), n = n())
-
-#https://ggplot2.tidyverse.org/reference/geom_boxplot.html
-
-#class(student_data$sex)
-
-#boxplot( as.numeric(student_data$cleaned_heights_data) ~ student_data$sex)
-
-
-
-# --number of-- students completed both ice cream and heights survey
-# --number of-- students complete just ice cream survey
-# --number of-- students completed heights survey
-# num_students_ice_cream <- sum(!is.na(student_data$Preference_1))
-# num_students_height <- sum(!is.na(student_data$height_text))
-# num_students_height_not_converted <- sum(is.na(student_data$cleaned_heigths_data)) #number not converted
-# num_students_ice_cream_and_height <- sum(!is.na(student_data$height_text) & !is.na(student_data$Preference_1))
-# 
-# #number of values outside of height range
-# #number of questionable heights 8 feet (96 inches) to 4 feet (48 inches)
-# num_students_ice_cream_and_height_very_tall <- sum(student_data$cleaned_heigths_data > 96)
-
-
-#student_data_no_na_height <- drop_na(student_data, height)
-#p <- ggplot(student_data_no_na_height, aes(sex, height))
-#p + geom_boxplot()
-
+#number heights not able to convert
+num_students_height_not_converted <- sum(is.na(student_data$cleaned_heigths_data)) 
 
 #filter data heights to range 4 feet 6 inches to 7 feet 6 inches
 student_data_filtered_48_to_96 <- student_data %>% 
   drop_na(height) %>%
   filter(height > 48 & height & height < 96)
 
-#p <- ggplot(student_data_filtered_54_to_90, aes(sex, height))
-#p + geom_boxplot()
-# 
+#remove rows with na in them
 student_data_ice_cream <- drop_na(student_data, height, Preference_1)
 ```
 ### Data Source `r data_file_name`
@@ -71,41 +42,34 @@ student_data_ice_cream <- drop_na(student_data, height, Preference_1)
 Row
 -----------------------------------------------------------------------
 
-### Data Heights filtered to range 4 feet (48 inches) inches to 8 feet (96 inches)
-
 ```{r}
+#Plot Heights
 p <- ggplot(student_data_filtered_48_to_96, aes(x=height))
-p + geom_histogram(position="identity", colour="grey40", alpha=0.2, bins = 10) +
+p + geom_histogram(position="identity", colour="grey40", alpha=0.2, bins = 10) + 
+  labs(title="Student Heights", 
+       subtitle="filtered to range 4 feet (48 inches) inches to 8 feet (96 inches)") +
     facet_grid(. ~ sex)
 ```
 
 
-### Ice Cream 
 ```{r}
-
-#num_rows <- nrow(student_data_ice_cream)
-#rep("Preference 1",num_rows)
-#sex <- student_data_ice_cream$sex
-
-#preferences <- tibble(sex=,preference)
-
 #https://tidyr.tidyverse.org/reference/pivot_longer.html
+#unpivot preferences
 student_data_ice_cream_pivot_longer <- student_data_ice_cream %>%
   pivot_longer(c("Preference_1","Preference_2","Preference_3"),
                names_to = "PreferenceNumber", values_to = "Flavor")
 
-
+#convert PreferenceNumber to Factor
 student_data_ice_cream_pivot_longer$PreferenceNumber <- as.factor(student_data_ice_cream_pivot_longer$PreferenceNumber) 
-#class(student_data_ice_cream_pivot_longer$Flavor)
 
-#summary(student_data_ice_cream_pivot_longer)
+#create a plot of ice cream preferences
 #https://www.r-graph-gallery.com/267-reorder-a-variable-in-ggplot2.html
 student_data_ice_cream_pivot_longer %>%
   mutate(Flavor = fct_reorder(Flavor, PreferenceNumber, .fun='length', .desc = TRUE )) %>%
 ggplot(aes(Flavor)) +
 geom_bar(aes(fill=sex), width = 0.5) + 
   theme(axis.text.x = element_text(angle=65, vjust=0.6)) + 
-  labs(title="Histogram on First Ice Cream Preference", 
+  labs(title="Student Ice Cream Preferences", 
        subtitle="by Female and Male") +
 facet_grid(. ~ PreferenceNumber)
 ```
@@ -117,45 +81,10 @@ Row
 -----------------------------------------------------------------------
 
 
-### 
+### Original Data Set with `r num_students_height_not_converted` heights not converted.
 ```{r}
-
-# 
-# p <- ggplot(student_data_ice_cream, aes(Preference_1, height))
-# p + geom_boxplot()
-# 
-# #there seems to be no difference between average height and preference
-# 
-# p <- ggplot(student_data_ice_cream, aes(Preference_2, height))
-# p + geom_boxplot()
-# 
-# 
-# p <- ggplot(student_data_ice_cream, aes(Preference_3, height))
-# p + geom_boxplot()
-# 
-# 
-# p <- ggplot(student_data_ice_cream, aes(Preference_1, sex))
-# p + geom_boxplot()
-# 
-# 
-# p <- ggplot(student_data_ice_cream, aes(Preference_1, height))
-# p + geom_violin()
-
-#https://ggplot2.tidyverse.org/reference/geom_histogram.html
+#output all the data
 datatable(student_data, options = list(pageLength = 20), rownames = FALSE)
-
-#datatable(student_data, options = list(pageLength = 20), rownames = FALSE)
-
-
-#http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html
-# Histogram on a Categorical variable
-
-
-
-
-
-
-
 ```
 
 
