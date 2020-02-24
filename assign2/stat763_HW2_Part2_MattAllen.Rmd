@@ -20,6 +20,7 @@ library(flexdashboard)
 #https://r4ds.had.co.nz/factors.html
 
 student_data <- read.csv2(paste(getwd(),data_file_name,sep="/"),sep=",")
+student_data$height <- as.numeric(student_data$cleaned_heigths_data)
 ```
 
 
@@ -28,6 +29,45 @@ Column {data-width=650}
 
 ### Summary of the student ice cream and student heights survey from file `r data_file_name`
 ```{r}
+# https://dplyr.tidyverse.org/reference/summarise.html
+# student_data %>%
+#   group_by(sex)
+#   summarise(mean = mean(cleaned_heights_data), n = n())
+
+#https://ggplot2.tidyverse.org/reference/geom_boxplot.html
+
+#class(student_data$sex)
+
+#boxplot( as.numeric(student_data$cleaned_heights_data) ~ student_data$sex)
+
+
+
+# --number of-- students completed both ice cream and heights survey
+# --number of-- students complete just ice cream survey
+# --number of-- students completed heights survey
+num_students_ice_cream <- sum(!is.na(student_data$Preference_1))
+num_students_height <- sum(!is.na(student_data$height_text))
+num_students_height_not_converted <- sum(is.na(student_data$cleaned_heigths_data)) #number not converted
+num_students_ice_cream_and_height <- sum(!is.na(student_data$height_text) & !is.na(student_data$Preference_1))
+
+#number of values outside of height range
+#number of questionable heights 8 feet (96 inches) to 4 feet (48 inches)
+sum(student_data$cleaned_heigths_data > 96)
+
+
+student_data_no_na_height <- drop_na(student_data, height)
+p <- ggplot(student_data_no_na_height, aes(sex, height))
+p + geom_boxplot()
+
+
+#filter data heights to range 4 feet 6 inches to 7 feet 6 inches
+student_data_filtered_54_to_90 <- student_data_no_na_height %>% filter(height > 54 & height & height < 90)
+
+p <- ggplot(student_data_filtered_48_to_96, aes(sex, height))
+p + geom_boxplot()
+
+
+
 
 ```
 
