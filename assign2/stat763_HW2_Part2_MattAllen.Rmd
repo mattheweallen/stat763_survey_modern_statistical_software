@@ -47,7 +47,7 @@ Row
 p <- ggplot(student_data_filtered_48_to_96, aes(x=height))
 p + geom_histogram(position="identity", colour="grey40", alpha=0.2, bins = 10) + 
   labs(title="Student Heights by Sex", 
-       subtitle="data filtered to range 48 inches to 96 inches") +
+       subtitle="data filtered to height range 48 inches to 96 inches") +
     facet_grid(. ~ sex)
 ```
 
@@ -70,7 +70,7 @@ ggplot(aes(Flavor)) +
 geom_bar(aes(fill=sex), width = 0.5) + 
   theme(axis.text.x = element_text(angle=65, vjust=0.6)) + 
   labs(title="Student Ice Cream Preferences by Sex", 
-       subtitle="data filtered to range 48 inches to 96 inches") +
+       subtitle="data filtered to height range 48 inches to 96 inches") +
 facet_grid(. ~ PreferenceNumber)
 ```
 
@@ -78,7 +78,8 @@ facet_grid(. ~ PreferenceNumber)
 #plot number one ice cream preference by height
 p <- ggplot(student_data_ice_cream, aes(Preference_1, height))
 p + geom_boxplot() + 
-  labs(title="Student Height by Number One Ice Cream Preference", subtitle="data filtered to range 48 inches to 96 inches")
+  labs(title="Student Height by Number One Ice Cream Preference", 
+       subtitle="data filtered to height range 48 inches to 96 inches")
 ```
 
 
