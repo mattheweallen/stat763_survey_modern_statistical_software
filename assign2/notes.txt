@@ -105,3 +105,9 @@ Processing triggers for systemd (237-3ubuntu10.39) ...
 Processing triggers for man-db (2.8.3-2ubuntu0.1) ...
 Processing triggers for initramfs-tools (0.130ubuntu3.9) ...
 update-initramfs: Generating /boot/initrd.img-5.0.0-1032-azure
+#https://rmarkdown.rstudio.com/authoring_quick_tour.html
+#https://rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf
+
+#todo include a template syntax with some simple statistic
+#todo check notes for other stuff may just need one or two graphs
+
