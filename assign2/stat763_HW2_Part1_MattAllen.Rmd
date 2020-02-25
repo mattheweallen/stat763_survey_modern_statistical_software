@@ -54,9 +54,7 @@ clean_heights <- function(height_text) {
       ft_inches_which = str_which(height_text,pattern = number_pattern)
       pattern_to_split = heights$height_text[ft_inches_which]
       split_data = str_split(pattern_to_split,p, simplify = TRUE)
-      #str_which(heights$height_text,pattern = "\\d'\\d+")
-      #blarg1 <- str_split(pattern_to_split,"'", simplify = TRUE)
-      
+    
       #take the feet part multiply by 12 and add the inches part to it
       converted_heights[ft_inches_which] = as.numeric(str_trim(split_data[,1]))*12 +   as.numeric(str_trim(str_extract(split_data[,2],"\\d*")))
     }
