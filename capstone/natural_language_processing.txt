@@ -9,3 +9,10 @@ https://livebook.manning.com/book/natural-language-processing-in-action/chapter-
 
 manning buy one get one free with code BOGO
 
+
+https://www.amazon.com/Introduction-Language-Processing-Adaptive-Computation/dp/0262042843/ref=pd_sbs_14_2/139-8023269-8913147?_encoding=UTF8&pd_rd_i=0262042843&pd_rd_r=751dfdfd-ed11-4ea5-8944-332a1378dce4&pd_rd_w=SPEcD&pd_rd_wg=aj1nf&pf_rd_p=7cd8f929-4345-4bf2-a554-7d7588b3dd5f&pf_rd_r=JP4B160W5VHTNSVG2ND0&psc=1&refRID=JP4B160W5VHTNSVG2ND0
+Introduction to Natural Language Processing (Adaptive Computation and Machine Learning series) 
+
+https://jacobeisenstein.github.io/
+
+https://github.com/jacobeisenstein/gt-nlp-class/blob/master/notes/eisenstein-nlp-notes.pdf
