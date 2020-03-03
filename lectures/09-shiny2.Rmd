@@ -1,0 +1,319 @@
+---
+title: "Shiny-er"
+author: "STAT 763 - Survey of Modern Statistical Software"
+output: ioslides_presentation
+---
+
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(out.width = '80%', collapse = TRUE, warning=FALSE, message=FALSE)
+library(knitr)
+library(ggplot2)
+library(png)
+```
+
+## Agenda
+
+- Reactive expressions
+- Example apps
+
+## Reactive expressions
+
+- Think Excel, and formulas
+- In shiny, input objects propagate to output objects
+  - We can even have conditional calculations, etc.
+
+## Reactive values
+
+- Create an input object with an input function
+- Value created by the input function is available for use in the server function
+  - reactive values require reactive functions (e.g., `render*`) -- this is a super common error when building reactive functions
+  - reactive values notify downstream functions, which respond in some way
+  
+## Reactive functions
+
+The `render*` functions:
+
+- `renderDataTable()` and `renderTable()`
+- `renderImage()` and `renderPlot()`
+- `renderPrint()` and `renderText()`
+- `renderUI()`
+
+Pass one block of code inside `{}` (ALL of this code will be rerun each time a value is invalidated)
+
+## Multiple inputs/outputs
+
+```{r eval=FALSE}
+ui <- fluidPage(
+  sliderInput(inputId = "num", 
+    label = "Choose a number", 
+    value = 25, min = 1, max = 100),
+  textInput(inputId = "title", 
+    label = "Write a title",
+    value = "Histogram of Random Normal Values"),
+  plotOutput("hist")
+)
+
+server <- function(input, output) {
+  output$hist <- renderPlot({
+    hist(rnorm(input$num), main = input$title)
+  })
+}
+```
+
+## Multiple inputs/outputs
+
+```{r eval=FALSE}
+ui <- fluidPage(
+  sliderInput(inputId = "num", 
+    label = "Choose a number", 
+    value = 25, min = 1, max = 100),
+  plotOutput("hist"),
+  verbatimTextOutput("stats")
+)
+
+server <- function(input, output) {
+  output$hist <- renderPlot({
+    hist(rnorm(input$num))
+  })
+  output$stats <- renderPrint({
+    summary(rnorm(input$num))
+  })
+}
+```
+
+## Reactive expressions
+
+`reactive()` builds a reactive expression 
+
+- Place inside `{}`
+- Very similar to R objects, but are technically functions (requires function-like code)
+
+
+## Reactive expressions
+
+```{r eval=FALSE}
+ui <- fluidPage(
+  sliderInput(inputId = "num", 
+    label = "Choose a number", 
+    value = 25, min = 1, max = 100),
+  plotOutput("hist"),
+  verbatimTextOutput("stats")
+)
+
+server <- function(input, output) {
+  
+  data <- reactive({
+    rnorm(input$num)
+  })  # Note: doesn't actually run here
+  
+  output$hist <- renderPlot({
+    hist(data()) #Function is run here, with data()
+  })
+  output$stats <- renderPrint({
+    summary(data()) #Function not run here; data valid
+  })
+}
+```
+
+## Preventing reactions
+
+Fields in our apps will update with every key press
+
+- This is annoying behavior for things like titles
+- `isolate()` can control this behavior
+- Makes non-reactive elements out of reactive elements
+
+## Preventing reactions
+
+```{r eval=FALSE}
+ui <- fluidPage(
+  sliderInput(inputId = "num", 
+    label = "Choose a number", 
+    value = 25, min = 1, max = 100),
+  textInput(inputId = "title", 
+    label = "Write a title",
+    value = "Histogram of Random Normal Values"),
+  plotOutput("hist")
+)
+
+server <- function(input, output) {
+  output$hist <- renderPlot({
+    hist(rnorm(input$num), main = isolate(input$title))
+  })
+}
+```
+
+## Where are we now?
+
+- We can build basic chain of reactivity
+- Extend chain with reactive expression
+- Break the chain with isolation
+
+## Action buttons
+
+- Takes an inputId and label (a click button, for example)
+
+  
+## Action buttons
+
+```{r eval=FALSE}
+ui <- fluidPage(
+  actionButton(inputId = "clicks", 
+    label = "Click me")
+)
+
+server <- function(input, output) {
+  observeEvent(input$clicks, {
+    print(as.numeric(input$clicks))
+  })
+}
+```
+  
+
+## Observing
+
+- Trigger code to run on server with `observeEvent()`:
+  - `observeEvent(input$clicks, { print(input$clicks)})`
+  - responds only to changes in the listed first value(s), runs code on value invalidation
+  - stuff in `{}` are essentially isolated
+- `observe()` will do the same thing, but react to EVERY reactive value
+
+## Observing
+
+```{r eval=FALSE}
+ui <- fluidPage(
+  sliderInput(inputId = "num", 
+    label = "Choose a number",
+    min = 1, max = 100, value = 25),
+  actionButton(inputId = "go", 
+    label = "Print Value")
+)
+
+server <- function(input, output) {
+  
+  # observe responds to the print button
+  # but not the slider
+  observeEvent(input$go, {
+    print(as.numeric(input$num))
+  })
+}
+```
+
+## Delaying reactions
+
+- `eventReactive()` makes a reactive expression
+- different syntax (like `observeEvent`)
+- first input are the only values that trigger the function (second input)
+
+## Delaying reactions
+
+```{r eval=FALSE}
+ui <- fluidPage(
+  sliderInput(inputId = "num", 
+    label = "Choose a number", 
+    value = 25, min = 1, max = 100),
+  actionButton(inputId = "go", 
+    label = "Update"),
+  plotOutput("hist")
+)
+
+server <- function(input, output) {
+  data <- eventReactive(input$go, {
+    rnorm(input$num) 
+  })
+  
+  output$hist <- renderPlot({
+    hist(data())
+  })
+}
+```
+
+## Managing states
+
+- `reactiveValue()`
+- With sliders, e.g., we cannot overwrite input values in the app
+- We can generate a list of reactive values to be manipulated programmatically
+
+
+## Managing states
+
+```{r eval=FALSE}
+ui <- fluidPage(
+  actionButton(inputId = "norm", label = "Normal"),
+  actionButton(inputId = "unif", label = "Uniform"),
+  plotOutput("hist")
+)
+
+server <- function(input, output) {
+
+  rv <- reactiveValues(data = rnorm(100))
+
+  observeEvent(input$norm, { rv$data <- rnorm(100) })
+  observeEvent(input$unif, { rv$data <- runif(100) })
+
+  output$hist <- renderPlot({ 
+    hist(rv$data) 
+  })
+}
+```
+
+
+## Interactive data tables
+
+```{r eval=FALSE}
+runApp("09-shiny-apps/table1")
+```
+
+## Interactive data tables
+
+[DT Walkthrough](https://rstudio.github.io/DT/)
+
+```{r eval=FALSE}
+#install.packages("DT")
+runApp("09-shiny-apps/table2")
+```
+
+## Interactive graphics
+
+[Plotly](https://plot.ly/r/)
+```{r eval=FALSE}
+#Plotly
+runApp("09-shiny-apps/plotly")
+```
+
+## Interactive graphics
+
+[Highcharts](http://jkunst.com/highcharter/)
+```{r eval=FALSE}
+#Highcharts
+runApp("09-shiny-apps/highcharter")
+```
+
+## Interactive graphics
+
+[Leaflet](http://rstudio.github.io/leaflet/shiny.html)
+
+```{r eval=FALSE}
+#Leaflet
+runApp("09-shiny-apps/leaflet")
+```
+
+## Interactive graphics
+
+ggplot2:
+
+```{r eval=FALSE}
+runApp("09-shiny-apps/clickbrush")
+```
+
+## Interactive graphics
+
+ggplot2 and leaflet:
+
+```{r eval=FALSE}
+runApp("09-shiny-apps/brushmap")
+```
+
+## Get really crazy...
+
+[Vincent Nijs](https://vnijs.shinyapps.io/radiant/)
