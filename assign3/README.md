@@ -31,3 +31,8 @@ story about how i decided to travel to get nearer the virus, but not too near.
 
 python app server. using django. sweet and low down.
 
+
+################
+https://medium.com/@traffordDataLab/querying-apis-in-r-39029b73d5f1 
+
+https://covid19api.com/ 

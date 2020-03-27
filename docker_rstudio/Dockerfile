@@ -7,6 +7,8 @@
 #B3Gd
 #docker build -t stat763/verse:1.0 .
 #https://docs.docker.com/develop/develop-images/baseimages/
+
+#start from root of directory so the .rstudio file is put there and ignored by git
 #sudo docker run --rm -d -p 8787:8787 -v $(pwd):/home/rstudio -e PASSWORD=admin stat763/verse:1.0
 FROM rocker/verse:latest
 
@@ -39,7 +41,9 @@ RUN install2.r --error \
 RUN install2.r --error \
     flexdashboard \
     plotly \
-    ggrepel
+    ggrepel \
+    shiny
+
     #pdftools
     #jsonlite \
     #tseries

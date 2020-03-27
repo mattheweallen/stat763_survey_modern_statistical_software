@@ -6,12 +6,32 @@ output:
   html_document: default
 ---
 
-Your task is to make a Shiny app that allows for exploration of Coronavirus data.
+<!-- Your task is to make a Shiny app that allows for exploration of Coronavirus data. -->
 
-The data source is [Johns Hopkins CSSE](https://systems.jhu.edu/research/public-health/ncov/). You can access the data directly on their [Github page](https://github.com/CSSEGISandData/COVID-19).
+<!-- The data source is [Johns Hopkins CSSE](https://systems.jhu.edu/research/public-health/ncov/). You can access the data directly on their [Github page](https://github.com/CSSEGISandData/COVID-19). -->
 
-Visiting the CSSE webpage, you'll see an example of a web app (maybe not written in Shiny) that allows for lots of user interactivity (if it works in your browser, at least). Poke around their app a bit and find interesting patterns or interesting functionality.
+<!-- Visiting the CSSE webpage, you'll see an example of a web app (maybe not written in Shiny) that allows for lots of user interactivity (if it works in your browser, at least). Poke around their app a bit and find interesting patterns or interesting functionality. -->
 
-Your app should be computationally efficient, effective at conveying information, and visually appealing. Your users should have as much control as is reasonable -- too much control might obscure your story. 
+<!-- Your app should be computationally efficient, effective at conveying information, and visually appealing. Your users should have as much control as is reasonable -- too much control might obscure your story.  -->
 
-Post your shiny app on shinyapps.io. Submit your (compressed) app directory and a link to your web app on Canvas by the due date.
+<!-- Post your shiny app on shinyapps.io. Submit your (compressed) app directory and a link to your web app on Canvas by the due date. -->
+
+
+#https://shiny.rstudio.com/
+#could you example of google trend index at this place, but have countries in drop down
+#use web service to get data
+
+library(shiny)
+
+# Define UI ----
+ui <- fluidPage(
+  "hello matt!" 
+)
+
+# Define server logic ----
+server <- function(input, output) {
+  
+}
+
+# Run the app ----
+shinyApp(ui = ui, server = server)
