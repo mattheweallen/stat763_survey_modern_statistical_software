@@ -21,6 +21,24 @@ output:
 #could you example of google trend index at this place, but have countries in drop down
 #use web service to get data
 #https://github.com/rstudio/shiny-server/blob/master/README.md
+#
+
+#https://hub.docker.com/r/rocker/shiny
+sudo docker run -d -p 80:3838 \
+    -v /home/matt/repos/stat763_survey_modern_statistical_software/assign3/covid_shiny/:/srv/shiny-server/ \
+    -v /home/matt/repos/stat763_survey_modern_statistical_software/assign3/covid_shiny/shinylog/:/var/log/shiny-server/ \
+    rocker/shiny-verse
+
+
+#http://covid19.underloud.com/
+
+
+################
+https://medium.com/@traffordDataLab/querying-apis-in-r-39029b73d5f1 
+
+https://covid19api.com/
+
+
 
 library(shiny)
 

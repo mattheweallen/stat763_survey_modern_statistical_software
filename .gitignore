@@ -40,3 +40,6 @@ vignettes/*.pdf
 
 # rstudio folder
 .rstudio/
+
+#ignore shiny log
+assign3/covid_shiny/shinylog

@@ -3,7 +3,7 @@
 #https://docs.docker.com/engine/reference/builder/
 #add this as a chart
 #docker build .
-#ssh -L 8787:localhost:8787 matt@137.117.78.5
+#ssh -L 8787:localhost:8787 matt@168.61.46.26
 #B3Gd
 #docker build -t stat763/verse:1.0 .
 #https://docs.docker.com/develop/develop-images/baseimages/
