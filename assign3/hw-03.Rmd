@@ -39,6 +39,20 @@ https://medium.com/@traffordDataLab/querying-apis-in-r-39029b73d5f1
 https://covid19api.com/
 
 
+Make By State
+
+Taicang: Jiangsu
+Pueblo, CO
+La Crosse, WI
+France
+
+Read multiple files
+https://www.r-bloggers.com/merging-multiple-data-files-into-one-data-frame/
+
+
+https://www.r-graph-gallery.com/136-stacked-area-chart.html
+
+
 
 library(shiny)
 
