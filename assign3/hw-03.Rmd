@@ -20,6 +20,7 @@ output:
 #https://shiny.rstudio.com/
 #could you example of google trend index at this place, but have countries in drop down
 #use web service to get data
+#https://github.com/rstudio/shiny-server/blob/master/README.md
 
 library(shiny)
 
