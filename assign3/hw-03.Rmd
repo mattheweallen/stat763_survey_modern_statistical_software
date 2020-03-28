@@ -53,6 +53,8 @@ https://www.r-bloggers.com/merging-multiple-data-files-into-one-data-frame/
 https://www.r-graph-gallery.com/136-stacked-area-chart.html
 
 
+https://stackoverflow.com/questions/48612676/how-to-download-entire-repository-from-github-using-r/48614528
+
 
 library(shiny)
 

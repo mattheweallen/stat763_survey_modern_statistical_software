@@ -1,15 +1,55 @@
 library(shiny)
 library(readr)
 
-#get data from github
-urlfile <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
-confirmed_data <- read_csv(url(urlfile))
+# #get data from github
+# urlfile <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
+# confirmed_data <- read_csv(url(urlfile))
+# 
+# urlfile <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
+# deaths_data <- read_csv(url(urlfile))
+# 
+# urlfile <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
+# recovered_data <- read_csv(url(urlfile))
 
-urlfile <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
-deaths_data <- read_csv(url(urlfile))
 
-urlfile <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
-recovered_data <- read_csv(url(urlfile))
+
+
+#create list of endings for file name. do for each
+#download repo, open and read all the files that have a data ending into single data frame.
+#https://stackoverflow.com/questions/48612676/how-to-download-entire-repository-from-github-using-r/48614528
+# set working directory so I know where the .zip file will be located
+#setwd(dir = "/some/path/")
+#setwd("/home/rstudio")
+current_dir <- getwd()
+
+data_url = "https://github.com/CSSEGISandData/COVID-19/archive/master.zip"
+
+# download a .zip file of the repository
+# from the "Clone or download - Download ZIP" button
+# on the GitHub repository of interest
+download.file(url = data_url
+              , destfile = "COVID-19-master.zip")
+
+# unzip the .zip file
+unzip(zipfile = "COVID-19-master.zip")
+
+# set the working directory
+# to be inside the newly unzipped 
+# GitHub repository of interest
+setwd(dir = "COVID-19-master/csse_covid_19_data/csse_covid_19_daily_reports")
+
+# examine the contents
+list.files()
+
+
+#clean up downloads. remove the files
+setwd(current_dir)
+file.remove("COVID-19-master.zip")
+unlink("COVID-19-master", recursive = TRUE)
+
+#merge data set
+
+#extract year month day from column, and make new column for all data sets
 
 
 # Define UI ----
