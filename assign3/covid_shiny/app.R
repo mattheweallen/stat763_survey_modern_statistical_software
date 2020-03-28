@@ -1,5 +1,7 @@
 library(shiny)
 library(readr)
+library(tidyverse)
+library(lubridate)
 
 # #get data from github
 # urlfile <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
@@ -20,7 +22,7 @@ library(readr)
 # set working directory so I know where the .zip file will be located
 #setwd(dir = "/some/path/")
 #setwd("/home/rstudio")
-current_dir <- getwd()
+#current_dir <- getwd()
 
 data_url = "https://github.com/CSSEGISandData/COVID-19/archive/master.zip"
 
@@ -36,14 +38,55 @@ unzip(zipfile = "COVID-19-master.zip")
 # set the working directory
 # to be inside the newly unzipped 
 # GitHub repository of interest
-setwd(dir = "COVID-19-master/csse_covid_19_data/csse_covid_19_daily_reports")
+#setwd(dir = "COVID-19-master/csse_covid_19_data/csse_covid_19_daily_reports")
 
 # examine the contents
-list.files()
+#list.files()
+#https://blog.exploratory.io/how-to-read-multiple-excel-or-csv-files-together-42af5d314a10
+files <- list.files(path = "COVID-19-master/csse_covid_19_data/csse_covid_19_daily_reports", pattern = "*.csv", full.names = T)
+
+#sapply(files, read_csv, simplify=FALSE)
+#https://stackoverflow.com/questions/46789010/error-in-bind-rows-x-id-column-cant-be-converted-from-factor-to-numeric
+#https://www.datalorax.com/post/a-tidyeval-use-case/
+
+#column names in the files have changed over time.
+#this function standardizes names and selects columns
+
+#https://github.com/tidyverse/dplyr/issues/3211
+select_cols <-function(daily_report) {
+  
+  #adjust column names. column names have been changed over time.
+  daily_report <- possibly(rename, otherwise = daily_report)(daily_report, Report_Date = `Last Update`)
+  daily_report <- possibly(rename, otherwise = daily_report)(daily_report, Report_Date = Last_Update)
+  daily_report <- possibly(rename, otherwise = daily_report)(daily_report, Province_State = `Province/State`)
+  daily_report <- possibly(rename, otherwise = daily_report)(daily_report, Country_Region = `Country/Region`)
+  
+  #possibly() rename(daily_report, report_date = `Last Update`)
+  #rename(daily_report, report_date = Last_Update)
+  
+  
+  daily_report <- daily_report %>%
+    mutate(Report_Date = as.character(Report_Date)) %>%
+    select(Report_Date,
+        Province_State,
+        Country_Region,
+        Confirmed, 
+        Deaths, 
+        Recovered)
+  print(daily_report)
+  return(daily_report)
+
+}
+
+covid19_data <- sapply(files, read_csv, simplify=FALSE) %>%
+  sapply(.,select_cols, simplify = FALSE) %>%
+  bind_rows(.id = "id")
+
+#covid19_data[[1]]
 
 
 #clean up downloads. remove the files
-setwd(current_dir)
+#setwd(current_dir)
 file.remove("COVID-19-master.zip")
 unlink("COVID-19-master", recursive = TRUE)
 
