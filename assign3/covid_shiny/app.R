@@ -61,9 +61,12 @@ select_cols <-function(daily_report) {
   daily_report <- possibly(rename, otherwise = daily_report)(daily_report, Province_State = `Province/State`)
   daily_report <- possibly(rename, otherwise = daily_report)(daily_report, Country_Region = `Country/Region`)
   
+  #daily_report <- daily_report %>%
+  #  mutate(File_Date = substr(id, length(id) - 10,length(id) - 4))
+  #print(daily_report)  
   #possibly() rename(daily_report, report_date = `Last Update`)
   #rename(daily_report, report_date = Last_Update)
-  
+ #TODO clean up report date column, it currently had different formats 
   
   daily_report <- daily_report %>%
     mutate(Report_Date = as.character(Report_Date)) %>%
@@ -73,15 +76,23 @@ select_cols <-function(daily_report) {
         Confirmed, 
         Deaths, 
         Recovered)
-  print(daily_report)
+  #print(daily_report)
   return(daily_report)
-
 }
 
 covid19_data <- sapply(files, read_csv, simplify=FALSE) %>%
   sapply(.,select_cols, simplify = FALSE) %>%
-  bind_rows(.id = "id")
+  bind_rows(.id = "id") %>%
+  mutate(File_Date = mdy(substr(id, str_length(id) - 13,str_length(id) - 4)))
 
+class(covid19_data$File_Date)
+
+#test <- "COVID-19-master/csse_covid_19_data/csse_covid_19_daily_reports/01-22-2020.csv"
+#substr(test,str_length(test)-13,str_length(test)-4)
+#length("COVID-19-master/csse_covid_19_data/csse_covid_19_daily_reports/01-22-2020.csv")
+
+covid19_data <- covid19_data %>%
+  mutate(Report_Date = ymd(Report_Date))
 #covid19_data[[1]]
 
 
