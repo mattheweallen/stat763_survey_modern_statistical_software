@@ -40,14 +40,16 @@ select_cols <- function(daily_report) {
   daily_report <-
     possibly(rename, otherwise = daily_report)(daily_report, Report_Date = Last_Update)
   daily_report <-
-    possibly(rename, otherwise = daily_report)(daily_report, Province_State = `Province/State`)
+    possibly(rename, otherwise = daily_report)(daily_report, State = `Province/State`)
+  daily_report <-
+    possibly(rename, otherwise = daily_report)(daily_report, State = Province_State)
   daily_report <-
     possibly(rename, otherwise = daily_report)(daily_report, Country_Region = `Country/Region`)
   
   daily_report <- daily_report %>%
     mutate(Report_Date = as.character(Report_Date)) %>%
     select(Report_Date,
-           Province_State,
+           State,
            Country_Region,
            Confirmed,
            Deaths,
@@ -69,15 +71,13 @@ ui <- fluidPage(
   fluidRow(column(6, h1(
     "Covid 19 Cases in the Midwest"
   )),),
-  fluidRow(column(2, h3("Select State: ")),
-           
-           
-           # Select type of trend to plot
+  fluidRow(
+           # State Selection
            column(
-             4,
+             3,
              selectInput(
                inputId = "state",
-               label = strong("State"),
+               label = strong("Select State"),
                choices = midwest_states,
                selected = "Wisconsin"
              )
@@ -93,8 +93,8 @@ ui <- fluidPage(
 # Define server logic ----
 server <- function(input, output) {
   state_data <- reactive(
-    filter(covid19_data, Province_State == input$state) %>%
-      group_by(Province_State, Date) %>%
+    filter(covid19_data, State == input$state) %>%
+      group_by(State, Date) %>%
       summarise_at(c("Confirmed", "Recovered", "Deaths"), sum, na.rm = TRUE)
   )
   
