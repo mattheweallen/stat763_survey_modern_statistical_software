@@ -68,25 +68,27 @@ covid19_data <- sapply(files, read_csv, simplify = FALSE) %>%
 ui <- fluidPage(
   theme = shinytheme("flatly"),
   title = "Midwest Covid 19 Cases",
-  fluidRow(column(6, offset = 1, h1(
-    "Covid 19 Cases in the Midwest"
-  )),),
-  fluidRow(
-           # State Selection
-           column(
-             3, offset = 1,
-             selectInput(
-               inputId = "state",
-               label = strong("Select State"),
-               choices = midwest_states,
-               selected = "Wisconsin"
-             )
-           )),
+  fluidRow(column(
+    6, offset = 1, h1("Covid 19 Cases in the Midwest")
+  ), ),
+  fluidRow(# State Selection
+    column(
+      3,
+      offset = 1,
+      selectInput(
+        inputId = "state",
+        label = strong("Select State"),
+        choices = midwest_states,
+        selected = "Wisconsin"
+      )
+    )),
   
   fluidRow(
     column(4, offset = 1, DT::dataTableOutput("state_table")),
     column(6, offset = 1, plotlyOutput(outputId = "lineplot", height = 450))
-  )
+  ),
+  fluidRow(column(3, offset = 1, tags$a(href = "https://github.com/CSSEGISandData/COVID-19", 
+                                        "Source: Johns Hopkins CSSE", target = "_blank")))
   
 )
 
@@ -100,14 +102,17 @@ server <- function(input, output) {
   
   # render state data table
   output$state_table <-
-    DT::renderDataTable(state_data(), 
-                        server = FALSE, 
-                        rownames = FALSE,
-                        options=list(columnDefs = list(list(visible=FALSE, targets=0))))
+    DT::renderDataTable(
+      state_data(),
+      server = FALSE,
+      rownames = FALSE,
+      options = list(columnDefs = list(list(
+        visible = FALSE, targets = 0
+      )))
+    )
   
   # Create plot of cases
   output$lineplot <- renderPlotly({
-    
     state_plot <-
       ggplot(state_data(), aes(Date, y = Cases, color = Cases)) +
       ggtitle(paste(input$state, 'Covid 19 Cases')) +
