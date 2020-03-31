@@ -4,6 +4,7 @@ library(readr)
 library(tidyverse)
 library(lubridate)
 library(plotly)
+library(DT)
 
 # #get data from github
 # urlfile <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
@@ -121,7 +122,7 @@ covid19_data <- sapply(files, read_csv, simplify=FALSE) %>%
 
 
 # Define UI ----
-ui <- fluidPage(theme = shinytheme("darkly"),
+ui <- fluidPage(theme = shinytheme("paper"),
                 titlePanel("Covid 19 Cases by State"),
                 sidebarLayout(
                   sidebarPanel(
@@ -149,20 +150,37 @@ ui <- fluidPage(theme = shinytheme("darkly"),
                   
                   # Output: Description, lineplot, and reference
                   mainPanel(
-                    plotlyOutput(outputId = "lineplot", height = "300px"),
-                    textOutput(outputId = "desc")
+                    fluidRow(
+                      #column(6, DT::dataTableOutput('x1')),
+                      column(8, plotlyOutput(outputId = "lineplot", height = "300"))
+                    ),
+                    fluidRow(
+                      column(8, DT::dataTableOutput("x1"))
+                        #column(8, plotlyOutput(outputId = "lineplot", height = "300"))
+                    )
+                    #plotlyOutput(outputId = "lineplot", height = "300"),
+                    #DT::dataTableOutput("x1")
+                    #textOutput(outputId = "desc")
                   )
                 ) 
 )
 
 # Define server logic ----
 server <- function(input, output) {
+  #state_data <- reactive(filter(covid19_data, Province_State == input$state))
+  
+  
+  # render the table (with row names)
+  output$x1 <- DT::renderDataTable(filter(covid19_data, Province_State == input$state), server = FALSE)
+      
   # Create scatterplot object the plotOutput function is expecting
   output$lineplot <- renderPlotly({
+    
     state_data <- filter(covid19_data, Province_State == input$state) %>%
       group_by(Province_State, File_Date) %>%  
       summarise_at(c("Confirmed", "Recovered", "Deaths"), sum, na.rm = TRUE)
-    
+      
+    #put title of state summary
     state_plot <- ggplot(state_data, aes(File_Date, y = Cases, color = Cases)) + 
       geom_line(aes(y = Confirmed, col = "Confirmed")) + 
       geom_line(aes(y = Recovered, col = "Recovered")) + 
