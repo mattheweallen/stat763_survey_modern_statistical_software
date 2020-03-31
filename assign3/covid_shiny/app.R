@@ -76,7 +76,8 @@ select_cols <-function(daily_report) {
 
   daily_report <- daily_report %>%
     mutate(Report_Date = as.character(Report_Date)) %>%
-    select(Report_Date,
+    select(
+        Report_Date,
         Province_State,
         Country_Region,
         Confirmed,
@@ -89,7 +90,7 @@ select_cols <-function(daily_report) {
 covid19_data <- sapply(files, read_csv, simplify=FALSE) %>%
   sapply(.,select_cols, simplify = FALSE) %>%
   bind_rows(.id = "id") %>%
-  mutate(File_Date = mdy(substr(id, str_length(id) - 13,str_length(id) - 4)))
+  mutate(Date = mdy(substr(id, str_length(id) - 13,str_length(id) - 4)))
 
 #class(covid19_data$File_Date)
 
@@ -168,17 +169,9 @@ ui <- fluidPage(theme = shinytheme("paper"),
                   # Output: Description, lineplot, and reference
                 
                     fluidRow(
-                      #column(6, DT::dataTableOutput('x1')),
-                      column(8, plotlyOutput(outputId = "lineplot"))
-                    ),
-                    fluidRow(
-                      column(12, DT::dataTableOutput("x1"))
-                        #column(8, plotlyOutput(outputId = "lineplot", height = "300"))
+                      column(6, DT::dataTableOutput("state_table")),
+                      column(6, plotlyOutput(outputId = "lineplot"))
                     )
-                    #plotlyOutput(outputId = "lineplot", height = "300"),
-                    #DT::dataTableOutput("x1")
-                    #textOutput(outputId = "desc")
-                  
               
 )
 
@@ -186,22 +179,28 @@ ui <- fluidPage(theme = shinytheme("paper"),
 server <- function(input, output) {
   #state_data <- reactive(filter(covid19_data, Province_State == input$state))
   
+  state_data <- reactive(
+    filter(covid19_data, Province_State == input$state) %>%
+      group_by(Province_State, Date) %>%  
+      summarise_at(c("Confirmed", "Recovered", "Deaths"), sum, na.rm = TRUE) 
+    )
   
   # render the table (with row names)
-  output$x1 <- DT::renderDataTable(filter(covid19_data, Province_State == input$state), server = FALSE)
+  output$state_table <- DT::renderDataTable(state_data(), server = FALSE)
       
   # Create scatterplot object the plotOutput function is expecting
   output$lineplot <- renderPlotly({
     
-    state_data <- filter(covid19_data, Province_State == input$state) %>%
-      group_by(Province_State, File_Date) %>%  
-      summarise_at(c("Confirmed", "Recovered", "Deaths"), sum, na.rm = TRUE)
+    # state_data <- filter(covid19_data, Province_State == input$state) %>%
+    #   group_by(Province_State, Date) %>%  
+    #   summarise_at(c("Confirmed", "Recovered", "Deaths"), sum, na.rm = TRUE)
       
     #put title of state summary
-    state_plot <- ggplot(state_data, aes(File_Date, y = Cases, color = Cases)) + 
+    state_plot <- ggplot(state_data(), aes(Date, y = Cases, color = Cases)) + 
       geom_line(aes(y = Confirmed, col = "Confirmed")) + 
       geom_line(aes(y = Recovered, col = "Recovered")) + 
-      geom_line(aes(y = Deaths, col = "Deaths"))
+      geom_line(aes(y = Deaths, col = "Deaths")) +
+      theme_bw()
     ggplotly(state_plot)
   })
 }
