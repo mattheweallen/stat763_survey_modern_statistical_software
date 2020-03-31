@@ -42,7 +42,8 @@ RUN install2.r --error \
     flexdashboard \
     plotly \
     ggrepel \
-    shiny
+    shiny \
+    shinythemes
 
     #pdftools
     #jsonlite \
