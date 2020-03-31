@@ -69,12 +69,12 @@ ui <- fluidPage(
   fluidRow(column(6, h1(
     "Covid 19 Cases in the Midwest"
   )),),
-  fluidRow(column(2, h3("Select State: ")),
+  fluidRow(column(1, h3("Select State: ")),
            
            
            # Select type of trend to plot
            column(
-             4,
+             3,
              selectInput(
                inputId = "state",
                label = strong("State"),
@@ -83,10 +83,10 @@ ui <- fluidPage(
              )
            )),
   
-  fluidRow(column(
-    6, plotlyOutput(outputId = "lineplot", height = 500)
-  ),
-  column(6, DT::dataTableOutput("state_table")))
+  fluidRow(
+    column(5, offset = 1, DT::dataTableOutput("state_table")),
+    column(5, offset = 1, plotlyOutput(outputId = "lineplot", height = 500))
+  )
   
 )
 
