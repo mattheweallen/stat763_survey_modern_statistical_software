@@ -85,7 +85,7 @@ ui <- fluidPage(
   
   fluidRow(
     column(5, offset = 1, DT::dataTableOutput("state_table")),
-    column(5, offset = 1, plotlyOutput(outputId = "lineplot", height = 400))
+    column(5, offset = 1, plotlyOutput(outputId = "lineplot", height = 450))
   )
   
 )
