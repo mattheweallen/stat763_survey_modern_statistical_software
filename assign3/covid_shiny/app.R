@@ -100,7 +100,10 @@ server <- function(input, output) {
   
   # render state data table
   output$state_table <-
-    DT::renderDataTable(state_data(), server = FALSE)
+    DT::renderDataTable(state_data(), 
+                        server = FALSE, 
+                        rownames = FALSE,
+                        options=list(columnDefs = list(list(visible=FALSE, targets=0))))
   
   # Create plot of cases
   output$lineplot <- renderPlotly({
