@@ -119,19 +119,36 @@ covid19_data <- sapply(files, read_csv, simplify=FALSE) %>%
   #summarize(Total_Recovered = sum(Recovered, na.rm = TRUE))
   
 
-
+midwest_states <- c("Illinois",
+                    "Indiana",
+                    "Iowa",
+                    "Kansas",
+                    "Michigan",
+                    "Minnesota",
+                    "Missouri",
+                    "Nebraska",
+                    "North Dakota",
+                    "Ohio",
+                    "South Dakota",     
+                    "Wisconsin")
 
 # Define UI ----
 ui <- fluidPage(theme = shinytheme("paper"),
-                titlePanel("Covid 19 Cases by State"),
-                sidebarLayout(
-                  sidebarPanel(
+                title = "Midwest Covid Cases",
+                fluidRow(
+                  column(6, h1("Covid 19 Cases in the Midwest")),
+                
                     
-                    # Select type of trend to plot
-                    selectInput(inputId = "state", label = strong("State"),
-                                choices = c("Wisconsin", "Iowa", "Minnesota"),
-                                selected = "Wisconsin"),
-                    
+                ),
+                fluidRow(
+                  column(2, h3("Select State: ")),
+                  
+                  
+                  # Select type of trend to plot
+                  column(4, selectInput(inputId = "state", label = strong("State"),
+                                        choices = midwest_states,
+                                        selected = "Wisconsin"))
+                ),
                     # # Select date range to be plotted
                     # dateRangeInput("date", strong("Date range"), start = "2007-01-01", end = "2017-07-31",
                     #                min = "2007-01-01", max = "2017-07-31"),
@@ -146,23 +163,23 @@ ui <- fluidPage(theme = shinytheme("paper"),
                     #                              animate = animationOptions(interval = 100)),
                     #                  HTML("Higher values give more smoothness.")
                     #)
-                  ),
+                  
                   
                   # Output: Description, lineplot, and reference
-                  mainPanel(
+                
                     fluidRow(
                       #column(6, DT::dataTableOutput('x1')),
-                      column(8, plotlyOutput(outputId = "lineplot", height = "300"))
+                      column(8, plotlyOutput(outputId = "lineplot"))
                     ),
                     fluidRow(
-                      column(8, DT::dataTableOutput("x1"))
+                      column(12, DT::dataTableOutput("x1"))
                         #column(8, plotlyOutput(outputId = "lineplot", height = "300"))
                     )
                     #plotlyOutput(outputId = "lineplot", height = "300"),
                     #DT::dataTableOutput("x1")
                     #textOutput(outputId = "desc")
-                  )
-                ) 
+                  
+              
 )
 
 # Define server logic ----
