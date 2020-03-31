@@ -66,15 +66,15 @@ covid19_data <- sapply(files, read_csv, simplify = FALSE) %>%
 
 # Define UI ----
 ui <- fluidPage(
-  theme = shinytheme("lumen"),
+  theme = shinytheme("flatly"),
   title = "Midwest Covid 19 Cases",
-  fluidRow(column(6, h1(
+  fluidRow(column(6, offset = 1, h1(
     "Covid 19 Cases in the Midwest"
   )),),
   fluidRow(
            # State Selection
            column(
-             3,
+             3, offset = 1,
              selectInput(
                inputId = "state",
                label = strong("Select State"),
@@ -84,8 +84,8 @@ ui <- fluidPage(
            )),
   
   fluidRow(
-    column(5, offset = 1, DT::dataTableOutput("state_table")),
-    column(5, offset = 1, plotlyOutput(outputId = "lineplot", height = 450))
+    column(4, offset = 1, DT::dataTableOutput("state_table")),
+    column(6, offset = 1, plotlyOutput(outputId = "lineplot", height = 450))
   )
   
 )
