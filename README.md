@@ -6,4 +6,8 @@ https://bookdown.org/yihui/rmarkdown/
 R for Data Science
 https://r4ds.had.co.nz/
 
+Think Stats
+https://greenteapress.com/thinkstats2/thinkstats2.pdf
+
+
 
