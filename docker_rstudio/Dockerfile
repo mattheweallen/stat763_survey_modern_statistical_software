@@ -10,6 +10,15 @@
 
 #start from root of directory so the .rstudio file is put there and ignored by git
 #sudo docker run --rm -d -p 8787:8787 -v $(pwd):/home/rstudio -e PASSWORD=admin stat763/verse:1.0
+
+
+
+
+
+
+
+
+
 FROM rocker/verse:latest
 
 #https://github.com/aabor/rstudio/blob/master/rstudio-text/Dockerfile
