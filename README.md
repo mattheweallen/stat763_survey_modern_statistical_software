@@ -14,5 +14,18 @@ https://elitedatascience.com/learn-python-for-data-science
 https://towardsdatascience.com/google-colab-jupyter-lab-on-steroids-perfect-for-deep-learning-cdddc174d77a
 
 
+http://statweb.stanford.edu/~jtaylo/courses/stats202/visualization.html
+
+https://seaborn.pydata.org/generated/seaborn.distplot.html#seaborn.distplot
+
+
+https://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html
+
+https://medium.com/@harimittapalli/exploratory-data-analysis-iris-dataset-9920ea439a3e
+
+
+https://seaborn.pydata.org/tutorial/distributions.html
+
+https://seaborn.pydata.org/tutorial/distributions.html
 
 
