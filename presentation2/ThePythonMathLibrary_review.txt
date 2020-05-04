@@ -1,4 +1,6 @@
 Python Math Library Review 
 by Matt Allen
 
-It is really good to have an explanation of a library that is probably widely used.  I really like the number theory examples.  
+It is good to have a presentation on a library that is probably widely used, because it shows off all of its capabilities that may not be realized. 
+
+I like the number theory examples.  

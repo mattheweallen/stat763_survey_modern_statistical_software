@@ -1,3 +1,10 @@
 Reticulate Review 
 by Matt Allen
 
+Being able to call Python from R is interesting. 
+
+I think Pandas was created to make an R like data frames possible in Python. I am not sure if using Pandas in R is useful in practice especially with Tidyverse. I do like the suggestion of using scikit learn.
+
+Python calling programs written in other languages would also be interesting. I have seen this as something that people want to be able to do. For example, if something was writting in C or C# can you call it from Python.
+
+

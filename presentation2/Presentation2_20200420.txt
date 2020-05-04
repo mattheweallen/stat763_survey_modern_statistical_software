@@ -1,3 +1,6 @@
 Django Review 
 by Matt Allen
 
+I think that I got all the points across that I wanted to. I had wanted to make a working demo, which would have made the presentation more concrete. I think some of the examples may be difficult to understand for some.
+
+It is likely others will not be as interested in this subject as I am, but I did attempt to make it relevant by showing the database layer. That could be useful for data scientists.

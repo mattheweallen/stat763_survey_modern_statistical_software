@@ -1,7 +1,7 @@
 Arrow Review 
 by Matt Allen
 
-I really like that you made your presentation in a Jupyter notebook. It is full of good 
+I really like that you made your presentation in a Jupyter notebook. It is full of good examples on how to use the library. The humanizing time is a cool feature.
 
 
 I am sure this has been mentioned, but In [32] line is showing an error. It looks like Pandas may not have been imported.
