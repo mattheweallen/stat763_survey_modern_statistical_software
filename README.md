@@ -7,6 +7,7 @@ R for Data Science
 https://r4ds.had.co.nz/
 
 Think Stats
+https://greenteapress.com/wp/think-stats-2e/
 https://greenteapress.com/thinkstats2/thinkstats2.pdf
 
 Python
@@ -29,3 +30,6 @@ https://seaborn.pydata.org/tutorial/distributions.html
 https://seaborn.pydata.org/tutorial/distributions.html
 
 
+https://en.wikipedia.org/wiki/Empirical_distribution_function
+
+https://en.wikipedia.org/wiki/Bootstrapping_(statistics)
