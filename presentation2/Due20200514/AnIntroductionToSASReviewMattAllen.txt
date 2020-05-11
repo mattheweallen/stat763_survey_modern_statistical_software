@@ -1,0 +1,10 @@
+An Introduction to SAS Review by Matt Allen 
+
+1.	Describe one (or more) positive aspects of the walkthrough.
+
+This is an interesting presentation, because SAS is one of the major Statistics packages, but I have not had the opportunity to use or learn about it.
+
+2.	Provide constructive criticism of one (or more) aspects of the walkthrough that you feel could be improved. As this is constructive, provide some justification and/or advice on ways to improve.
+
+There are some minor issues like not capitalizing proper nouns like Excel.
+

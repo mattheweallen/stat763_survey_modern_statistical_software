@@ -1,0 +1,9 @@
+Sentiment Analysis in R Review by Matt Allen 
+
+1.	Describe one (or more) positive aspects of the walkthrough.
+
+I do not have much experience performing sentiment analysis, so seeing the features of TidyText is a good start on understanding what it can tell us.
+
+2.	Provide constructive criticism of one (or more) aspects of the walkthrough that you feel could be improved. As this is constructive, provide some justification and/or advice on ways to improve.
+
+It is not clear to me what Afinn, Bing and Nrc are. Some more detail on those would be nice.

@@ -1,0 +1,9 @@
+Data Explorer Package Review by Matt Allen 
+
+1.	Describe one (or more) positive aspects of the walkthrough.
+
+I liked that your presentation was interactive. You can click on the buttons and change the output. I also like that the presentation could be reproduced.
+
+2.	Provide constructive criticism of one (or more) aspects of the walkthrough that you feel could be improved. As this is constructive, provide some justification and/or advice on ways to improve.
+
+There are some spelling and grammatical issues, but overall the presentation was a nice walk through on how to use the Data Explorer package and why you would want to use it.

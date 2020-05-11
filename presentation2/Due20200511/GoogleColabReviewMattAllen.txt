@@ -1,0 +1,9 @@
+Google Colab Review by Matt Allen 
+
+1.	Describe one (or more) positive aspects of the walkthrough.
+
+The slides look really nice. There are helpful tips on using Google Colab.
+
+2.	Provide constructive criticism of one (or more) aspects of the walkthrough that you feel could be improved. As this is constructive, provide some justification and/or advice on ways to improve.
+
+I was unable to play the mp4, so I only have the slides to view and may have missed some content. In the slides themselves, there could be a slide explaining the motivation for using Google Colab. There is an Advantages slide at the end which may capture some of that, but there could be more like an example of why you would use Google Colab.

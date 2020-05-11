@@ -1,0 +1,9 @@
+A Walk Through of gganimate Review by Matt Allen 
+
+1.	Describe one (or more) positive aspects of the walkthrough.
+
+The live animations of the plots are cool.
+
+2.	Provide constructive criticism of one (or more) aspects of the walkthrough that you feel could be improved. As this is constructive, provide some justification and/or advice on ways to improve.
+
+There are some code chunks that are commented out, and probably should not be shown.

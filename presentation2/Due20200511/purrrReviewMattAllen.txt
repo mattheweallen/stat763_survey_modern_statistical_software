@@ -1,0 +1,9 @@
+purrr Review by Matt Allen 
+
+1.	Describe one (or more) positive aspects of the walkthrough.
+
+The presentation is well organized and provides good motivation for using the package.
+
+2.	Provide constructive criticism of one (or more) aspects of the walkthrough that you feel could be improved. As this is constructive, provide some justification and/or advice on ways to improve.
+
+There is a mention of S3 objects in the splice function detail. It is unclear to me what an S3 object is. That is minor, but could be clarified.

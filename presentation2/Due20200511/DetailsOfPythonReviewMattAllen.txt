@@ -1,0 +1,10 @@
+Details of Python Review by Matt Allen 
+
+1.	Describe one (or more) positive aspects of the walkthrough.
+
+This is a useful walk through on setting up an Anaconda environment. Some of it is similar to the instructions on the Anaconda site, but gives some more justification on why to select an option.
+
+2.	Provide constructive criticism of one (or more) aspects of the walkthrough that you feel could be improved. As this is constructive, provide some justification and/or advice on ways to improve.
+
+The term Kernel is used in a couple of places. One place it is defined as the core of the operating system, and in another it is not defined and seems like it is related to Python versus an Operating System. I think the second use of Kernel is more like this definition https://ipython.org/ipython-doc/3/development/kernels.html
+

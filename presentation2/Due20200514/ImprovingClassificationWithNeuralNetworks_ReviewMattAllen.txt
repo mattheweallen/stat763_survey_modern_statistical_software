@@ -1,0 +1,9 @@
+Improving Classification with Neural Networks Review by Matt Allen 
+
+1.	Describe one (or more) positive aspects of the walkthrough.
+
+This is not something I understand that well, but it seems like the presentation is very detailed on how to use the Keras package.
+
+2.	Provide constructive criticism of one (or more) aspects of the walkthrough that you feel could be improved. As this is constructive, provide some justification and/or advice on ways to improve.
+
+Perhaps because of my lack of understanding of the topic, I wish there was more explanation of what the output means.
