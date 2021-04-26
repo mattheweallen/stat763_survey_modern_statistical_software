@@ -1,0 +1,2 @@
+    Both Spyper and PyCharm open Jupyter notebook files as a plain text file. That does make it easy to work edit a Jupyter Notebook. Google Colaborate allows you to download your work as either a Juptyer notebook or a Python file. Google Colaborate is nice, because you can access it through a web browser which makes it easy to access from anywhere. PyCharm and Spyder both require an installation. Spyder is nice, because it included with the Anaconda installation. PyCharm has more features and has a more user friendly IDE than Spyder.
+
